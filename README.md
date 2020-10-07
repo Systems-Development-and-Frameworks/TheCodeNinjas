@@ -13,6 +13,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 ## Maintainers
 
  - Christoph Stach
+ - Florian Thom
 
 ## How to contact us
 
