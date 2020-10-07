@@ -1,38 +1,18 @@
-# Systems Development and Frameworks - 2020/21
+# TheCodeNinjas
 
-This is the homework repository of course `Systems Development and Frameworks`
-at `Hochschule für Technik und Wirtschaft` in Berlin.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
+## Installation
 
-<p align="center">
-  <img src="https://media.giphy.com/media/dNgK7Ws7y176U/giphy.gif" alt="homework" width="50%">
-<p>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-## Homework - Exercise #0
+## Contribution guidelines
 
-1. Find team members to groups of 2-3 people. Together, come up with a team name (Team names must be url-safe). We will setup a team on Github and Moodle for you. Kudos for a team name with a corresponding emoji. 
-2. Make a copy of this repository (using a second remote). Ensure that each member of your team has sufficient access. :star:
-3. Replace the content of this `README.md` with your individual content. Here's a Github [README.md template](https://github.com/othneildrew/Best-README-Template) and there are more [awesome READMEs](https://github.com/matiassingers/awesome-readme) out there. :star:
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-You can also have a look on the community checklist to get inspiration:
+## Maintainers
 
+ - Christoph Stach
 
-![community checklist](./.github/img/community_checklist.png)
+## How to contact us
 
-### How to submit homework
-
-You have to create a feature branch first, commit your code and push it to your
-copy of the homework repository. Then create a pull request with your feature
-branch as the target branch and request a review from your teachers.
-
-![create pull request](./.github/img/create_pr.png)
-
-Make sure that you *watch* the original homework repository. That's where we
-update exercise descriptions. Keep your own copy up-to-date by merging in new
-commits of the original repository.
-
-![watch home repository](./.github/img/watch_repo.png)
-
-Do not submit lengthy pull request. Pull requests with a large `diff` in
-`Files changed` tab are difficult to review. If you want to get good feedback on
-your pull requests, don't push unrelated changes.
