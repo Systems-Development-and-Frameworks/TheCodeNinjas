@@ -4,7 +4,7 @@
 
     <div class="news-items-wrapper">
       <news-item
-        v-for="item in newsItems" 
+        v-for="item in newsItems"
         :key="item.id"
         :newsItem="item"
         @upvote="upvoteNewsItem"
@@ -50,33 +50,37 @@ export default defineComponent({
     ]);
 
     function upvoteNewsItem(id: number) {
-      newsItems.value = newsItems.value.map((item) => {
-        if(item.id === id) {
-          return {
-            ...item,
-            votes: item.votes + 1
-          };
-        } else {
-          return item;
-        }
-      }).sort((a, b) => b.votes - a.votes);
+      newsItems.value = newsItems.value
+        .map(item => {
+          if (item.id === id) {
+            return {
+              ...item,
+              votes: item.votes + 1
+            };
+          } else {
+            return item;
+          }
+        })
+        .sort((a, b) => b.votes - a.votes);
     }
 
     function downvoteNewsItem(id: number) {
-      newsItems.value = newsItems.value.map((item) => {
-        if(item.id === id) {
-          return {
-            ...item,
-            votes: item.votes - 1
-          };
-        } else {
-          return item;
-        }
-      }).sort((a, b) => b.votes - a.votes);
+      newsItems.value = newsItems.value
+        .map(item => {
+          if (item.id === id) {
+            return {
+              ...item,
+              votes: item.votes - 1
+            };
+          } else {
+            return item;
+          }
+        })
+        .sort((a, b) => b.votes - a.votes);
     }
 
     function removeNewsItem(id: number) {
-      console.log('remove', id);
+      console.log("remove", id);
       // newsItems.value.fil
     }
 
@@ -87,14 +91,11 @@ export default defineComponent({
         votes: 0
       };
 
-      newsItems.value.push()
+      newsItems.value.push();
 
-      newsItems.value = [
-        ...newsItems.value,
-        newItem
-      ]
+      newsItems.value = [...newsItems.value, newItem];
     }
-    
+
     return {
       newsItems,
       upvoteNewsItem,
