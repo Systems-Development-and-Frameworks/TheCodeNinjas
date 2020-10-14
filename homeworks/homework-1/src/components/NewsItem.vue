@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { NewsItemModel }  from "@/models/news-item.model"
+import { NewsItemModel } from "@/models/news-item.model";
 
 export default defineComponent({
   name: "NewsItem",
@@ -22,15 +22,15 @@ export default defineComponent({
   },
   setup(props, context) {
     function upvote() {
-      context.emit('upvote', props.newsItem.id);
+      context.emit("upvote", props.newsItem.id);
     }
 
     function downvote() {
-      context.emit('downvote', props.newsItem.id);
+      context.emit("downvote", props.newsItem.id);
     }
 
     function remove() {
-      context.emit('remove', props.newsItem.id);
+      context.emit("remove", props.newsItem.id);
     }
 
     return {
