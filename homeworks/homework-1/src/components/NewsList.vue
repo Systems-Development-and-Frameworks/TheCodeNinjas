@@ -13,11 +13,10 @@
       />
     </div>
 
-    <form>
-      <input id="newsTitle" v-model="inputTitle" type="text" />
+    <form @submit.prevent="createNewsItem">
+      <input v-model="newsTitle" type="text" />
+      <button type="submit">Create</button>
     </form>
-    <button @click="createNewsItem">Create</button>
-    <h1>{{ inputTitle }}</h1>
   </div>
 </template>
 
@@ -32,34 +31,33 @@ export default defineComponent({
     NewsItem
   },
   setup() {
+    const newsTitle = ref("");
     const newsItems = ref<NewsItemModel[]>([
-      {
+      new NewsItemModel({
         id: 1,
         title: "Hackernews Nr 1",
         votes: 0
-      },
-      {
+      }),
+      new NewsItemModel({
         id: 2,
         title: "Hackernews Nr 2",
         votes: 0
-      },
-      {
+      }),
+      new NewsItemModel({
         id: 3,
         title: "Hackernews Nr 3",
         votes: 0
-      }
+      })
     ]);
-
-    let articleCount = newsItems.value.length;
 
     function upvoteNewsItem(id: number) {
       newsItems.value = newsItems.value
         .map(item => {
           if (item.id === id) {
-            return {
+            return new NewsItemModel({
               ...item,
               votes: item.votes + 1
-            };
+            });
           } else {
             return item;
           }
@@ -71,10 +69,10 @@ export default defineComponent({
       newsItems.value = newsItems.value
         .map(item => {
           if (item.id === id) {
-            return {
+            return new NewsItemModel({
               ...item,
               votes: item.votes - 1
-            };
+            });
           } else {
             return item;
           }
@@ -83,23 +81,18 @@ export default defineComponent({
     }
 
     function removeNewsItem(id: number) {
-      console.log("remove", id);
       newsItems.value = newsItems.value.filter(item => item.id != id);
     }
 
     function createNewsItem() {
-      articleCount += 1;
-      const articleTitle = (document.getElementById(
-        "newsTitle"
-      ) as HTMLInputElement).value;
-
-      const newItem: NewsItemModel = {
-        id: articleCount,
-        title: articleTitle,
+      const newItem = new NewsItemModel({
+        id: newsItems.value.map(item => item.id).reduce((acc, cur) => Math.max(acc, cur)) + 1,
+        title: newsTitle.value,
         votes: 0
-      };
+      });
 
       newsItems.value = [...newsItems.value, newItem];
+      newsTitle.value = "";
     }
 
     return {
@@ -107,7 +100,8 @@ export default defineComponent({
       upvoteNewsItem,
       downvoteNewsItem,
       removeNewsItem,
-      createNewsItem
+      createNewsItem,
+      newsTitle
     };
   }
 });
