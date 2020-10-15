@@ -81,7 +81,7 @@ export default defineComponent({
 
     function removeNewsItem(id: number) {
       console.log("remove", id);
-      // newsItems.value.fil
+      newsItems.value = newsItems.value.filter(item => item.id != id );
     }
 
     function createNewsItem() {
