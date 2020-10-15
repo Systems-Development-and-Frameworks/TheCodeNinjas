@@ -14,9 +14,10 @@
     </div>
 
     <form>
-      <input type="text" />
-      <button type="submit">Create</button>
+      <input id="newsTitle" v-model="inputTitle" type="text" />
     </form>
+    <button @click="createNewsItem">Create</button>
+    <h1>{{ inputTitle }}</h1>
   </div>
 </template>
 
@@ -48,6 +49,8 @@ export default defineComponent({
         votes: 0
       }
     ]);
+
+    let articleCount = newsItems.value.length;
 
     function upvoteNewsItem(id: number) {
       newsItems.value = newsItems.value
@@ -81,17 +84,20 @@ export default defineComponent({
 
     function removeNewsItem(id: number) {
       console.log("remove", id);
-      newsItems.value = newsItems.value.filter(item => item.id != id );
+      newsItems.value = newsItems.value.filter(item => item.id != id);
     }
 
     function createNewsItem() {
+      articleCount += 1;
+      const articleTitle = (document.getElementById(
+        "newsTitle"
+      ) as HTMLInputElement).value;
+
       const newItem: NewsItemModel = {
-        id: 5555,
-        title: "",
+        id: articleCount,
+        title: articleTitle,
         votes: 0
       };
-
-      newsItems.value.push();
 
       newsItems.value = [...newsItems.value, newItem];
     }
@@ -100,7 +106,8 @@ export default defineComponent({
       newsItems,
       upvoteNewsItem,
       downvoteNewsItem,
-      removeNewsItem
+      removeNewsItem,
+      createNewsItem
     };
   }
 });
