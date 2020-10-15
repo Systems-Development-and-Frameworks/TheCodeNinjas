@@ -1,11 +1,24 @@
 <template>
-  <div>
-    <h2>{{ newsItem.title }} ({{ newsItem.votes }})</h2>
-
-    <button @click="upvote">Upvote</button>
-    <button @click="downvote">Downvote</button>
-    <button @click="remove">Remove</button>
-  </div>
+  <tr>
+    <td class="uk-table-shrink">{{ newsItem.id }}</td>
+    <td class="uk-table-expand">{{ newsItem.title }}</td>
+    <td class="uk-table-shrink">{{ newsItem.votes }}</td>
+    <td class="uk-table-shrink">
+      <button @click="upvote" class="uk-icon-button uk-button-default">
+        <i class="mdi mdi-18px mdi-thumb-up" aria-hidden="true"></i>
+      </button>
+    </td>
+    <td class="uk-table-shrink">
+      <button @click="downvote" class="uk-icon-button uk-button-secondary">
+        <i class="mdi mdi-18px mdi-thumb-down" aria-hidden="true"></i>
+      </button>
+    </td>
+    <td class="uk-table-shrink">
+      <button @click="remove" class="uk-icon-button uk-button-danger">
+        <i class="mdi mdi-18px mdi-delete" aria-hidden="true"></i>
+      </button>
+    </td>
+  </tr>
 </template>
 
 <script lang="ts">
