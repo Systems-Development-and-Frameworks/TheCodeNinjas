@@ -1,21 +1,53 @@
 <template>
-  <div class="center">
-    <h1>News List</h1>
+  <div class="uk-container uk-margin-top">
+    <h1 class="uk-heading-xlarge uk-text-center">News List</h1>
 
     <div class="news-items-wrapper">
-      <news-item
-        v-for="item in newsItems"
-        :key="item.id"
-        :newsItem="item"
-        @upvote="upvoteNewsItem"
-        @downvote="downvoteNewsItem"
-        @remove="removeNewsItem"
-      />
+      <table class="uk-table uk-table-striped uk-table-medium uk-table-middle">
+        <thead>
+          <tr>
+            <th class="uk-table-shrink">Id</th>
+            <th class="uk-table-expand">Title</th>
+            <th class="uk-table-shrink">Votes</th>
+            <th colspan="3" class="uk-table-shrink"></th>
+          </tr>
+        </thead>
+        <tbody v-if="newsItems.length > 0">
+          <news-item
+            v-for="item in newsItems"
+            :key="item.id"
+            :newsItem="item"
+            @upvote="upvoteNewsItem"
+            @downvote="downvoteNewsItem"
+            @remove="removeNewsItem"
+          />
+        </tbody>
+        <tbody v-else>
+          <tr>
+            <td colspan="4" class="uk-text-center">
+              No News in the list!
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <form @submit.prevent="createNewsItem">
-      <input v-model="newsTitle" type="text" />
-      <button type="submit">Create</button>
+    <form @submit.prevent="createNewsItem" class="uk-form-large">
+      <div class="uk-flex">
+        <div class="uk-flex-1">
+          <input
+            class="uk-input"
+            v-model="newsTitle"
+            type="text"
+            placeholder="Please enter title"
+          />
+        </div>
+        <div>
+          <button type="submit" class="uk-button uk-button-primary">
+            Create
+          </button>
+        </div>
+      </div>
     </form>
   </div>
 </template>
@@ -85,8 +117,13 @@ export default defineComponent({
     }
 
     function createNewsItem() {
+      const id =
+        newsItems.value
+          .map(item => item.id)
+          .reduce((acc, cur) => Math.max(acc, cur), 0) + 1;
+
       const newItem = new NewsItemModel({
-        id: newsItems.value.map(item => item.id).reduce((acc, cur) => Math.max(acc, cur)) + 1,
+        id: id,
         title: newsTitle.value,
         votes: 0
       });
@@ -107,12 +144,4 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
-.center {
-  text-align: center;
-}
-
-.news-items-wrapper {
-  margin-bottom: 5rem;
-}
-</style>
+<style scoped lang="scss"></style>
