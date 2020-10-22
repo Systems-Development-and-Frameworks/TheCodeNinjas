@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "uikit": "^3.5.9-dev.4d5485e24",
+    "uikit": "^3.5.9",
     "vue": "^3.0.0"
   },
   "devDependencies": {
