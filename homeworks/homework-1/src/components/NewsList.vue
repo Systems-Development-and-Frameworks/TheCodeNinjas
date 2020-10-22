@@ -81,6 +81,7 @@ export default defineComponent({
         votes: 0
       })
     ]);
+    let currentId = newsItems.value.length;
 
     function upvoteNewsItem(id: number) {
       newsItems.value = newsItems.value
@@ -117,13 +118,9 @@ export default defineComponent({
     }
 
     function createNewsItem() {
-      const id =
-        newsItems.value
-          .map(item => item.id)
-          .reduce((acc, cur) => Math.max(acc, cur), 0) + 1;
-
+      currentId++;
       const newItem = new NewsItemModel({
-        id: id,
+        id: currentId,
         title: newsTitle.value,
         votes: 0
       });
