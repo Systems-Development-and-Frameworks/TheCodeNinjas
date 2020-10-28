@@ -3,8 +3,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
 import NewsList from "@/components/NewsList.vue";
+import { defineComponent } from "@vue/composition-api";
 
 export default defineComponent({
   name: "App",

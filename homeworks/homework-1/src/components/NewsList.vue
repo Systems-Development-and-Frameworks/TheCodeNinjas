@@ -51,9 +51,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
 import NewsItem from "@/components/NewsItem.vue";
 import { NewsItemModel } from "@/models/news-item.model";
+import { defineComponent, ref } from "@vue/composition-api";
 
 export default defineComponent({
   name: "NewsList",
@@ -89,8 +89,8 @@ export default defineComponent({
           }
 
           return new NewsItemModel({
-              ...item,
-              votes: newsItem.votes
+            ...item,
+            votes: newsItem.votes
           });
         })
         .sort((a, b) => a.compareTo(b));
@@ -108,7 +108,9 @@ export default defineComponent({
         votes: 0
       });
 
-      newsItems.value = [...newsItems.value, newItem].sort((a, b) => a.compareTo(b));
+      newsItems.value = [...newsItems.value, newItem].sort((a, b) =>
+        a.compareTo(b)
+      );
       newsTitle.value = "";
     }
 
@@ -122,4 +124,3 @@ export default defineComponent({
   }
 });
 </script>
-

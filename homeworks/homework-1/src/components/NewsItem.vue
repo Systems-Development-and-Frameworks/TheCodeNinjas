@@ -22,8 +22,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs } from "vue";
 import { NewsItemModel } from "@/models/news-item.model";
+import { defineComponent, toRefs } from "@vue/composition-api";
 
 export default defineComponent({
   name: "NewsItem",
@@ -37,11 +37,17 @@ export default defineComponent({
     const { newsItem } = toRefs(props);
 
     function upvote() {
-      context.emit("update", {...props.newsItem, votes: (props.newsItem.votes + 1)});
+      context.emit("update", {
+        ...props.newsItem,
+        votes: props.newsItem.votes + 1
+      });
     }
 
     function downvote() {
-      context.emit("update", {...props.newsItem, votes: (props.newsItem.votes - 1)});
+      context.emit("update", {
+        ...props.newsItem,
+        votes: props.newsItem.votes - 1
+      });
     }
 
     function remove() {
