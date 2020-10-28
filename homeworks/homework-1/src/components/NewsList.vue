@@ -12,13 +12,12 @@
             <th colspan="3" class="uk-table-shrink"></th>
           </tr>
         </thead>
-        <tbody v-if="newsItems.length > 0">
+        <tbody v-if="newsItems.length">
           <news-item
             v-for="item in newsItems"
             :key="item.id"
             :newsItem="item"
-            @upvote="upvoteNewsItem"
-            @downvote="downvoteNewsItem"
+            @update="updateNewsItem"
             @remove="removeNewsItem"
           />
         </tbody>
@@ -38,7 +37,6 @@
           <input
             class="uk-input"
             v-model="newsTitle"
-            type="text"
             placeholder="Please enter title"
           />
         </div>
@@ -82,38 +80,23 @@ export default defineComponent({
       })
     ]);
 
-    function upvoteNewsItem(id: number) {
+    function updateNewsItem(newsItem: NewsItemModel) {
       newsItems.value = newsItems.value
         .map(item => {
-          if (item.id === id) {
-            return new NewsItemModel({
-              ...item,
-              votes: item.votes + 1
-            });
-          } else {
+          if (item.id !== newsItem.id) {
             return item;
           }
-        })
-        .sort((a, b) => b.votes - a.votes);
-    }
 
-    function downvoteNewsItem(id: number) {
-      newsItems.value = newsItems.value
-        .map(item => {
-          if (item.id === id) {
-            return new NewsItemModel({
+          return new NewsItemModel({
               ...item,
-              votes: item.votes - 1
-            });
-          } else {
-            return item;
-          }
+              votes: newsItem.votes
+          });
         })
-        .sort((a, b) => b.votes - a.votes);
+        .sort((a, b) => a.compareTo(b));
     }
 
     function removeNewsItem(id: number) {
-      newsItems.value = newsItems.value.filter(item => item.id != id);
+      newsItems.value = newsItems.value.filter(item => item.id !== id);
     }
 
     function createNewsItem() {
@@ -128,14 +111,13 @@ export default defineComponent({
         votes: 0
       });
 
-      newsItems.value = [...newsItems.value, newItem];
+      newsItems.value = [...newsItems.value, newItem].sort((a, b) => a.compareTo(b));
       newsTitle.value = "";
     }
 
     return {
       newsItems,
-      upvoteNewsItem,
-      downvoteNewsItem,
+      updateNewsItem,
       removeNewsItem,
       createNewsItem,
       newsTitle
@@ -144,4 +126,3 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss"></style>

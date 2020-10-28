@@ -35,11 +35,11 @@ export default defineComponent({
   },
   setup(props, context) {
     function upvote() {
-      context.emit("upvote", props.newsItem.id);
+      context.emit("update", {...props.newsItem, votes: (props.newsItem.votes + 1)});
     }
 
     function downvote() {
-      context.emit("downvote", props.newsItem.id);
+      context.emit("update", {...props.newsItem, votes: (props.newsItem.votes - 1)});
     }
 
     function remove() {
