@@ -12,7 +12,7 @@
             <th colspan="3" class="uk-table-shrink"></th>
           </tr>
         </thead>
-        <tbody v-if="newsItems.length">
+        <tbody v-if="hasNewsItems">
           <news-item
             v-for="item in newsItems"
             :key="item.id"
@@ -53,7 +53,7 @@
 <script lang="ts">
 import NewsItem from "@/components/NewsItem.vue";
 import { NewsItemModel } from "@/models/news-item.model";
-import { defineComponent, ref } from "@vue/composition-api";
+import { computed, defineComponent, ref } from "@vue/composition-api";
 
 export default defineComponent({
   name: "NewsList",
@@ -80,6 +80,7 @@ export default defineComponent({
       })
     ]);
     let currentId = newsItems.value.length;
+    const hasNewsItems = computed(() => newsItems.value.length > 0);
 
     function updateNewsItem(newsItem: NewsItemModel) {
       newsItems.value = newsItems.value
@@ -119,7 +120,8 @@ export default defineComponent({
       updateNewsItem,
       removeNewsItem,
       createNewsItem,
-      newsTitle
+      newsTitle,
+      hasNewsItems
     };
   }
 });
