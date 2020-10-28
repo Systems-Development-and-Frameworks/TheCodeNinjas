@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, toRefs } from "vue";
 import { NewsItemModel } from "@/models/news-item.model";
 
 export default defineComponent({
@@ -34,6 +34,8 @@ export default defineComponent({
     }
   },
   setup(props, context) {
+    const { newsItem } = toRefs(props);
+
     function upvote() {
       context.emit("update", {...props.newsItem, votes: (props.newsItem.votes + 1)});
     }
@@ -43,7 +45,7 @@ export default defineComponent({
     }
 
     function remove() {
-      context.emit("remove", props.newsItem.id);
+      context.emit("remove", newsItem.value.id);
     }
 
     return {
