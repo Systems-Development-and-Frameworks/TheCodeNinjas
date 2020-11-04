@@ -15,7 +15,7 @@ export class NewsItemModel {
     this.votes = votes;
   }
 
-  compareTo(other: NewsItemModel) : number {
-    return other.votes - this.votes
+  compareTo(other: NewsItemModel): number {
+    return other.votes - this.votes;
   }
 }

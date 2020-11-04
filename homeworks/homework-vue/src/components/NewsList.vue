@@ -14,7 +14,7 @@
         </thead>
         <tbody v-if="hasNewsItems">
           <news-item
-            v-for="item in newsItems"
+            v-for="item in newsItemsSorted"
             :key="item.id"
             :newsItem="item"
             @update="updateNewsItem"
@@ -23,7 +23,7 @@
         </tbody>
         <tbody v-else>
           <tr>
-            <td colspan="4" class="uk-text-center">
+            <td colspan="4" id="checkId" class="uk-text-center">
               No News in the list!
             </td>
           </tr>
@@ -53,34 +53,47 @@
 <script lang="ts">
 import NewsItem from "@/components/NewsItem.vue";
 import { NewsItemModel } from "@/models/news-item.model";
-import { computed, defineComponent, ref } from "@vue/composition-api";
+import { computed, defineComponent, ref, toRefs } from "@vue/composition-api";
 
 export default defineComponent({
   name: "NewsList",
   components: {
     NewsItem
   },
-  setup() {
+  props: {
+    newsItems: {
+      required: true,
+      default() {
+        return [
+          new NewsItemModel({
+            id: 1,
+            title: "Hackernews Nr 1",
+            votes: 0
+          }),
+          new NewsItemModel({
+            id: 2,
+            title: "Hackernews Nr 2",
+            votes: 0
+          }),
+          new NewsItemModel({
+            id: 3,
+            title: "Hackernews Nr 3",
+            votes: 0
+          })
+        ];
+      }
+    }
+  },
+  setup(props: { newsItems: NewsItemModel[] }) {
     const newsTitle = ref("");
-    const newsItems = ref<NewsItemModel[]>([
-      new NewsItemModel({
-        id: 1,
-        title: "Hackernews Nr 1",
-        votes: 0
-      }),
-      new NewsItemModel({
-        id: 2,
-        title: "Hackernews Nr 2",
-        votes: 0
-      }),
-      new NewsItemModel({
-        id: 3,
-        title: "Hackernews Nr 3",
-        votes: 0
-      })
-    ]);
+    const { newsItems } = toRefs(props);
+
     let currentId = newsItems.value.length;
     const hasNewsItems = computed(() => newsItems.value.length > 0);
+    const newsItemsSorted = computed(() => newsItems.value);
+
+    const sortDescending = ref(true);
+
 
     function updateNewsItem(newsItem: NewsItemModel) {
       newsItems.value = newsItems.value
@@ -116,12 +129,12 @@ export default defineComponent({
     }
 
     return {
-      newsItems,
       updateNewsItem,
       removeNewsItem,
       createNewsItem,
       newsTitle,
-      hasNewsItems
+      hasNewsItems,
+      newsItemsSorted
     };
   }
 });
