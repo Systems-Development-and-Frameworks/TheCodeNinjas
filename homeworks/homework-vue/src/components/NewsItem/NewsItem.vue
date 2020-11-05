@@ -2,7 +2,7 @@
   <tr>
     <td class="uk-table-shrink">{{ newsItem.id }}</td>
     <td class="uk-table-expand">{{ newsItem.title }}</td>
-    <td class="uk-table-shrink data-test-votes">{{ newsItem.votes }}</td>
+    <td class="uk-table-shrink" data-test-votes>{{ newsItem.votes }}</td>
     <td class="uk-table-shrink">
       <button @click="upvote" class="uk-icon-button uk-button-default">
         <i class="mdi mdi-18px mdi-thumb-up" aria-hidden="true"></i>
@@ -23,9 +23,9 @@
 
 <script lang="ts">
 import { NewsItemModel } from "@/models/news-item.model";
-import { defineComponent, toRefs } from "@vue/composition-api";
+import Vue from "vue";
 
-export default defineComponent({
+export default Vue.extend({
   name: "NewsItem",
   props: {
     newsItem: {
@@ -33,32 +33,22 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props, context) {
-    const { newsItem } = toRefs(props);
-
-    function upvote() {
-      context.emit("update", {
-        ...props.newsItem,
-        votes: props.newsItem.votes + 1
+  methods: {
+    upvote() {
+      this.$emit("update", {
+        ...this.newsItem,
+        votes: this.newsItem.votes + 1
       });
-    }
-
-    function downvote() {
-      context.emit("update", {
-        ...props.newsItem,
-        votes: props.newsItem.votes - 1
+    },
+    downvote() {
+      this.$emit("update", {
+        ...this.newsItem,
+        votes: this.newsItem.votes - 1
       });
+    },
+    remove() {
+      this.$emit("remove", this.newsItem.id);
     }
-
-    function remove() {
-      context.emit("remove", newsItem.value.id);
-    }
-
-    return {
-      upvote,
-      downvote,
-      remove
-    };
   }
 });
 </script>

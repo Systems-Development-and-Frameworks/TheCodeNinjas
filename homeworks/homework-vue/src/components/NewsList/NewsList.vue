@@ -8,7 +8,25 @@
           <tr>
             <th class="uk-table-shrink">Id</th>
             <th class="uk-table-expand">Title</th>
-            <th class="uk-table-shrink">Votes</th>
+            <th class="uk-table-shrink uk-text-nowrap">
+              Votes
+              <button
+                class="uk-button uk-button-default"
+                data-test-toggle
+                @click="toggleSortOrder"
+              >
+                <i
+                  v-if="sortDescending"
+                  class="mdi mdi-18px mdi-sort-ascending"
+                  aria-hidden="true"
+                ></i>
+                <i
+                  v-else
+                  class="mdi mdi-18px mdi-sort-descending"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </th>
             <th colspan="3" class="uk-table-shrink"></th>
           </tr>
         </thead>
@@ -47,12 +65,6 @@
         </div>
       </div>
     </form>
-    <button
-      class="uk-button uk-button-primary data-test-toggle"
-      @click="toggleSortOrder"
-    >
-      {{ sortDescending }}
-    </button>
   </div>
 </template>
 
