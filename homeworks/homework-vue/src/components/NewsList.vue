@@ -23,7 +23,7 @@
         </tbody>
         <tbody v-else>
           <tr>
-            <td colspan="4" id="checkId" class="uk-text-center">
+            <td colspan="4" class="uk-text-center">
               No News in the list!
             </td>
           </tr>
@@ -47,53 +47,61 @@
         </div>
       </div>
     </form>
+    <button
+      class="uk-button uk-button-primary data-test-toggle"
+      @click="toggle($event)"
+    >
+      Toggle-Sorting-Order
+    </button>
   </div>
 </template>
 
 <script lang="ts">
 import NewsItem from "@/components/NewsItem.vue";
 import { NewsItemModel } from "@/models/news-item.model";
-import { computed, defineComponent, ref, toRefs } from "@vue/composition-api";
+import {
+  computed,
+  defineComponent,
+  ref,
+  toRefs,
+  watch
+} from "@vue/composition-api";
 
 export default defineComponent({
   name: "NewsList",
   components: {
     NewsItem
   },
-  props: {
-    newsItems: {
-      required: true,
-      default() {
-        return [
-          new NewsItemModel({
-            id: 1,
-            title: "Hackernews Nr 1",
-            votes: 0
-          }),
-          new NewsItemModel({
-            id: 2,
-            title: "Hackernews Nr 2",
-            votes: 0
-          }),
-          new NewsItemModel({
-            id: 3,
-            title: "Hackernews Nr 3",
-            votes: 0
-          })
-        ];
-      }
-    }
-  },
-  setup(props: { newsItems: NewsItemModel[] }) {
+  setup(props: { newsItems: NewsItemModel[] }, context) {
+    // props: { newsItems: NewsItemModel[]}
     const newsTitle = ref("");
-    const { newsItems } = toRefs(props);
-
-    let currentId = newsItems.value.length;
-    const hasNewsItems = computed(() => newsItems.value.length > 0);
-    const newsItemsSorted = computed(() => newsItems.value);
+    // const { newsItems } = toRefs(props);
+    const newsItems = ref(props.newsItems);
+    // const newsItems = ref();
 
     const sortDescending = ref(true);
 
+    let currentId = newsItems.value.length;
+    const hasNewsItems = computed(() => newsItems.value.length > 0);
+
+    // const newsItemsSorted = computed(() => {
+    //   console.log("check");
+    //   console.log(sortDescending.value);
+    //   return newsItems.value.reverse();
+    // });
+
+    watch(sortDescending, (oldValue: any, newValue: any) => {
+      newsItems.value.reverse();
+    });
+
+    const newsItemsSorted = computed(() => newsItems.value);
+
+    function toggle(event: any) {
+      console.log(
+        "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm"
+      );
+      sortDescending.value = !sortDescending.value;
+    }
 
     function updateNewsItem(newsItem: NewsItemModel) {
       newsItems.value = newsItems.value
@@ -107,7 +115,7 @@ export default defineComponent({
             votes: newsItem.votes
           });
         })
-        .sort((a, b) => a.compareTo(b));
+        .sort((a, b) => a.compareToDescending(b));
     }
 
     function removeNewsItem(id: number) {
@@ -123,7 +131,9 @@ export default defineComponent({
       });
 
       newsItems.value = [...newsItems.value, newItem].sort((a, b) =>
-        a.compareTo(b)
+        sortDescending.value
+          ? a.compareToDescending(b)
+          : a.compareToAscending(b)
       );
       newsTitle.value = "";
     }
@@ -134,7 +144,9 @@ export default defineComponent({
       createNewsItem,
       newsTitle,
       hasNewsItems,
-      newsItemsSorted
+      newsItemsSorted,
+      sortDescending,
+      toggle
     };
   }
 });
