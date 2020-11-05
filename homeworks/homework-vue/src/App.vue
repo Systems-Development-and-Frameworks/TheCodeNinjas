@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import NewsList from "@/components/NewsList.vue";
+import NewsList from "@/components/NewsList/NewsList.vue";
 import { defineComponent } from "@vue/composition-api";
 
 export default defineComponent({

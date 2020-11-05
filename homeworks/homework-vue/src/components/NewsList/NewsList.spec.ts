@@ -1,6 +1,6 @@
 import { createLocalVue, mount } from "@vue/test-utils";
-import NewsList from "@/components/NewsList.vue";
-import NewsItem from "@/components/NewsItem.vue";
+import NewsList from "@/components/NewsList/NewsList.vue";
+import NewsItem from "@/components/NewsItem/NewsItem.vue";
 import CompositionApi from "@vue/composition-api";
 import { NewsItemModel } from "@/models/news-item.model";
 

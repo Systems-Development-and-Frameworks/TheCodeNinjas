@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import NewsItem from "@/components/NewsItem.vue";
+import NewsItem from "@/components/NewsItem/NewsItem.vue";
 import { NewsItemModel } from "@/models/news-item.model";
 import Vue from "vue";
 
