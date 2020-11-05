@@ -49,9 +49,9 @@
     </form>
     <button
       class="uk-button uk-button-primary data-test-toggle"
-      @click="toggle($event)"
+      @click="toggleSortOrder"
     >
-      Toggle-Sorting-Order
+      {{ sortDescending }}
     </button>
   </div>
 </template>
@@ -59,95 +59,80 @@
 <script lang="ts">
 import NewsItem from "@/components/NewsItem.vue";
 import { NewsItemModel } from "@/models/news-item.model";
-import {
-  computed,
-  defineComponent,
-  ref,
-  toRefs,
-  watch
-} from "@vue/composition-api";
+import Vue from "vue";
 
-export default defineComponent({
+export default Vue.extend({
   name: "NewsList",
   components: {
     NewsItem
   },
-  setup(props: { newsItems: NewsItemModel[] }, context) {
-    // props: { newsItems: NewsItemModel[]}
-    const newsTitle = ref("");
-    // const { newsItems } = toRefs(props);
-    const newsItems = ref(props.newsItems);
-    // const newsItems = ref();
-
-    const sortDescending = ref(true);
-
-    let currentId = newsItems.value.length;
-    const hasNewsItems = computed(() => newsItems.value.length > 0);
-
-    // const newsItemsSorted = computed(() => {
-    //   console.log("check");
-    //   console.log(sortDescending.value);
-    //   return newsItems.value.reverse();
-    // });
-
-    watch(sortDescending, (oldValue: any, newValue: any) => {
-      newsItems.value.reverse();
-    });
-
-    const newsItemsSorted = computed(() => newsItems.value);
-
-    function toggle(event: any) {
-      console.log(
-        "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm"
-      );
-      sortDescending.value = !sortDescending.value;
-    }
-
-    function updateNewsItem(newsItem: NewsItemModel) {
-      newsItems.value = newsItems.value
-        .map(item => {
-          if (item.id !== newsItem.id) {
-            return item;
-          }
-
-          return new NewsItemModel({
-            ...item,
-            votes: newsItem.votes
-          });
+  data() {
+    return {
+      sortDescending: true,
+      currentId: 3,
+      newsTitle: "",
+      newsItems: [
+        new NewsItemModel({
+          id: 1,
+          title: "Hackernews Nr 1",
+          votes: 0
+        }),
+        new NewsItemModel({
+          id: 2,
+          title: "Hackernews Nr 2",
+          votes: 0
+        }),
+        new NewsItemModel({
+          id: 3,
+          title: "Hackernews Nr 3",
+          votes: 0
         })
-        .sort((a, b) => a.compareToDescending(b));
-    }
+      ]
+    };
+  },
+  methods: {
+    toggleSortOrder() {
+      this.sortDescending = !this.sortDescending;
+    },
+    updateNewsItem(newsItem: NewsItemModel) {
+      this.newsItems = this.newsItems.map(item => {
+        if (item.id !== newsItem.id) {
+          return item;
+        }
 
-    function removeNewsItem(id: number) {
-      newsItems.value = newsItems.value.filter(item => item.id !== id);
-    }
+        return new NewsItemModel({
+          ...item,
+          votes: newsItem.votes
+        });
+      });
+    },
+    removeNewsItem(id: number) {
+      this.newsItems = this.newsItems.filter(item => item.id !== id);
+    },
 
-    function createNewsItem() {
-      currentId++;
+    createNewsItem() {
+      this.currentId++;
       const newItem = new NewsItemModel({
-        id: currentId,
-        title: newsTitle.value,
+        id: this.currentId,
+        title: this.newsTitle,
         votes: 0
       });
 
-      newsItems.value = [...newsItems.value, newItem].sort((a, b) =>
-        sortDescending.value
-          ? a.compareToDescending(b)
-          : a.compareToAscending(b)
-      );
-      newsTitle.value = "";
+      this.newsItems = [...this.newsItems, newItem];
+      this.newsTitle = "";
     }
-
-    return {
-      updateNewsItem,
-      removeNewsItem,
-      createNewsItem,
-      newsTitle,
-      hasNewsItems,
-      newsItemsSorted,
-      sortDescending,
-      toggle
-    };
+  },
+  computed: {
+    hasNewsItems(): boolean {
+      return this.newsItems.length > 0;
+    },
+    newsItemsSorted(): NewsItemModel[] {
+      if (this.sortDescending) {
+        return [...this.newsItems].sort((a, b) => a.compareToDescending(b));
+      } else {
+        return [...this.newsItems].sort((a, b) => a.compareToAscending(b));
+      }
+    }
   }
 });
 </script>
