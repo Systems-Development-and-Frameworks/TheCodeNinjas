@@ -1,7 +1,6 @@
 import { createLocalVue, mount } from "@vue/test-utils";
 import NewsList from "@/components/NewsList/NewsList.vue";
 import NewsItem from "@/components/NewsItem/NewsItem.vue";
-import CompositionApi from "@vue/composition-api";
 import { NewsItemModel } from "@/models/news-item.model";
 
 const newsItemsMock = [
@@ -24,7 +23,6 @@ const newsItemsMock = [
 
 describe("NewsList", () => {
   const localVue = createLocalVue();
-  localVue.use(CompositionApi);
 
   it("check App-instance-existance and newsList-instance-existance", () => {
     const wrapper = mount(NewsList, {
@@ -78,7 +76,7 @@ describe("NewsList", () => {
     });
 
     const votes = wrapper
-      .findAll(".data-test-votes")
+      .findAll("[data-test-votes]")
       .wrappers.map(a => a.text());
 
     expect(votes).toStrictEqual(["3", "2", "1"]);
@@ -92,11 +90,11 @@ describe("NewsList", () => {
       }
     });
 
-    const button = wrapper.find(".data-test-toggle");
+    const button = wrapper.find("[data-test-toggle]");
     await button.trigger("click");
 
     const votesAsc = wrapper
-      .findAll(".data-test-votes")
+      .findAll("[data-test-votes]")
       .wrappers.map(a => a.text());
 
     expect(votesAsc).toStrictEqual(["1", "2", "3"]);
@@ -104,7 +102,7 @@ describe("NewsList", () => {
     await button.trigger("click");
 
     const votesDesc = wrapper
-      .findAll(".data-test-votes")
+      .findAll("[data-test-votes]")
       .wrappers.map(a => a.text());
 
     expect(votesDesc).toStrictEqual(["3", "2", "1"]);
