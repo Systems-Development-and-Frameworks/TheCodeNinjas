@@ -12,20 +12,27 @@ defaults:
       working-directory: ./homeworks/homework-vue
 
 jobs:
-  build:
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '14'
+    - name: Run linter
+    - run: npm ci
+    - run: npm run lint --fix 
+
+  test:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [14.x]
-
     steps:
     - uses: actions/checkout@v2
-    - name: Run linter, tests and update status checks 
-      uses: actions/setup-node@v1
+    - uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: '14'
+    - name: Run tests
     - run: npm ci
-    - run: npm run lint --fix
     - run: npm run test:unit
