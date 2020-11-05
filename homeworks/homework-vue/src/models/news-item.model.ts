@@ -15,7 +15,11 @@ export class NewsItemModel {
     this.votes = votes;
   }
 
-  compareTo(other: NewsItemModel): number {
+  compareToDescending(other: NewsItemModel): number {
     return other.votes - this.votes;
+  }
+
+  compareToAscending(other: NewsItemModel): number {
+    return this.votes - other.votes;
   }
 }

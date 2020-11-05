@@ -2,7 +2,7 @@
   <tr>
     <td class="uk-table-shrink">{{ newsItem.id }}</td>
     <td class="uk-table-expand">{{ newsItem.title }}</td>
-    <td class="uk-table-shrink">{{ newsItem.votes }}</td>
+    <td class="uk-table-shrink data-test-votes">{{ newsItem.votes }}</td>
     <td class="uk-table-shrink">
       <button @click="upvote" class="uk-icon-button uk-button-default">
         <i class="mdi mdi-18px mdi-thumb-up" aria-hidden="true"></i>
