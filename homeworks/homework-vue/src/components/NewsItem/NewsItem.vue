@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { NewsItemModel } from "@/models/news-item.model";
+import { NewsItemModel } from "../..//models/news-item.model";
 import Vue from "vue";
 
 export default Vue.extend({
