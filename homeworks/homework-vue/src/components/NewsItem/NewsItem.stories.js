@@ -10,8 +10,8 @@ export default {
   title: "NewsItem",
   component: NewsItem,
   argTypes: {
-    update: { action: "update" },
-    remove: { action: "remove" }
+    update: { action: "down- or upvote event action" },
+    remove: { action: "remove-event action" }
   }
 };
 
@@ -21,7 +21,7 @@ const Template = (args, { argTypes }) => ({
   template: '<NewsItem @update="update" @remove="remove" v-bind="$props" />'
 });
 
-export const Primary = Template.bind({});
-Primary.args = {
+export const Default = Template.bind({});
+Default.args = {
   newsItem: newsItem
 };

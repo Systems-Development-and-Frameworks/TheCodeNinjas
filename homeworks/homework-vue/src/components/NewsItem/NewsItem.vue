@@ -4,17 +4,29 @@
     <td class="uk-table-expand">{{ newsItem.title }}</td>
     <td class="uk-table-shrink" data-test-votes>{{ newsItem.votes }}</td>
     <td class="uk-table-shrink">
-      <button @click="upvote" class="uk-icon-button uk-button-default">
+      <button
+        @click="upvote"
+        class="uk-icon-button uk-button-default"
+        aria-label="Upvote"
+      >
         <i class="mdi mdi-18px mdi-thumb-up" aria-hidden="true"></i>
       </button>
     </td>
     <td class="uk-table-shrink">
-      <button @click="downvote" class="uk-icon-button uk-button-secondary">
+      <button
+        @click="downvote"
+        class="uk-icon-button uk-button-secondary"
+        aria-label="Downvote"
+      >
         <i class="mdi mdi-18px mdi-thumb-down" aria-hidden="true"></i>
       </button>
     </td>
     <td class="uk-table-shrink">
-      <button @click="remove" class="uk-icon-button uk-button-danger">
+      <button
+        @click="remove"
+        class="uk-icon-button uk-button-danger"
+        aria-label="Remove"
+      >
         <i class="mdi mdi-18px mdi-delete" aria-hidden="true"></i>
       </button>
     </td>

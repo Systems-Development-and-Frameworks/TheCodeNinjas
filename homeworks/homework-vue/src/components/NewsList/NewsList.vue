@@ -14,6 +14,7 @@
                 class="uk-button uk-button-default"
                 data-test-toggle
                 @click="toggleSortOrder"
+                aria-label="Sort"
               >
                 <i
                   v-if="sortDescending"
@@ -50,13 +51,18 @@
     </div>
 
     <form @submit.prevent="createNewsItem" class="uk-form-large">
-      <div class="uk-flex">
+      <div class="uk-flex uk-flex-bottom">
         <div class="uk-flex-1">
-          <input
-            class="uk-input"
-            v-model="newsTitle"
-            placeholder="Please enter title"
-          />
+          <label class="uk-form-label" for="news-title-input">Title</label>
+
+          <div class="uk-form-controls">
+            <input
+              id="news-title-input"
+              class="uk-input"
+              v-model="newsTitle"
+              placeholder="Please enter title"
+            />
+          </div>
         </div>
         <div>
           <button type="submit" class="uk-button uk-button-primary">
@@ -69,8 +75,8 @@
 </template>
 
 <script lang="ts">
-import NewsItem from "@/components/NewsItem/NewsItem.vue";
-import { NewsItemModel } from "@/models/news-item.model";
+import NewsItem from "../../components/NewsItem/NewsItem.vue";
+import { NewsItemModel } from "../../models/news-item.model";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -148,3 +154,13 @@ export default Vue.extend({
   }
 });
 </script>
+
+<style scoped>
+th {
+  color: #000000;
+}
+
+.uk-button-primary {
+  background-color: #0000ff;
+}
+</style>
