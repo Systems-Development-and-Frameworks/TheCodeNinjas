@@ -11,13 +11,13 @@
     "build-storybook": "build-storybook --no-dll"
   },
   "dependencies": {
-    "@storybook/addon-a11y": "^6.0.28",
     "core-js": "^3.6.5",
     "uikit": "^3.5.9",
     "vue": "^2.6.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
+    "@storybook/addon-a11y": "^6.0.28",
     "@storybook/addon-actions": "^6.0.28",
     "@storybook/addon-essentials": "^6.0.28",
     "@storybook/addon-links": "^6.0.28",
