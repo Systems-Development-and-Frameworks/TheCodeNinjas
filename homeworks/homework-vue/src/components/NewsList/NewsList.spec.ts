@@ -24,7 +24,7 @@ const newsItemsMock = [
 describe("NewsList", () => {
   const localVue = createLocalVue();
 
-  it("check App-instance-existance and newsList-instance-existance", () => {
+  it("exists", () => {
     const wrapper = mount(NewsList, {
       localVue: localVue
     });
@@ -32,7 +32,7 @@ describe("NewsList", () => {
     expect(wrapper).toBeTruthy();
   });
 
-  it("check if renders news item for each item in list if list empty", () => {
+  it("renders no news items", () => {
     const wrapper = mount(NewsList, {
       localVue: localVue,
       data() {
@@ -40,10 +40,10 @@ describe("NewsList", () => {
       }
     });
 
-    expect(wrapper.findAllComponents(NewsItem).length).toBe(0);
+    expect(wrapper.findAllComponents(NewsItem)).toHaveLength(0);
   });
 
-  it("check if renders news item for each item in list if list empty and filled again", () => {
+  it("renders news item", () => {
     const wrapper = mount(NewsList, {
       localVue: localVue,
       data() {
@@ -51,7 +51,7 @@ describe("NewsList", () => {
       }
     });
 
-    expect(wrapper.findAllComponents(NewsItem).length).toBe(3);
+    expect(wrapper.findAllComponents(NewsItem)).toHaveLength(3);
   });
 
   it("renders empty list message", () => {
