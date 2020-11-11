@@ -1,19 +1,59 @@
+
 # TheCodeNinjas
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  
 
-## Installation
+This is the homework repo of the "TheCodeNinjas"-Team for the course 'Systems Development and Frameworks'
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<p>
+  <img src=".github/img/ninja.gif" alt="homework" width="50%">
+<p>
 
-## Contribution guidelines
+# Installation
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  
+
+Clone this repo
+
+Install all necessary packages
+
+```
+
+npm install
+
+```
+
+Run the unit tests
+
+```
+
+npm run test:unit
+
+```
+
+Lint and fix files
+
+```
+
+npm run lint --fix
+
+```
+ Compile the project and start the server locally
+
+```
+
+npm run serve
+
+```
+
 
 ## Maintainers
 
- - Christoph Stach
- - Florian Thom
+  
 
-## How to contact us
+- Christoph Stach
+
+- Florian Thom
+
+- Phillip Friedel
 
