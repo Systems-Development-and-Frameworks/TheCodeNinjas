@@ -1,12 +1,14 @@
 <template>
-  <news-list />
+  <div>
+    <news-list />
+  </div>
 </template>
 
 <script lang="ts">
-import NewsList from "@/components/NewsList.vue";
-import { defineComponent } from "@vue/composition-api";
+import NewsList from "@/components/NewsList/NewsList.vue";
+import Vue from "vue";
 
-export default defineComponent({
+export default Vue.extend({
   name: "App",
   components: {
     NewsList
