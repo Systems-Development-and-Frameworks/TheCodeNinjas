@@ -10,7 +10,7 @@ on:
 
 defaults:
     run:
-      working-directory: ./homeworks/homework-vue
+      working-directory: ./webapp
 
 jobs:
   lint:
