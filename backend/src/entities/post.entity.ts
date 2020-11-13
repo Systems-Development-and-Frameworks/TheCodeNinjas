@@ -5,7 +5,7 @@ export default class Post {
 
     title: string;
 
-    votes: number;
+    voters: string[];
 
-    author?: User;
+    userName: string
 }
