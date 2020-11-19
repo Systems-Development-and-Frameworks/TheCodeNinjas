@@ -1,6 +1,7 @@
 import * as uuid from 'uuid';
 import { DataSource } from 'apollo-datasource';
 import Post from '../entities/post.entity';
+import { posts } from '../seed-data'
 
 export default class PostDatasource extends DataSource {
     private posts: Post[];
@@ -8,32 +9,7 @@ export default class PostDatasource extends DataSource {
     constructor() {
         super();
 
-        this.posts = [
-            {
-                id: uuid.v4(),
-                title: "Ein Toller Title",
-                voters: [], 
-                userName: "Christoph Stach"
-            },
-            {
-                id: uuid.v4(),
-                title: "Phillips Post",
-                voters: [], 
-                userName: "Phillip"
-            },
-            {
-                id: uuid.v4(),
-                title: "Flos Post",
-                voters: [], 
-                userName: "Florian"
-            }, 
-            {
-                id: uuid.v4(),
-                title: "Noch ein Post",
-                voters: [], 
-                userName: "Florian"
-            }
-        ]
+        this.posts = posts;
     }
 
     async getPosts() {

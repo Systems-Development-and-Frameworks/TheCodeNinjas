@@ -1,5 +1,6 @@
 import User from '../entities/user.entity';
 import { DataSource } from 'apollo-datasource';
+import { users } from '../seed-data' 
 
 export default class UserDatasource extends DataSource{
     private users: User[];
@@ -7,17 +8,7 @@ export default class UserDatasource extends DataSource{
     constructor() {
         super();
 
-        this.users = [
-            {
-                name: "Christoph Stach",
-            },
-            {
-                name: "Phillip"
-            },
-            {
-                name: "Florian"
-            }
-        ]
+        this.users = users;
     }
 
     async getUsers() {
