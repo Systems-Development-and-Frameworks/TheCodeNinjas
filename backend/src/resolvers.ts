@@ -60,9 +60,7 @@ const resolvers = {
   },
   User: {
     posts: async (parent : User, _args, context) => {
-      const { postDatasource } = context.dataSources;
-
-      return postDatasource.getPostsByUser(parent.name);
+      return context.dataSources.postDatasource.getPostsByUser(parent.name);
     },
   },
   Post: {
