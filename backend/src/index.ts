@@ -1,5 +1,9 @@
-import server from './server';
+import { ApolloServer } from 'apollo-server';
+import ServerInitializer from './serverInitializer';
 
-server.listen({ port: 1337 }).then(() => {
-    console.log('Server is running on http://localhost:1337');
+const serverInitializer : ServerInitializer = new ServerInitializer();
+const server = serverInitializer.createServer();
+
+server.listen({ port: 4000 }).then(({ url }) => {
+  console.log(`🚀  Server ready at ${url}`);
 });
