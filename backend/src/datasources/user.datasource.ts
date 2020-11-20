@@ -1,22 +1,22 @@
-import User from '../entities/user.entity';
 import { DataSource } from 'apollo-datasource';
-import { users } from '../seed-data' 
+import User from '../entities/user.entity';
+import { users } from '../seed-data';
 
-export default class UserDatasource extends DataSource{
-    private users: User[];
+export default class UserDatasource extends DataSource {
+    users: User[];
 
     constructor() {
-        super();
+      super();
 
-        this.users = users;
+      this.users = users;
     }
 
     async getUsers() {
-        return Promise.resolve(this.users);
+      return Promise.resolve(this.users);
     }
 
     async getUser(name: string) {
-        return Promise.resolve(this.users.find(user => user.name == name));
+      return Promise.resolve(this.users.find((user) => user.name == name));
     }
 
     async createUser(user: User) {
@@ -28,6 +28,4 @@ export default class UserDatasource extends DataSource{
     async deleteUser(name: string) {
 
     }
-
-
 }

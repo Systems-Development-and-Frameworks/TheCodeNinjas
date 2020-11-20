@@ -1,55 +1,54 @@
 import * as uuid from 'uuid';
 import { DataSource } from 'apollo-datasource';
 import Post from '../entities/post.entity';
-import { posts } from '../seed-data'
+import { posts } from '../seed-data';
 
 export default class PostDatasource extends DataSource {
-    private posts: Post[];
+    posts: Post[];
 
     constructor() {
-        super();
+      super();
 
-        this.posts = posts;
+      this.posts = posts;
     }
 
     async getPosts() {
-        return Promise.resolve(this.posts);
+      return Promise.resolve(this.posts);
     }
 
     async getPost(id: string) {
-        return Promise.resolve(this.posts.find(post => post.id === id));
+      return Promise.resolve(this.posts.find((post) => post.id === id));
     }
 
     async createPost(post: Partial<Post>) {
-        const fullPost : Post = {
-            id: uuid.v4(),
-            title: post.title,
-            voters: [], 
-            userName: post.userName
-        }
+      const fullPost : Post = {
+        id: uuid.v4(),
+        title: post.title,
+        voters: [],
+        userName: post.userName,
+      };
 
-        this.posts = [... this.posts, fullPost]
+      this.posts = [...this.posts, fullPost];
 
-        return Promise.resolve(fullPost);
+      return Promise.resolve(fullPost);
     }
 
     async updatePost(id: string, post: Post) {
-        const index = this.posts.findIndex(post => post.id === id);
-        this.posts.splice(index, 1, post);
+      const index = this.posts.findIndex((post) => post.id === id);
+      this.posts.splice(index, 1, post);
 
-        return Promise.resolve(post);
+      return Promise.resolve(post);
     }
 
     async deletePost(id: string) {
-        
-        const index = this.posts.findIndex(post => post.id === id);
-        const post = this.posts[index];
-        this.posts.splice(index, 1);
-        
-        return Promise.resolve(post);
+      const index = this.posts.findIndex((post) => post.id === id);
+      const post = this.posts[index];
+      this.posts.splice(index, 1);
+
+      return Promise.resolve(post);
     }
 
-    async getPostsByUser(name: string){
-        return Promise.resolve(this.posts.filter(post => post.userName === name));
+    async getPostsByUser(name: string) {
+      return Promise.resolve(this.posts.filter((post) => post.userName === name));
     }
 }
