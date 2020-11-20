@@ -2,7 +2,7 @@
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
 # branches: [ $default-branch, Testing/GithubActions, feature/homework-2 ]
-name: Deploy Actions
+name: Webapp Workflow
 
 on:
   push:
