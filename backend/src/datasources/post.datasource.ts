@@ -24,8 +24,8 @@ export default class PostDatasource extends DataSource {
     const fullPost: Post = {
       id: uuid.v4(),
       title: post.title,
+      user: post.user,
       voters: [],
-      userName: post.userName,
     };
 
     this.posts = [...this.posts, fullPost];
@@ -33,7 +33,7 @@ export default class PostDatasource extends DataSource {
     return Promise.resolve(fullPost);
   }
 
-  async updatePost(id: string, post: Post): Promise<Post> {
+  updatePost(id: string, post: Post): Promise<Post> {
     const index = this.posts.findIndex((post) => post.id === id);
     this.posts.splice(index, 1, post);
 
@@ -48,7 +48,7 @@ export default class PostDatasource extends DataSource {
     return Promise.resolve(post);
   }
 
-  getPostsByUser(name: string): Promise<Post[]> {
-    return Promise.resolve(this.posts.filter((post) => post.userName === name));
+  getPostsByUser(userId: string): Promise<Post[]> {
+    return Promise.resolve(this.posts.filter((post) => post.user === userId));
   }
 }

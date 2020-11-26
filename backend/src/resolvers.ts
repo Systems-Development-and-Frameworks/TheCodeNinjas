@@ -1,5 +1,14 @@
 import Post from "./entities/post.entity";
 import User from "./entities/user.entity";
+import * as jwt from "jsonwebtoken";
+
+import { UserInputError, AuthenticationError } from "apollo-server";
+import UserDatasource from "./datasources/user.datasource";
+import { SignupDto } from "./dtos/signup.dto";
+import { SigninDto } from "./dtos/signin.dto";
+
+import * as bcrypt from "bcrypt";
+import has = Reflect.has;
 
 const resolvers = {
   Query: {
@@ -17,10 +26,45 @@ const resolvers = {
     },
   },
   Mutation: {
+    // signup(name: String!, email: String!, password: String!): String
+    async signup(_, args: SignupDto, context) {
+      const { name, email, password } = args;
+      const userDatasource: UserDatasource = context.dataSources.userDatasource;
+      const existentUser = await userDatasource.getUserByEmail(email);
+
+      if (password.length < 8) {
+        throw new UserInputError("Password must at least 8 characters long");
+      }
+
+      if (existentUser) {
+        throw new UserInputError("E-Mail does already exists");
+      }
+
+      const user = await userDatasource.createUser({ name, email }, password);
+      return jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
+    },
+    // login(email: String!, password: String!): String
+    async login(_, args: SigninDto, context) {
+      const { email, password } = args;
+      const userDatasource: UserDatasource = context.dataSources.userDatasource;
+      const user = await userDatasource.getUserByEmail(email);
+
+      if (!user) {
+        throw new AuthenticationError("Wrong credentials");
+      }
+
+      const hash = await bcrypt.hash(password, user.passwordSalt);
+
+      if (hash === user.passwordHash) {
+        return jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
+      } else {
+        throw new AuthenticationError("Wrong credentials");
+      }
+    },
     write: async (_, args, context) => {
       const post: Partial<Post> = {
         title: args.post.title,
-        userName: args.post.author.name,
+        user: args.post.author.id,
       };
 
       const { postDatasource } = context.dataSources;
@@ -37,24 +81,29 @@ const resolvers = {
       }));
     },
     upvote: async (_, args, context) => {
-      const { postDatasource } = context.dataSources;
+      const id = args.id;
+      const voter = args.voter;
+      const postDatasource = context.dataSources.postDatasource;
+      const post = await postDatasource.getPost(id);
 
-      const post = await postDatasource.getPost(args.id);
-      if (!post.voters.includes(args.voter.name)) {
-        post.voters = [...post.voters, args.voter.name];
+      if (!post.voters.includes(voter)) {
+        post.voters = [...post.voters, voter];
       }
-      return postDatasource.updatePost(args.id, post).then((p) => ({
+
+      return postDatasource.updatePost(id, post).then((p) => ({
         ...p,
         votes: p.voters.length,
       }));
     },
     downvote: async (_, args, context) => {
-      const { postDatasource } = context.dataSources;
+      const id = args.id;
+      const voter = args.voter;
+      const postDatasource = context.dataSources.postDatasource;
+      const post = await postDatasource.getPost(id);
 
-      const post = await postDatasource.getPost(args.id);
-      post.voters = post.voters.filter((voter) => voter !== args.voter.name);
+      post.voters = post.voters.filter((v) => v !== voter);
 
-      return postDatasource.updatePost(args.id, post).then((p) => ({
+      return postDatasource.updatePost(id, post).then((p) => ({
         ...p,
         votes: p.voters.length,
       }));
@@ -62,12 +111,12 @@ const resolvers = {
   },
   User: {
     posts: async (parent: User, _args, context) =>
-      context.dataSources.postDatasource.getPostsByUser(parent.name),
+      context.dataSources.postDatasource.getPostsByUser(parent.id),
   },
   Post: {
     author: async (parent: Post, _args, context) => {
       const { userDatasource } = context.dataSources;
-      return await userDatasource.getUser(parent.userName);
+      return await userDatasource.getUser(parent.id);
     },
   },
 };

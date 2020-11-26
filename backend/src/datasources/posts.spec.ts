@@ -42,8 +42,8 @@ describe("queries", () => {
           {
             id: "1", // uuid.v4(),
             title: "Ein Toller Title",
+            user: "58334916-ae55-4149-add5-0bc11f1b43c6",
             voters: [],
-            userName: "Christoph Stach",
           },
         ];
       });
@@ -67,6 +67,8 @@ describe("queries", () => {
     const USERS = gql`
       query {
         users {
+          email
+          id
           name
         }
       }
@@ -162,14 +164,14 @@ describe("mutations", () => {
       const postSample = {
         id: "1",
         title: "Ein Toller Title",
+        user: "58334916-ae55-4149-add5-0bc11f1b43c6",
         voters: [],
-        userName: "Christoph Stach",
       };
       postDb.posts = [postSample];
       expect(postDb.posts.length).toBe(1);
       expect(postDb.posts[0].voters.length).toBe(0);
 
-      const votes = await upvote(postSample.id, postSample.userName);
+      const votes = await upvote(postSample.id, postSample.id);
 
       expect(votes.data.upvote.votes).toBe(1);
     });

@@ -12,7 +12,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
     "@types/jest": "^26.0.15",
+    "@types/jsonwebtoken": "^8.5.0",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.8.2",
     "@typescript-eslint/parser": "^4.8.2",
@@ -29,9 +31,12 @@
   "dependencies": {
     "apollo-datasource": "^0.7.2",
     "apollo-server": "^2.19.0",
+    "bcrypt": "^5.0.0",
+    "dotenv": "^8.2.0",
     "graphql": "^15.4.0",
     "graphql-import": "^1.0.2",
     "graphql-tools": "^7.0.2",
+    "jsonwebtoken": "^8.5.1",
     "ts-node": "^9.0.0",
     "uuid": "^8.3.1"
   }
