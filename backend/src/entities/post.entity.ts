@@ -1,11 +1,9 @@
-import User from './user.entity';
-
 export default class Post {
-    id: string;
+  id: string;
 
-    title: string;
+  title: string;
 
-    voters: string[];
+  voters: string[];
 
-    userName: string
+  userName: string;
 }

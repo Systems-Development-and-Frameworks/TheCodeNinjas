@@ -1,40 +1,40 @@
-import * as uuid from 'uuid';
+import * as uuid from "uuid";
 
 export const posts = [
   {
     id: uuid.v4(),
-    title: 'Ein Toller Title',
+    title: "Ein Toller Title",
     voters: [],
-    userName: 'Christoph Stach',
+    userName: "Christoph Stach",
   },
   {
     id: uuid.v4(),
-    title: 'Phillips Post',
+    title: "Phillips Post",
     voters: [],
-    userName: 'Phillip',
+    userName: "Phillip",
   },
   {
     id: uuid.v4(),
-    title: 'Flos Post',
+    title: "Flos Post",
     voters: [],
-    userName: 'Florian',
+    userName: "Florian",
   },
   {
     id: uuid.v4(),
-    title: 'Noch ein Post',
+    title: "Noch ein Post",
     voters: [],
-    userName: 'Florian',
+    userName: "Florian",
   },
 ];
 
 export const users = [
   {
-    name: 'Christoph Stach',
+    name: "Christoph Stach",
   },
   {
-    name: 'Phillip',
+    name: "Phillip",
   },
   {
-    name: 'Florian',
+    name: "Florian",
   },
 ];

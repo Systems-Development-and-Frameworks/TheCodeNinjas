@@ -1,7 +1,7 @@
-import Post from './post.entity';
+import Post from "./post.entity";
 
 export default class User {
-    name: string;
+  name: string;
 
-    posts?: Post[];
+  posts?: Post[];
 }

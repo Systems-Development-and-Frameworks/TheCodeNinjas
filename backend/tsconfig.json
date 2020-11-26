@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
     "target": "es2016",
-    "module": "commonjs",
+    "module": "CommonJS",
     "strict": false,
     "outDir": "dist",
     "sourceMap": true,
     "noImplicitAny": false,
-    "skipLibCheck": true, 
-    "types": ["node", "jest"] 
+    "skipLibCheck": true,
+    "types": ["node", "jest"]
   },
   "exclude": ["node_modules", "dist"],
   "include": ["src/**/*"]
