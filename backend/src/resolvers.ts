@@ -2,13 +2,12 @@ import Post from "./entities/post.entity";
 import User from "./entities/user.entity";
 import * as jwt from "jsonwebtoken";
 
-import { UserInputError, AuthenticationError } from "apollo-server";
+import { AuthenticationError, UserInputError } from "apollo-server";
 import UserDatasource from "./datasources/user.datasource";
 import { SignupDto } from "./dtos/signup.dto";
 import { SigninDto } from "./dtos/signin.dto";
 
 import * as bcrypt from "bcrypt";
-import has = Reflect.has;
 
 const resolvers = {
   Query: {
@@ -41,7 +40,7 @@ const resolvers = {
       }
 
       const user = await userDatasource.createUser({ name, email }, password);
-      return jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
+      return jwt.sign({ id: user.id }, process.env.JWT_SECRET);
     },
     // login(email: String!, password: String!): String
     async login(_, args: SigninDto, context) {
@@ -56,7 +55,7 @@ const resolvers = {
       const hash = await bcrypt.hash(password, user.passwordSalt);
 
       if (hash === user.passwordHash) {
-        return jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
+        return jwt.sign({ id: user.id }, process.env.JWT_SECRET);
       } else {
         throw new AuthenticationError("Wrong credentials");
       }

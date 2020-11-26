@@ -1,8 +1,11 @@
 import PostDatasource from "./datasources/post.datasource";
 import UserDatasource from "./datasources/user.datasource";
 
-const dataSources = {
+const createDatasources = {
   postDatasource: new PostDatasource(),
   userDatasource: new UserDatasource(),
 };
-export default dataSources;
+
+export default function () {
+  return createDatasources;
+}

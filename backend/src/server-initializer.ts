@@ -1,25 +1,29 @@
 import { ApolloServer } from "apollo-server";
-import typeDefs from "./type-defs";
-import resolvers from "./resolvers";
-import dataSources from "./datasources";
 
-const context = ({ req, res }) => ({ req, res });
+import resolvers from "./resolvers";
+
+import { applyMiddleware } from "graphql-middleware";
+import permissions from "./permissions";
+
+import createDatasources from "./create-datasources";
+import createContext from "./create-context";
+import typeDefs from "./type-defs";
+
+import { makeExecutableSchema } from "graphql-tools";
 
 export default class ServerInitializer {
-  defaults: any;
-
-  constructor() {
-    this.defaults = {
+  createServer() {
+    const schema = makeExecutableSchema({
       typeDefs,
       resolvers,
-      dataSources: () => dataSources,
-      context,
-    };
-  }
+    });
 
-  // return new ApolloServer({ ...this.defaults, ...opts });
+    const schemaWithMiddleware = applyMiddleware(schema, permissions);
 
-  createServer(otherDb: any = {}, opts: any = {}) {
-    return new ApolloServer({ ...{ ...this.defaults, ...otherDb }, ...opts });
+    return new ApolloServer({
+      schema: schemaWithMiddleware,
+      context: createContext,
+      dataSources: createDatasources,
+    });
   }
 }
