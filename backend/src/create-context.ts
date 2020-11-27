@@ -1,5 +1,5 @@
 import * as jwt from "jsonwebtoken";
-import User from "./entities/user.entity";
+import { JwtPayload } from "./jwt-payload";
 
 export default function ({ req }) {
   try {
@@ -7,13 +7,13 @@ export default function ({ req }) {
     const auth = headers["authorization"];
     const token = auth.replace("Bearer ", "");
 
-    const payload: Partial<User> = jwt.verify(
+    const payload = jwt.verify(
       token,
       process.env.JWT_SECRET
-    ) as Partial<User>;
+    ) as Partial<JwtPayload>;
 
     return { user: payload };
   } catch (e) {
-    return null;
+    return { user: null };
   }
 }

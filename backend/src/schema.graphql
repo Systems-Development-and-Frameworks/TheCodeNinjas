@@ -21,8 +21,8 @@ type Mutation {
     write(post: PostInput!): Post
     delete(id: ID!): Post
 
-    upvote(id: ID!, voter: ID!): Post
-    downvote(id: ID!, voter: ID!): Post
+    upvote(id: ID!): Post
+    downvote(id: ID!): Post
 
 
     """
@@ -38,7 +38,6 @@ type Mutation {
 
 input PostInput {
     title: String!
-    author: UserInput!
 }
 
 input UserInput {

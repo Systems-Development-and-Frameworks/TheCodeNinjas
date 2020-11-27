@@ -8,27 +8,33 @@ import { SignupDto } from "./dtos/signup.dto";
 import { SigninDto } from "./dtos/signin.dto";
 
 import * as bcrypt from "bcrypt";
+import { JwtPayload } from "./jwt-payload";
+import PostDatasource from "./datasources/post.datasource";
 
 const resolvers = {
   Query: {
-    posts: async (_source, _args, context) => {
-      const { postDatasource } = context.dataSources;
-      return (await postDatasource.getPosts()).map((post) => ({
-        ...post,
-        votes: post.voters.length,
-      }));
+    posts: async (_source, _args, ctx) => {
+      const postDatasource: PostDatasource = ctx.dataSources.postDatasource;
+      const posts = await postDatasource.getPosts();
+
+      return posts.map((post) => {
+        return {
+          ...post,
+          votes: post.voters.length,
+        };
+      });
     },
-    users: async (_source, _args, context) => {
-      const { userDatasource } = context.dataSources;
+    users: async (_source, _args, ctx) => {
+      const { userDatasource } = ctx.dataSources;
 
       return userDatasource.getUsers();
     },
   },
   Mutation: {
     // signup(name: String!, email: String!, password: String!): String
-    async signup(_, args: SignupDto, context) {
+    async signup(_, args: SignupDto, ctx) {
       const { name, email, password } = args;
-      const userDatasource: UserDatasource = context.dataSources.userDatasource;
+      const userDatasource: UserDatasource = ctx.dataSources.userDatasource;
       const existentUser = await userDatasource.getUserByEmail(email);
 
       if (password.length < 8) {
@@ -40,12 +46,13 @@ const resolvers = {
       }
 
       const user = await userDatasource.createUser({ name, email }, password);
-      return jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+      const payload: JwtPayload = { id: user.id };
+      return jwt.sign(payload, process.env.JWT_SECRET);
     },
     // login(email: String!, password: String!): String
-    async login(_, args: SigninDto, context) {
+    async login(_, args: SigninDto, ctx) {
       const { email, password } = args;
-      const userDatasource: UserDatasource = context.dataSources.userDatasource;
+      const userDatasource: UserDatasource = ctx.dataSources.userDatasource;
       const user = await userDatasource.getUserByEmail(email);
 
       if (!user) {
@@ -55,34 +62,38 @@ const resolvers = {
       const hash = await bcrypt.hash(password, user.passwordSalt);
 
       if (hash === user.passwordHash) {
-        return jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+        const payload: JwtPayload = { id: user.id };
+        return jwt.sign(payload, process.env.JWT_SECRET);
       } else {
         throw new AuthenticationError("Wrong credentials");
       }
     },
-    write: async (_, args, context) => {
+    write: async (_, args, ctx) => {
+      const jwtPayload: JwtPayload = ctx.user;
+      const postDatasource: PostDatasource = ctx.dataSources.postDatasource;
       const post: Partial<Post> = {
         title: args.post.title,
-        user: args.post.author.id,
+        user: jwtPayload.id,
       };
 
-      const { postDatasource } = context.dataSources;
       return postDatasource.createPost(post).then((p) => ({
         ...p,
         votes: p.voters.length,
       }));
     },
-    delete: async (_, args, context) => {
-      const { postDatasource } = context.dataSources;
+    delete: async (_, args, ctx) => {
+      const postDatasource: PostDatasource = ctx.dataSources.postDatasource;
+
       return postDatasource.deletePost(args.id).then((p) => ({
         ...p,
         votes: p.voters.length,
       }));
     },
-    upvote: async (_, args, context) => {
+    upvote: async (_, args, ctx) => {
+      const jwtPayload: JwtPayload = ctx.user;
       const id = args.id;
-      const voter = args.voter;
-      const postDatasource = context.dataSources.postDatasource;
+      const voter = jwtPayload.id;
+      const postDatasource = ctx.dataSources.postDatasource;
       const post = await postDatasource.getPost(id);
 
       if (!post.voters.includes(voter)) {
@@ -94,10 +105,11 @@ const resolvers = {
         votes: p.voters.length,
       }));
     },
-    downvote: async (_, args, context) => {
+    downvote: async (_, args, ctx) => {
+      const jwtPayload: JwtPayload = ctx.user;
       const id = args.id;
-      const voter = args.voter;
-      const postDatasource = context.dataSources.postDatasource;
+      const voter = jwtPayload.id;
+      const postDatasource = ctx.dataSources.postDatasource;
       const post = await postDatasource.getPost(id);
 
       post.voters = post.voters.filter((v) => v !== voter);
@@ -109,13 +121,15 @@ const resolvers = {
     },
   },
   User: {
-    posts: async (parent: User, _args, context) =>
-      context.dataSources.postDatasource.getPostsByUser(parent.id),
+    posts: async (parent: User, _args, ctx) => {
+      const postDatasource: PostDatasource = ctx.dataSources.postDatasource;
+      return postDatasource.getPostsByUser(parent.id);
+    },
   },
   Post: {
-    author: async (parent: Post, _args, context) => {
-      const { userDatasource } = context.dataSources;
-      return await userDatasource.getUser(parent.id);
+    author: async (parent: Post, _args, ctx) => {
+      const userDatasource: UserDatasource = ctx.dataSources.userDatasource;
+      return await userDatasource.getUser(parent.user);
     },
   },
 };
