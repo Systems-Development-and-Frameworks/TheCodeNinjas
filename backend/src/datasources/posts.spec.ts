@@ -4,6 +4,7 @@ import ServerInitializer from "../server-initializer";
 import { users } from "../seed-data";
 import PostDatasource from "./post.datasource";
 import UserDatasource from "./user.datasource";
+import User from "../entities/user.entity";
 
 let postDb = new PostDatasource();
 const userDb = new UserDatasource();
@@ -77,7 +78,15 @@ describe("queries", () => {
     it("returns all users", async () => {
       await expect(query({ query: USERS })).resolves.toMatchObject({
         errors: undefined,
-        data: { users },
+        data: {
+          users: users.map((u) => {
+            return {
+              id: u.id,
+              email: u.email,
+              name: u.name,
+            } as Partial<User>;
+          }),
+        },
       });
     });
   });

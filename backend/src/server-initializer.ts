@@ -11,8 +11,10 @@ import typeDefs from "./type-defs";
 
 import { makeExecutableSchema } from "graphql-tools";
 
+import { ApolloServerExpressConfig } from "apollo-server-express";
+
 export default class ServerInitializer {
-  createServer() {
+  createServer(defaultConfig: ApolloServerExpressConfig = {}) {
     const schema = makeExecutableSchema({
       typeDefs,
       resolvers,
@@ -24,6 +26,7 @@ export default class ServerInitializer {
       schema: schemaWithMiddleware,
       context: createContext,
       dataSources: createDatasources,
+      ...defaultConfig,
     });
   }
 }

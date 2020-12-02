@@ -3,19 +3,21 @@ import PostDatasource from "./datasources/post.datasource";
 import { JwtPayload } from "./jwt-payload";
 
 const isAuthenticated = rule({ cache: "contextual" })(
-  async (parent, args, ctx, info) => {
+  async (parent, args, ctx) => {
     return ctx.user !== null;
   }
 );
 
 const isPostAuthor = rule({ cache: "contextual" })(
-  async (parent, args, ctx, info) => {
-    const jwtPayload: JwtPayload = ctx.user;
-    const postDatasource: PostDatasource = ctx.dataSources.postDatasource;
-    const post = await postDatasource.getPost(args.id);
+  async (parent, args, ctx) => {
+    if (ctx.user !== null) {
+      const jwtPayload: JwtPayload = ctx.user;
+      const postDatasource: PostDatasource = ctx.dataSources.postDatasource;
+      const post = await postDatasource.getPost(args.id);
 
-    if (post) {
-      return post.user === jwtPayload.id;
+      if (post) {
+        return post.user === jwtPayload.id;
+      }
     }
 
     return false;
