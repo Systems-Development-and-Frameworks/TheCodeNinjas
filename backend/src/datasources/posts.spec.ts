@@ -13,14 +13,10 @@ const dataSource = { postDatasource: postDb, userDatasource: userDb };
 userDb.users = users;
 postDb.posts = [];
 
-
-
-
 const serverInitializer = new ServerInitializer();
 const serverUnauthorized = serverInitializer.createServer({
-  dataSources: () => dataSource
-}
-);
+  dataSources: () => dataSource,
+});
 
 const serverAuthorized = serverInitializer.createServer({
   dataSources: () => dataSource,
@@ -28,12 +24,10 @@ const serverAuthorized = serverInitializer.createServer({
     return {
       user: {
         id: "58334916-ae55-4149-add5-0bc11f1b43c6",
-      } as Partial<JwtPayload>
-    }
+      } as Partial<JwtPayload>,
+    };
   },
-}
-);
-
+});
 
 describe("queries", () => {
   describe("POSTS", () => {
@@ -140,14 +134,13 @@ describe("mutations", () => {
       await expect(action(mutate)).resolves.toMatchObject({
         errors: [
           // https://jestjs.io/docs/en/expect#expectobjectcontainingobject
-          expect.objectContaining({message: "Not Authorised!"})
+          expect.objectContaining({ message: "Not Authorised!" }),
         ],
         data: {
           write: null,
         },
       });
     });
-
 
     it("responds with created post", async () => {
       const { query, mutate } = createTestClient(serverAuthorized);
@@ -174,7 +167,7 @@ describe("mutations", () => {
       mutate({
         mutation: UPVOTE_VOTE,
         variables: {
-          id
+          id,
         },
       });
 
@@ -191,7 +184,10 @@ describe("mutations", () => {
 
       const { query, mutate } = createTestClient(serverAuthorized);
 
-      const votes = await upvote("7ed8828b-f4de-4359-8160-1df1ff3234cd", mutate);
+      const votes = await upvote(
+        "7ed8828b-f4de-4359-8160-1df1ff3234cd",
+        mutate
+      );
 
       console.log("\n\n\n\n\n", votes);
       expect(votes.data.upvote.votes).toBe(1);
