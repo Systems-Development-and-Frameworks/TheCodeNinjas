@@ -4,12 +4,14 @@ import * as uuid from "uuid";
 import * as bcrypt from "bcrypt";
 
 export default class UserDatasource extends DataSource {
+  seedUsers: User[];
   users: User[];
 
   constructor(users: User[]) {
     super();
 
     this.users = users;
+    this.seedUsers = users;
   }
 
   getUsers(): Promise<User[]> {
@@ -39,5 +41,9 @@ export default class UserDatasource extends DataSource {
     this.users = [...this.users, newUser];
 
     return Promise.resolve(newUser);
+  }
+
+  reset() {
+    this.users = this.seedUsers;
   }
 }

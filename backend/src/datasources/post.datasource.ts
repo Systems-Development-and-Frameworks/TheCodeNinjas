@@ -3,12 +3,14 @@ import { DataSource } from "apollo-datasource";
 import Post from "../entities/post.entity";
 
 export default class PostDatasource extends DataSource {
+  seedPosts: Post[];
   posts: Post[];
 
   constructor(posts: Post[]) {
     super();
 
     this.posts = posts;
+    this.seedPosts = posts;
   }
 
   getPosts(): Promise<Post[]> {
@@ -49,5 +51,9 @@ export default class PostDatasource extends DataSource {
 
   getPostsByUser(userId: string): Promise<Post[]> {
     return Promise.resolve(this.posts.filter((post) => post.user === userId));
+  }
+
+  reset() {
+    this.posts = this.seedPosts;
   }
 }
