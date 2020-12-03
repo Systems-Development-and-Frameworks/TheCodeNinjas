@@ -26,6 +26,9 @@ jobs:
     - uses: actions/setup-node@v1
     - run: npm ci
     - run: npm run test:unit
+      env:
+        SALT_ROUNDS: ${{ secrets.SALT_ROUND }}
+	    JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
   build:
     name: Run build
