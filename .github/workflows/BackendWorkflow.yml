@@ -29,6 +29,7 @@ jobs:
       env:
         SALT_ROUNDS: ${{ secrets.SALT_ROUND }}
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
 
   build:
     name: Run build

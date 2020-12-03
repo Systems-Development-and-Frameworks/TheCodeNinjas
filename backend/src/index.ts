@@ -7,5 +7,5 @@ const serverInitializer: ServerInitializer = new ServerInitializer();
 const server = serverInitializer.createServer();
 
 server.listen({ port: process.env.PORT }).then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
+  console.log(`Server ready at ${url}`);
 });
