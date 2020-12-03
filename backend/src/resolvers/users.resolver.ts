@@ -40,6 +40,7 @@ export const mutation = {
 
     const user = await userDatasource.createUser({ name, email }, password);
     const payload: JwtPayload = { id: user.id };
+
     return jwt.sign(payload, process.env.JWT_SECRET);
   },
   // login(email: String!, password: String!): String

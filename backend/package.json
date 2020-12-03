@@ -9,7 +9,7 @@
     "start:prod": "node dist/index.js",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
-    "test:unit": "jest"
+    "test:unit": "jest src/"
   },
   "author": "",
   "license": "ISC",

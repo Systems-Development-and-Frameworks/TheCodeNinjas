@@ -5,6 +5,9 @@ import { posts, users } from "../test-data";
 import UserDatasource from "../datasources/user.datasource";
 import ServerInitializer from "../server-initializer";
 import { JwtPayload } from "../jwt-payload";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 const postDatasource = new PostDatasource(posts);
 const userDatasource = new UserDatasource(users);
