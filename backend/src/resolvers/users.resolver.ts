@@ -30,18 +30,30 @@ export const mutation = {
     const userDatasource: UserDatasource = ctx.dataSources.userDatasource;
     const existentUser = await userDatasource.getUserByEmail(email);
 
+    console.log(args);
+
     if (password.length < 8) {
       throw new UserInputError("Password must at least 8 characters long");
     }
+
+    console.log("passwort stimmt");
 
     if (existentUser) {
       throw new UserInputError("E-Mail does already exists");
     }
 
+    console.log("user does not exist");
+
     const user = await userDatasource.createUser({ name, email }, password);
+    console.log("user jetzt in db");
+
     const payload: JwtPayload = { id: user.id };
 
-    return jwt.sign(payload, process.env.JWT_SECRET);
+    console.log("payload", payload);
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET);
+    console.log("token", token);
+    return token;
   },
   // login(email: String!, password: String!): String
   async login(_, args: SigninDto, ctx) {
