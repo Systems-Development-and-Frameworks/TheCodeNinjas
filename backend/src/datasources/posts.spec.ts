@@ -1,17 +1,15 @@
 import { createTestClient } from "apollo-server-testing";
 import { gql } from "apollo-server";
 import ServerInitializer from "../server-initializer";
-import { users } from "../seed-data";
+import { users, posts } from "../test-data";
 import PostDatasource from "./post.datasource";
 import UserDatasource from "./user.datasource";
 import User from "../entities/user.entity";
 import { JwtPayload } from "../jwt-payload";
 
-let postDb = new PostDatasource();
-const userDb = new UserDatasource();
+const postDb = new PostDatasource(posts);
+const userDb = new UserDatasource(users);
 const dataSource = { postDatasource: postDb, userDatasource: userDb };
-userDb.users = users;
-postDb.posts = [];
 
 const serverInitializer = new ServerInitializer();
 const serverUnauthorized = serverInitializer.createServer({
@@ -41,6 +39,7 @@ describe("queries", () => {
     `;
 
     it("returns empty array", async () => {
+      postDb.posts = [];
       const { query, mutate } = createTestClient(serverUnauthorized);
       await expect(query({ query: POSTS })).resolves.toMatchObject({
         errors: undefined,
@@ -106,10 +105,6 @@ describe("queries", () => {
 });
 
 describe("mutations", () => {
-  beforeEach(() => {
-    postDb = new PostDatasource();
-  });
-
   describe("WRITE_POST", () => {
     const action = (mutate) =>
       mutate({
@@ -172,15 +167,6 @@ describe("mutations", () => {
       });
 
     it("upvote a post", async () => {
-      const postSample = {
-        id: "1",
-        title: "Ein Toller Title",
-        user: "58334916-ae55-4149-add5-0bc11f1b43c6",
-        voters: [],
-      };
-      postDb.posts = [postSample];
-      expect(postDb.posts.length).toBe(1);
-      expect(postDb.posts[0].voters.length).toBe(0);
 
       const { query, mutate } = createTestClient(serverAuthorized);
 

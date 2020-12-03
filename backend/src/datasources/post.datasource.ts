@@ -1,12 +1,11 @@
 import * as uuid from "uuid";
 import { DataSource } from "apollo-datasource";
 import Post from "../entities/post.entity";
-import { posts } from "../seed-data";
 
 export default class PostDatasource extends DataSource {
   posts: Post[];
 
-  constructor() {
+  constructor(posts: Post[]) {
     super();
 
     this.posts = posts;

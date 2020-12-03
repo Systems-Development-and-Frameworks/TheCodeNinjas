@@ -1,13 +1,12 @@
 import { DataSource } from "apollo-datasource";
 import User from "../entities/user.entity";
-import { users } from "../seed-data";
 import * as uuid from "uuid";
 import * as bcrypt from "bcrypt";
 
 export default class UserDatasource extends DataSource {
   users: User[];
 
-  constructor() {
+  constructor(users: User[]) {
     super();
 
     this.users = users;
