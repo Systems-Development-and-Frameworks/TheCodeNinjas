@@ -119,7 +119,7 @@ describe("mutations", () => {
       userDatasource.reset();
     });
 
-    it("should responds not authorised if no JWT was given", async () => {
+    it("should responds not authorized if no JWT was given", async () => {
       const { mutate } = createTestClient(serverUnauthorized);
       const response = action(mutate);
 
@@ -138,7 +138,7 @@ describe("mutations", () => {
       const { mutate } = createTestClient(serverAuthorized);
       const response = action(mutate);
 
-      expect(response).resolves.toMatchObject({
+      await expect(response).resolves.toMatchObject({
         errors: undefined,
         data: {
           write: {
@@ -171,6 +171,21 @@ describe("mutations", () => {
     beforeEach(() => {
       postDatasource.reset();
       userDatasource.reset();
+    });
+
+    it("should throw an error if not authorized", async () => {
+      const { mutate } = createTestClient(serverUnauthorized);
+      const response = action("7ed8828b-f4de-4359-8160-1df1ff3234cd", mutate);
+
+      await expect(response).resolves.toMatchObject({
+        errors: [
+          // https://jestjs.io/docs/en/expect#expectobjectcontainingobject
+          expect.objectContaining({ message: "Not Authorised!" }),
+        ],
+        data: {
+          upvote: null,
+        },
+      });
     });
 
     it("should add one vote to the post", async () => {
