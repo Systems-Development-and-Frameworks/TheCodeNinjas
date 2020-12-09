@@ -1,31 +1,49 @@
-import { DataSource } from 'apollo-datasource';
-import User from '../entities/user.entity';
-import { users } from '../seed-data';
+import { DataSource } from "apollo-datasource";
+import User from "../entities/user.entity";
+import * as uuid from "uuid";
+import * as bcrypt from "bcrypt";
 
 export default class UserDatasource extends DataSource {
-    users: User[];
+  seedUsers: User[];
+  users: User[];
 
-    constructor() {
-      super();
+  constructor(users: User[]) {
+    super();
 
-      this.users = users;
-    }
+    this.users = users;
+    this.seedUsers = users;
+  }
 
-    async getUsers() {
-      return Promise.resolve(this.users);
-    }
+  getUsers(): Promise<User[]> {
+    return Promise.resolve(this.users);
+  }
 
-    async getUser(name: string) {
-      return Promise.resolve(this.users.find((user) => user.name == name));
-    }
+  getUser(id: string): Promise<User> {
+    return Promise.resolve(this.users.find((user) => user.id === id));
+  }
 
-    async createUser(user: User) {
-    }
+  getUserByEmail(email: string): Promise<User> {
+    return Promise.resolve(this.users.find((user) => user.email === email));
+  }
 
-    async updateUser(name: string, user: User) {
-    }
+  async createUser(user: Partial<User>, password: string): Promise<User> {
+    const salt = await bcrypt.genSalt(parseInt(process.env.SALT_ROUNDS));
+    const hash = await bcrypt.hash(password, salt);
 
-    async deleteUser(name: string) {
+    const newUser: User = {
+      id: uuid.v4(),
+      name: user.name,
+      email: user.email,
+      passwordHash: hash,
+      passwordSalt: salt,
+    };
 
-    }
+    this.users = [...this.users, newUser];
+
+    return Promise.resolve(newUser);
+  }
+
+  reset() {
+    this.users = this.seedUsers;
+  }
 }
