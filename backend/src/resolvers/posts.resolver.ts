@@ -2,10 +2,40 @@ import PostDatasource from "../datasources/post.datasource";
 import { JwtPayload } from "../jwt-payload";
 import Post from "../entities/post.entity";
 import UserDatasource from "../datasources/user.datasource";
+import { Context } from "../create-context";
+import { delegateToSchema } from "@graphql-tools/delegate";
 
 export const query = {
-  posts: async (_source, _args, ctx) => {
-    const postDatasource: PostDatasource = ctx.dataSources.postDatasource;
+  posts: async (_source, _args, context: Context, info) => {
+    const [graphCmsSchema] = context.subSchemas;
+
+    return delegateToSchema({
+      schema: graphCmsSchema,
+      operation: "query",
+      fieldName: "posts",
+      transforms: [
+        {
+          transformResult(originalResult) {
+            const posts = originalResult.data.posts as Partial<Post[]>;
+            console.log(originalResult.data.posts);
+            /* const postsWithVotes = posts.map((post) => {
+              return {
+                ...post,
+                votes: post.voters.length,
+              };
+            });
+
+            originalResult.data.posts = postsWithVotes;*/
+
+            return originalResult;
+          },
+        },
+      ],
+      context,
+      info,
+    });
+
+    /*const postDatasource: PostDatasource = ctx.dataSources.postDatasource;
     const posts = await postDatasource.getPosts();
 
     return posts.map((post) => {
@@ -14,6 +44,8 @@ export const query = {
         votes: post.voters.length,
       };
     });
+
+     */
   },
 };
 

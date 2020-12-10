@@ -55,7 +55,7 @@ describe("queries", () => {
     it("should return an empty array", async () => {
       postDatasource.posts = [];
 
-      const { query } = createTestClient(serverUnauthorized);
+      const { query } = createTestClient(await serverUnauthorized);
       const response = action(query);
 
       await expect(response).resolves.toMatchObject({
@@ -65,7 +65,7 @@ describe("queries", () => {
     });
 
     it("should return seeded post data ", async () => {
-      const { query } = createTestClient(serverUnauthorized);
+      const { query } = createTestClient(await serverUnauthorized);
       const response = action(query);
 
       await expect(response).resolves.toMatchObject({
@@ -123,7 +123,7 @@ describe("mutations", () => {
     });
 
     it("should responds not authorized if no JWT was given", async () => {
-      const { mutate } = createTestClient(serverUnauthorized);
+      const { mutate } = createTestClient(await serverUnauthorized);
       const response = action(mutate);
 
       await expect(response).resolves.toMatchObject({
@@ -138,7 +138,7 @@ describe("mutations", () => {
     });
 
     it("should create post ", async () => {
-      const { mutate } = createTestClient(serverAuthorized);
+      const { mutate } = createTestClient(await serverAuthorized);
       const response = action(mutate);
 
       await expect(response).resolves.toMatchObject({
@@ -177,7 +177,7 @@ describe("mutations", () => {
     });
 
     it("should throw an error if not authorized", async () => {
-      const { mutate } = createTestClient(serverUnauthorized);
+      const { mutate } = createTestClient(await serverUnauthorized);
       const response = action("7ed8828b-f4de-4359-8160-1df1ff3234cd", mutate);
 
       await expect(response).resolves.toMatchObject({
@@ -192,7 +192,7 @@ describe("mutations", () => {
     });
 
     it("should add one vote to the post", async () => {
-      const { mutate } = createTestClient(serverAuthorized);
+      const { mutate } = createTestClient(await serverAuthorized);
       const response = await action(
         "7ed8828b-f4de-4359-8160-1df1ff3234cd",
         mutate
@@ -202,7 +202,7 @@ describe("mutations", () => {
     });
 
     it("should not add two votes to the post", async () => {
-      const { mutate } = createTestClient(serverAuthorized);
+      const { mutate } = createTestClient(await serverAuthorized);
 
       await action("7ed8828b-f4de-4359-8160-1df1ff3234cd", mutate);
 

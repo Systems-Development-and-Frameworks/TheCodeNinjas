@@ -9,17 +9,17 @@ import {
   query as usersQuery,
 } from "./resolvers/users.resolver";
 
-const resolvers = {
-  Query: {
-    ...postsQuery,
-    ...usersQuery,
-  },
-  Mutation: {
-    ...usersMutation,
-    ...postsMutation,
-  },
-  Post: postsProperties,
-  User: usersProperties,
-};
-
-export default resolvers;
+export default function createResolvers() {
+  return {
+    Query: {
+      ...postsQuery,
+      ...usersQuery,
+    },
+    Mutation: {
+      ...usersMutation,
+      ...postsMutation,
+    },
+    Post: postsProperties,
+    User: usersProperties,
+  };
+}

@@ -4,8 +4,9 @@ import ServerInitializer from "./server-initializer";
 dotenv.config();
 
 const serverInitializer: ServerInitializer = new ServerInitializer();
-const server = serverInitializer.createServer();
 
-server.listen({ port: process.env.PORT }).then(({ url }) => {
-  console.log(`Server ready at ${url}`);
+serverInitializer.createServer().then((server) => {
+  server.listen({ port: process.env.PORT }).then(({ url }) => {
+    console.log(`Server ready at ${url}`);
+  });
 });

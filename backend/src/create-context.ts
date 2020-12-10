@@ -1,19 +1,33 @@
 import * as jwt from "jsonwebtoken";
 import { JwtPayload } from "./jwt-payload";
+import { GraphQLSchema } from "graphql";
+import PostDatasource from "./datasources/post.datasource";
+import UserDatasource from "./datasources/user.datasource";
 
-export default function ({ req }) {
-  try {
-    const { headers } = req;
-    const auth = headers["authorization"];
-    const token = auth.replace("Bearer ", "");
+export interface Context {
+  user?: JwtPayload;
+  subSchemas: GraphQLSchema[];
+  dataSources: {
+    postDatasource: PostDatasource;
+    userDatasource: UserDatasource;
+  };
+}
 
-    const payload = jwt.verify(
-      token,
-      process.env.JWT_SECRET
-    ) as Partial<JwtPayload>;
+export default function createContext(subSchemas: GraphQLSchema[]) {
+  const context: Partial<Context> = {
+    user: null,
+    subSchemas: subSchemas,
+  };
 
-    return { user: payload };
-  } catch (e) {
-    return { user: null };
-  }
+  return ({ req }) => {
+    try {
+      const { headers } = req;
+      const auth = headers["authorization"];
+      const token = auth.replace("Bearer ", "");
+
+      context.user = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
+    } catch (e) {}
+
+    return context;
+  };
 }
