@@ -9,7 +9,8 @@ import createDatasources from "./create-datasources";
 import createContext from "./create-context";
 import typeDefs from "./type-defs";
 
-import { makeExecutableSchema } from "graphql-tools";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import { stitchSchemas } from "@graphql-tools/stitch";
 
 import { ApolloServerExpressConfig } from "apollo-server-express";
 
