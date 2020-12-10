@@ -1,4 +1,4 @@
-import { importSchema } from "graphql-import";
+import { readFileSync } from "fs";
 
-const typeDefs = importSchema("src/schema.graphql");
+const typeDefs = readFileSync("src/schema.graphql").toString();
 export default typeDefs;
