@@ -9,6 +9,7 @@ import {
 
 import { fetch } from "cross-fetch";
 import { FieldTransformer } from "@graphql-tools/wrap/types";
+import { RenameRootFields } from "apollo-server";
 
 export async function executor({ document, variables }) {
   const query = print(document);
@@ -30,22 +31,6 @@ export async function executor({ document, variables }) {
 export default async function createGraphCmsSchema(): Promise<GraphQLSchema> {
   return wrapSchema({
     schema: await introspectSchema(executor),
-    transforms: [
-      new TransformObjectFields((typeName, fieldName, fieldConfig) => {
-        console.log(typeName, fieldName);
-        if (typeName === "Post" && fieldName === "voters") {
-          return [
-            "votes",
-            fieldConfig
-          ];
-        }
-        return undefined;
-      }),
-      new FilterRootFields((operation, rootFieldName) => {
-        return true;
-        // return ["posts"].includes(rootFieldName);
-      }),
-    ],
     executor,
   });
 }

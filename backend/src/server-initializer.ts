@@ -11,7 +11,7 @@ import typeDefs from "./type-defs";
 import { stitchSchemas } from "@graphql-tools/stitch";
 
 import { ApolloServerExpressConfig } from "apollo-server-express";
-import createGraphCmsSchema from "./create-graph-cms-schema";
+import createGraphCmsSchema, {executor} from "./create-graph-cms-schema";
 
 export default class ServerInitializer {
   async createServer(defaultConfig: ApolloServerExpressConfig = {}) {
@@ -19,13 +19,13 @@ export default class ServerInitializer {
     const gatewaysSchema = stitchSchemas({
       subschemas: [graphCmsSchema],
       typeDefs,
-      resolvers: createResolvers([graphCmsSchema]),
+      resolvers: createResolvers([graphCmsSchema], executor),
     });
 
     const schemaWithMiddleware = applyMiddleware(gatewaysSchema, permissions);
 
     return new ApolloServer({
-      schema: gatewaysSchema,
+      schema: schemaWithMiddleware,
       context: createContext(),
       dataSources: createDatasources,
       ...defaultConfig,

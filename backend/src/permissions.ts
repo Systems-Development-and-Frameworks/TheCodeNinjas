@@ -1,4 +1,4 @@
-import { rule, shield } from "graphql-shield";
+import { allow, rule, shield } from "graphql-shield";
 import PostDatasource from "./datasources/post.datasource";
 import { JwtPayload } from "./jwt-payload";
 
@@ -27,11 +27,10 @@ const isPostAuthor = rule({ cache: "contextual" })(
 const permissions = shield({
   Query: {},
   Mutation: {
-    write: isAuthenticated,
-    delete: isPostAuthor,
+    signup: allow,
     downvote: isAuthenticated,
     upvote: isAuthenticated,
   },
-});
+}, {allowExternalErrors: true});
 
 export default permissions;
