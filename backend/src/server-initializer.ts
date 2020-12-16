@@ -18,16 +18,15 @@ export default class ServerInitializer {
     const graphCmsSchema = await createGraphCmsSchema();
     const gatewaysSchema = stitchSchemas({
       subschemas: [graphCmsSchema],
-      mergeTypes: true,
       typeDefs,
-      resolvers: createResolvers(),
+      resolvers: createResolvers([graphCmsSchema]),
     });
 
     const schemaWithMiddleware = applyMiddleware(gatewaysSchema, permissions);
 
     return new ApolloServer({
       schema: gatewaysSchema,
-      context: createContext([graphCmsSchema]),
+      context: createContext(),
       dataSources: createDatasources,
       ...defaultConfig,
     });

@@ -13,10 +13,9 @@ export interface Context {
   };
 }
 
-export default function createContext(subSchemas: GraphQLSchema[]) {
+export default function createContext() {
   const context: Partial<Context> = {
-    user: null,
-    subSchemas: subSchemas,
+    user: null
   };
 
   return ({ req }) => {

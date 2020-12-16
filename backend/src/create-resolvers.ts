@@ -1,3 +1,4 @@
+import { GraphQLSchema } from "graphql";
 import {
   mutation as postsMutation,
   properties as postsProperties,
@@ -9,17 +10,17 @@ import {
   query as usersQuery,
 } from "./resolvers/users.resolver";
 
-export default function createResolvers() {
+export default function createResolvers(subSchemas : GraphQLSchema[]) {
   return {
     Query: {
-      ...postsQuery,
-      ...usersQuery,
+      ...postsQuery(subSchemas),
+      // ...usersQuery(subSchemas),
     },
     Mutation: {
-      ...usersMutation,
-      ...postsMutation,
+      // ...usersMutation(subSchemas),
+      ...postsMutation(subSchemas),
     },
-    Post: postsProperties,
-    User: usersProperties,
+    Post: postsProperties(subSchemas),
+    // User: usersProperties(subSchemas),
   };
 }
