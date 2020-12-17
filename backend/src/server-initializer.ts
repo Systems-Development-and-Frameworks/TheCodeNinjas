@@ -12,21 +12,14 @@ import { stitchSchemas } from "@graphql-tools/stitch";
 
 import { ApolloServerExpressConfig } from "apollo-server-express";
 import createGraphCmsSchema, { executor } from "./create-graph-cms-schema";
-import { loadSchemaSync } from "@graphql-tools/load";
-import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 
 export default class ServerInitializer {
   async createServer(config: ApolloServerExpressConfig = {}) {
-    const localSchema = loadSchemaSync("./src/schema/**/*.graphql", {
-      loaders: [new GraphQLFileLoader()],
-    });
-
     const graphCmsSchema = await createGraphCmsSchema();
-
 
     const gatewaysSchema = stitchSchemas({
       subschemas: [graphCmsSchema],
-      typeDefs: localSchema,
+      typeDefs,
       resolvers: createResolvers([graphCmsSchema], executor),
     });
 

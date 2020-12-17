@@ -8,7 +8,7 @@ export function query(subSchemas: GraphQLSchema[]) {
 export function properties(subSchemas: GraphQLSchema[]) {
   return {
     votes: {
-      selectionSet: "{ voters }",
+      selectionSet: "{ voters { id } }",
       resolve: (post: Post) => post.voters.length,
     },
   };
