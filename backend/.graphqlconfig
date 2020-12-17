@@ -1,0 +1,22 @@
+{
+  "name": "Posts GraphQL Schema",
+  "schemaPath": "schema.graphql",
+  "extensions": {
+    "endpoints": {
+      "Gateway GraphQL Endpoint": {
+        "url": "http://localhost:8080/graphql",
+        "headers": {
+          "user-agent": "JS GraphQL"
+        },
+        "introspect": false
+      },
+      "GraphCMS GraphQL Endpoint": {
+        "url": "https://api-eu-central-1.graphcms.com/v2/ckihmjmxd4a7r01z87qh5fi7o/master",
+        "headers": {
+          "user-agent": "JS GraphQL"
+        },
+        "introspect": false
+      }
+    }
+  }
+}

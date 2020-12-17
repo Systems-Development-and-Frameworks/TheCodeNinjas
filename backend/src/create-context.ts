@@ -15,7 +15,7 @@ export interface Context {
 
 export default function createContext() {
   const context: Partial<Context> = {
-    user: null
+    user: null,
   };
 
   return ({ req }) => {

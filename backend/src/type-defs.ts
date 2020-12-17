@@ -1,4 +1,6 @@
-import { readFileSync } from "fs";
+import { loadSchemaSync } from "@graphql-tools/load";
+import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 
-const typeDefs = readFileSync("src/schema.graphql").toString();
+
+
 export default typeDefs;

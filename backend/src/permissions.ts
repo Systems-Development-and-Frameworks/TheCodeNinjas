@@ -24,13 +24,16 @@ const isPostAuthor = rule({ cache: "contextual" })(
   }
 );
 
-const permissions = shield({
-  Query: {},
-  Mutation: {
-    signup: allow,
-    downvote: isAuthenticated,
-    upvote: isAuthenticated,
+const permissions = shield(
+  {
+    Query: {},
+    Mutation: {
+      signup: allow,
+      downvote: isAuthenticated,
+      upvote: isAuthenticated,
+    },
   },
-}, {allowExternalErrors: true});
+  { allowExternalErrors: true }
+);
 
 export default permissions;
