@@ -16,7 +16,7 @@ const isPostAuthor = rule({ cache: "contextual" })(
       const post = await postDatasource.getPost(args.id);
 
       if (post) {
-        return post.user === jwtPayload.id;
+        return post.author === jwtPayload.id;
       }
     }
 

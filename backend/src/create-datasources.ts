@@ -1,10 +1,10 @@
 import PostDatasource from "./datasources/post.datasource";
-import UserDatasource from "./datasources/user.datasource";
-import { users, posts } from "./seed-data";
+import PersonDatasource from "./datasources/person.datasource";
+import { persons, posts } from "./seed-data";
 
 const createDatasources = {
   postDatasource: new PostDatasource(posts),
-  userDatasource: new UserDatasource(users),
+  personDatasource: new PersonDatasource(persons),
 };
 
 export default function () {

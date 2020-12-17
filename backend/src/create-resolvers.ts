@@ -5,10 +5,10 @@ import {
   query as postsQuery,
 } from "./resolvers/posts.resolver";
 import {
-  mutation as usersMutation,
-  properties as usersProperties,
-  query as usersQuery,
-} from "./resolvers/users.resolver";
+  mutation as personsMutation,
+  properties as personsProperties,
+  query as personsQuery,
+} from "./resolvers/persons.resolver";
 
 export default function createResolvers(
   subSchemas: GraphQLSchema[],
@@ -16,14 +16,14 @@ export default function createResolvers(
 ) {
   return {
     Query: {
-      ...postsQuery(subSchemas),
-      // ...usersQuery(subSchemas),
+      ...postsQuery(subSchemas, executor),
+      ...personsQuery(subSchemas, executor),
     },
     Mutation: {
-      ...usersMutation(subSchemas, executor),
-      ...postsMutation(subSchemas),
+      ...personsMutation(subSchemas, executor),
+      ...postsMutation(subSchemas, executor),
     },
-    Post: postsProperties(subSchemas),
-    // User: usersProperties(subSchemas),
+    Post: postsProperties(subSchemas, executor),
+    Person: personsProperties(subSchemas, executor),
   };
 }

@@ -1,8 +1,8 @@
 import { createTestClient } from "apollo-server-testing";
 import { gql } from "apollo-server";
 import PostDatasource from "../datasources/post.datasource";
-import UserDatasource from "../datasources/user.datasource";
-import { posts, users } from "../test-data";
+import PersonDatasource from "../datasources/person.datasource";
+import { posts, persons } from "../test-data";
 import ServerInitializer from "../server-initializer";
 import * as dotenv from "dotenv";
 import * as jwt from "jsonwebtoken";
@@ -11,10 +11,10 @@ import { JwtPayload } from "../jwt-payload";
 dotenv.config();
 
 const postDatasource = new PostDatasource(posts);
-const userDatasource = new UserDatasource(users);
+const personDatasource = new PersonDatasource(persons);
 const dataSource = {
   postDatasource: postDatasource,
-  userDatasource: userDatasource,
+  personDatasource: personDatasource,
 };
 
 const serverInitializer = new ServerInitializer();
@@ -23,10 +23,10 @@ const serverUnauthorized = serverInitializer.createServer({
 });
 
 describe("queries", () => {
-  describe("USERS", () => {
-    const USERS = gql`
+  describe("PERSONS", () => {
+    const PERSONS = gql`
       query {
-        users {
+        persons {
           id
           email
           name
@@ -35,22 +35,22 @@ describe("queries", () => {
     `;
 
     const action = (query) => {
-      return query({ query: USERS });
+      return query({ query: PERSONS });
     };
 
     beforeEach(() => {
       postDatasource.reset();
-      userDatasource.reset();
+      personDatasource.reset();
     });
 
-    it("should return seeded users", async () => {
-      const { query } = createTestClient(serverUnauthorized);
+    it("should return seeded persons", async () => {
+      const { query } = createTestClient(await serverUnauthorized);
       const response = action(query);
 
       await expect(response).resolves.toMatchObject({
         errors: undefined,
         data: {
-          users: [
+          persons: [
             {
               id: "58334916-ae55-4149-add5-0bc11f1b43c6",
               name: "Christoph Stach",
@@ -93,11 +93,11 @@ describe("mutations", () => {
 
     beforeEach(() => {
       postDatasource.reset();
-      userDatasource.reset();
+      personDatasource.reset();
     });
 
-    it("should not login with wrong user", async () => {
-      const { mutate } = createTestClient(serverUnauthorized);
+    it("should not login with wrong person", async () => {
+      const { mutate } = createTestClient(await serverUnauthorized);
       const response = await action(
         "s0555912@htw-berlin.de",
         "__WRONG_PASSWORD__",
@@ -112,8 +112,8 @@ describe("mutations", () => {
       });
     });
 
-    it("should login with valid user", async () => {
-      const { mutate } = createTestClient(serverUnauthorized);
+    it("should login with valid person", async () => {
+      const { mutate } = createTestClient(await serverUnauthorized);
       const response = await action(
         "s0555912@htw-berlin.de",
         "chrisPW",
@@ -157,11 +157,11 @@ describe("mutations", () => {
 
     beforeEach(() => {
       postDatasource.reset();
-      userDatasource.reset();
+      personDatasource.reset();
     });
 
-    it("should not signup if email of user already exists", async () => {
-      const { mutate } = createTestClient(serverUnauthorized);
+    it("should not signup if email of person already exists", async () => {
+      const { mutate } = createTestClient(await serverUnauthorized);
       const response = await action(
         "Christoph Stach",
         "s0555912@htw-berlin.de",
@@ -176,11 +176,11 @@ describe("mutations", () => {
         },
       });
 
-      expect(userDatasource.users).toHaveLength(3);
+      expect(personDatasource.persons).toHaveLength(3);
     });
 
     it("should not signup if password is to short", async () => {
-      const { mutate } = createTestClient(serverUnauthorized);
+      const { mutate } = createTestClient(await serverUnauthorized);
       const response = await action(
         "Christoph Stach",
         "notexistingmail@htw-berlin.de",
@@ -195,11 +195,11 @@ describe("mutations", () => {
         },
       });
 
-      expect(userDatasource.users).toHaveLength(3);
+      expect(personDatasource.persons).toHaveLength(3);
     });
 
-    it("it should signup a new user", async () => {
-      const { mutate } = createTestClient(serverUnauthorized);
+    it("it should signup a new person", async () => {
+      const { mutate } = createTestClient(await serverUnauthorized);
       const response = await action(
         "Christoph Stach",
         "notexistingmail@htw-berlin.de",
@@ -213,7 +213,7 @@ describe("mutations", () => {
         },
       });
 
-      expect(userDatasource.users).toHaveLength(4);
+      expect(personDatasource.persons).toHaveLength(4);
     });
   });
 });

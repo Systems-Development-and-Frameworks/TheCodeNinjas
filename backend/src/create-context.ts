@@ -2,14 +2,14 @@ import * as jwt from "jsonwebtoken";
 import { JwtPayload } from "./jwt-payload";
 import { GraphQLSchema } from "graphql";
 import PostDatasource from "./datasources/post.datasource";
-import UserDatasource from "./datasources/user.datasource";
+import PersonDatasource from "./datasources/person.datasource";
 
 export interface Context {
   user?: JwtPayload;
   subSchemas: GraphQLSchema[];
   dataSources: {
     postDatasource: PostDatasource;
-    userDatasource: UserDatasource;
+    personDatasource: PersonDatasource;
   };
 }
 

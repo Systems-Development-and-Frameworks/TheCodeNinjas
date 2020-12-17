@@ -25,7 +25,7 @@ export default class PostDatasource extends DataSource {
     const fullPost: Post = {
       id: uuid.v4(),
       title: post.title,
-      user: post.user,
+      author: post.author,
       voters: [],
     };
 
@@ -49,8 +49,10 @@ export default class PostDatasource extends DataSource {
     return Promise.resolve(post);
   }
 
-  getPostsByUser(userId: string): Promise<Post[]> {
-    return Promise.resolve(this.posts.filter((post) => post.user === userId));
+  getPostsByPerson(personId: string): Promise<Post[]> {
+    return Promise.resolve(
+      this.posts.filter((post) => post.author === personId)
+    );
   }
 
   reset() {

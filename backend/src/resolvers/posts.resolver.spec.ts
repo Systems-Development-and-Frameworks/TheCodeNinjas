@@ -1,8 +1,8 @@
 import { createTestClient } from "apollo-server-testing";
 import { gql } from "apollo-server";
 import PostDatasource from "../datasources/post.datasource";
-import { posts, users } from "../test-data";
-import UserDatasource from "../datasources/user.datasource";
+import { posts, persons } from "../test-data";
+import PersonDatasource from "../datasources/person.datasource";
 import ServerInitializer from "../server-initializer";
 import { JwtPayload } from "../jwt-payload";
 import * as dotenv from "dotenv";
@@ -10,10 +10,10 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const postDatasource = new PostDatasource(posts);
-const userDatasource = new UserDatasource(users);
+const personDatasource = new PersonDatasource(persons);
 const dataSource = {
   postDatasource: postDatasource,
-  userDatasource: userDatasource,
+  personDatasource: personDatasource,
 };
 
 const serverInitializer = new ServerInitializer();
@@ -49,7 +49,7 @@ describe("queries", () => {
 
     beforeEach(() => {
       postDatasource.reset();
-      userDatasource.reset();
+      personDatasource.reset();
     });
 
     it("should return an empty array", async () => {
@@ -119,7 +119,7 @@ describe("mutations", () => {
 
     beforeEach(() => {
       postDatasource.reset();
-      userDatasource.reset();
+      personDatasource.reset();
     });
 
     it("should responds not authorized if no JWT was given", async () => {
@@ -173,7 +173,7 @@ describe("mutations", () => {
 
     beforeEach(() => {
       postDatasource.reset();
-      userDatasource.reset();
+      personDatasource.reset();
     });
 
     it("should throw an error if not authorized", async () => {

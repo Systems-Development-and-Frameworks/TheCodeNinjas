@@ -6,13 +6,13 @@ import { JwtPayload } from "../jwt-payload";
 import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
 import { Executor } from "@graphql-tools/delegate/types";
-import User from "../entities/user.entity";
+import Person from "../entities/person.entity";
 
-export function query(subSchemas: GraphQLSchema[]) {
+export function query(subSchemas: GraphQLSchema[], executor: Executor) {
   return {};
 }
 
-export function properties(subSchemas: GraphQLSchema[]) {
+export function properties(subSchemas: GraphQLSchema[], executor: Executor) {
   return {};
 }
 
@@ -66,7 +66,7 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
           result.errors.map((error) => error.message).join("\n")
         );
       } else {
-        const person: Partial<User> = result.data.person;
+        const person: Partial<Person> = result.data.person;
         const payload: JwtPayload = { id: result["id"] };
 
         return jwt.sign(payload, process.env.JWT_SECRET, {
@@ -85,6 +85,7 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
           }
         }
       `;
+
       const { email, password } = args;
 
       const result = await executor({
@@ -97,7 +98,7 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
           result.errors.map((error) => error.message).join("\n")
         );
       } else {
-        const person: Partial<User> = result.data.person;
+        const person: Partial<Person> = result.data.person;
 
         if (!person) {
           throw new AuthenticationError("Wrong credentials");
