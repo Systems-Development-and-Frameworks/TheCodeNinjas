@@ -30,6 +30,7 @@ export default class ServerInitializer {
       schema: schemaWithMiddleware,
       context: createContext(),
       dataSources: createDatasources,
+      playground: true,
       ...config,
     });
   }
