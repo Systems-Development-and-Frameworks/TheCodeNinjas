@@ -130,19 +130,28 @@ export default Vue.extend({
         });
       });
     },
-    removeNewsItem(id: number) {
-      this.newsItems = this.newsItems.filter(item => item.id !== id);
+    removeNewsItem(id: string) {
+      this.$apollo.mutate({
+        mutation: gql`
+          mutation($postId: ID!) {
+            delete(id: $postId)
+          }
+        `,
+        update(store, response) {
+          console.log(store);
+          console.log(response);
+        },
+        variables: {
+          postId: id
+        }
+      });
     },
 
     createNewsItem() {
       this.$apollo.mutate({
         mutation: gql`
-          mutation {
-            posts {
-              id
-              title
-              votes
-            }
+          mutation($postId: ID!) {
+            delete(id: $postId)
           }
         `,
         update(store, response) {
