@@ -31,6 +31,7 @@ export default class ServerInitializer {
       context: createContext(),
       dataSources: createDatasources,
       playground: true,
+      introspection: true,
       ...config,
     });
   }
