@@ -1,25 +1,9 @@
 import { allow, rule, shield } from "graphql-shield";
-import PostDatasource from "./datasources/post.datasource";
 import { JwtPayload } from "./jwt-payload";
 import { GraphQLSchema } from "graphql";
 import { gql, UserInputError } from "apollo-server";
-import Person from "./entities/person.entity";
 import Post from "./entities/post.entity";
 
-/*
-const isOwner = rule({ cache: "no_cache" })(async (parent, args, ctx) => {
-  if (ctx.user !== null) {
-    const jwtPayload: JwtPayload = ctx.user;
-    const postDatasource: PostDatasource = ctx.dataSources.postDatasource;
-    const post = await postDatasource.getPost(args.id);
-
-    if (post) {
-      return post.user.id === jwtPayload.id;
-    }
-  }
-
-  return false;
-});*/
 
 export default function createPermissions(
   subSchemas: GraphQLSchema[],

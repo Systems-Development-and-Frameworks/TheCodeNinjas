@@ -7,17 +7,20 @@ const newsItemsMock = [
   new NewsItemModel({
     id: 1,
     title: "Hackernews Nr 1",
-    votes: 1
+    votes: 1,
+    author: null
   }),
   new NewsItemModel({
     id: 2,
     title: "Hackernews Nr 2",
-    votes: 2
+    votes: 2,
+    author: null
   }),
   new NewsItemModel({
     id: 3,
     title: "Hackernews Nr 3",
-    votes: 3
+    votes: 3,
+    author: null
   })
 ];
 

@@ -9,7 +9,11 @@ Vue.config.productionTip = false;
 Vue.use(VueApollo);
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:4000/graphql"
+  uri: "http://localhost:4000/graphql",
+  //uri: "https://news-list-backend.herokuapp.com/graphql",
+  headers: {
+    authorization: `Bearer ${window.localStorage.getItem("token")}`
+  }
 });
 
 const cache = new InMemoryCache();
