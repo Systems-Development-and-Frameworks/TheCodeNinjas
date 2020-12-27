@@ -76,36 +76,42 @@
 
 <script lang="ts">
 import NewsItem from "../../components/NewsItem/NewsItem.vue";
-import { NewsItemModel } from "../../models/news-item.model";
+import {
+  NewsItemModel,
+  NewsItemProperties
+} from "../../models/news-item.model";
 import Vue from "vue";
+import { gql } from "apollo-boost";
 
 export default Vue.extend({
   name: "NewsList",
   components: {
     NewsItem
   },
+  apollo: {
+    newsItems: {
+      query: gql`
+        query {
+          posts {
+            id
+            title
+            votes
+          }
+        }
+      `,
+      update(data) {
+        return data.posts.map(
+          (post: NewsItemProperties) => new NewsItemModel(post)
+        );
+      }
+    }
+  },
   data() {
     return {
       sortDescending: true,
       currentId: 3,
       newsTitle: "",
-      newsItems: [
-        new NewsItemModel({
-          id: 1,
-          title: "Hackernews Nr 1",
-          votes: 0
-        }),
-        new NewsItemModel({
-          id: 2,
-          title: "Hackernews Nr 2",
-          votes: 0
-        }),
-        new NewsItemModel({
-          id: 3,
-          title: "Hackernews Nr 3",
-          votes: 0
-        })
-      ]
+      newsItems: [] as NewsItemModel[]
     };
   },
   methods: {
@@ -129,7 +135,22 @@ export default Vue.extend({
     },
 
     createNewsItem() {
-      this.currentId++;
+      this.$apollo.mutate({
+        mutation: gql`
+          mutation {
+            posts {
+              id
+              title
+              votes
+            }
+          }
+        `,
+        update(store, response) {
+          console.log(store);
+          console.log(response);
+        }
+      });
+      /*this.currentId++;
       const newItem = new NewsItemModel({
         id: this.currentId,
         title: this.newsTitle,
@@ -137,11 +158,12 @@ export default Vue.extend({
       });
 
       this.newsItems = [...this.newsItems, newItem];
-      this.newsTitle = "";
+      this.newsTitle = "";*/
     }
   },
   computed: {
     hasNewsItems(): boolean {
+      console.log(this.newsItems);
       return this.newsItems.length > 0;
     },
     newsItemsSorted(): NewsItemModel[] {
