@@ -7,6 +7,9 @@ const typeDefs = `
   }
   
   type Mutation {
+      write(title: String!): ID
+      delete(id: ID!): ID
+  
       upvote(id: ID!): Int
       downvote(id: ID!): Int
   

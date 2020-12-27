@@ -51,7 +51,7 @@ export default class PostDatasource extends DataSource {
 
   getPostsByPerson(personId: string): Promise<Post[]> {
     return Promise.resolve(
-      this.posts.filter((post) => post.author === personId)
+      this.posts.filter((post) => post.author.id === personId)
     );
   }
 

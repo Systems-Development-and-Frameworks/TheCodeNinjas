@@ -3,7 +3,7 @@ import { ApolloServer } from "apollo-server";
 import createResolvers from "./create-resolvers";
 
 import { applyMiddleware } from "graphql-middleware";
-import permissions from "./permissions";
+import createPermissions from "./create-permissions";
 
 import createDatasources from "./create-datasources";
 import createContext from "./create-context";
@@ -23,6 +23,7 @@ export default class ServerInitializer {
       resolvers: createResolvers([graphCmsSchema], executor),
     });
 
+    const permissions = createPermissions([graphCmsSchema], executor);
     const schemaWithMiddleware = applyMiddleware(gatewaysSchema, permissions);
 
     return new ApolloServer({
