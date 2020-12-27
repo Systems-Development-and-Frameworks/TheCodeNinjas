@@ -9,7 +9,8 @@
     "start:prod": "node dist/index.js",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
-    "test:unit": "jest src/"
+    "test:unit": "jest src/",
+    "deploy": "cd .. && git subtree push --prefix backend heroku master"
   },
   "author": "",
   "license": "ISC",
