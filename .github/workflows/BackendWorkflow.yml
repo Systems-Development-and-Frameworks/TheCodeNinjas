@@ -40,16 +40,3 @@ jobs:
     - run: npm ci
     - run: npm run build
 
-  deploy:
-    name: Deploy to backend branch
-    runs-on: ubuntu-latest
-    steps:
-    - name: Push to branch
-      uses: s0/git-publish-subdir-action@develop
-      env:
-        REPO: self
-        BRANCH: deploy/backend
-        FOLDER: backend
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
