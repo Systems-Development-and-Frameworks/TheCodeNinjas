@@ -16,7 +16,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deploy-webapp:
-    name: Deploy to backend branch
+    name: Deploy to webapp branch
     runs-on: ubuntu-latest
     steps:
     - name: Push to branch
