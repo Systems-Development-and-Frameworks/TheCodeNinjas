@@ -111,13 +111,27 @@ const GET_POSTS = gql`
 
 const UPVOTE = gql`
   mutation($postId: ID!) {
-    upvote(id: $postId)
+    upvote(id: $postId) {
+      id
+      title
+      votes
+      author {
+        id
+      }
+    }
   }
 `;
 
 const DOWNVOTE = gql`
   mutation($postId: ID!) {
-    downvote(id: $postId)
+    downvote(id: $postId) {
+      id
+      title
+      votes
+      author {
+        id
+      }
+    }
   }
 `;
 
@@ -129,13 +143,27 @@ const LOGIN = gql`
 
 const WRITE = gql`
   mutation($title: String!) {
-    write(title: $title)
+    write(title: $title) {
+      id
+      title
+      votes
+      author {
+        id
+      }
+    }
   }
 `;
 
-const DELETE_POST = gql`
+const DELETE = gql`
   mutation($postId: ID!) {
-    delete(id: $postId)
+    delete(id: $postId) {
+      id
+      title
+      votes
+      author {
+        id
+      }
+    }
   }
 `;
 
@@ -189,45 +217,129 @@ export default Vue.extend({
     toggleSortOrder() {
       this.sortDescending = !this.sortDescending;
     },
-    async upvote(postId: string) {
+    async upvote(newsItem: NewsItemProperties) {
       try {
         await this.$apollo.mutate({
           mutation: UPVOTE,
-          update: async (store, response) => {
-            await this.$apolloProvider.defaultClient.reFetchObservableQueries();
+          optimisticResponse: {
+            upvote: {
+              id: newsItem.id,
+              title: newsItem.title,
+              votes: newsItem.votes + 1,
+              author: {
+                id: this.userId,
+                __typename: "Person"
+              },
+              __typename: "Post"
+            }
+          },
+          update: (store, response) => {
+            if (response.data) {
+              const remotePost = response.data.upvote;
+              const data = store.readQuery<{ posts: { id: string }[] }>({
+                query: GET_POSTS
+              });
+
+              store.writeQuery({
+                query: GET_POSTS,
+                data: {
+                  posts: data?.posts.map(post => {
+                    if (remotePost.id === post.id) {
+                      return remotePost;
+                    } else {
+                      return post;
+                    }
+                  })
+                }
+              });
+            }
           },
           variables: {
-            postId
+            postId: newsItem.id
           }
         });
       } catch (e) {
         alert(e);
       }
     },
-    async downvote(postId: string) {
+    async downvote(newsItem: NewsItemProperties) {
       try {
         await this.$apollo.mutate({
           mutation: DOWNVOTE,
-          update: async (store, response) => {
-            await this.$apolloProvider.defaultClient.reFetchObservableQueries();
+          optimisticResponse: {
+            downvote: {
+              id: newsItem.id,
+              title: newsItem.title,
+              votes: newsItem.votes > 0 ? newsItem.votes - 1 : 0,
+              author: {
+                id: this.userId,
+                __typename: "Person"
+              },
+              __typename: "Post"
+            }
+          },
+          update: (store, response) => {
+            if (response.data) {
+              const remotePost = response.data.downvote;
+              const data = store.readQuery<{ posts: { id: string }[] }>({
+                query: GET_POSTS
+              });
+
+              store.writeQuery({
+                query: GET_POSTS,
+                data: {
+                  posts: data?.posts.map(post => {
+                    if (remotePost.id === post.id) {
+                      return remotePost;
+                    } else {
+                      return post;
+                    }
+                  })
+                }
+              });
+            }
           },
           variables: {
-            postId
+            postId: newsItem.id
           }
         });
       } catch (e) {
         alert(e);
       }
     },
-    async removeNewsItem(postId: string) {
+    async removeNewsItem(newsItem: NewsItemProperties) {
       try {
         await this.$apollo.mutate({
-          mutation: DELETE_POST,
-          update: async (store, response) => {
-            await this.$apolloProvider.defaultClient.reFetchObservableQueries();
+          mutation: DELETE,
+          optimisticResponse: {
+            delete: {
+              id: newsItem.id,
+              title: newsItem.title,
+              votes: newsItem.votes,
+              author: {
+                id: this.userId,
+                __typename: "Person"
+              },
+              __typename: "Post"
+            }
+          },
+          update: (store, response) => {
+            if (response.data) {
+              const remotePost = response.data.delete;
+              const data = store.readQuery<{ posts: { id: string }[] }>({
+                query: GET_POSTS
+              });
+
+              store.writeQuery({
+                query: GET_POSTS,
+                data: {
+                  posts: data?.posts.filter(post => post.id !== remotePost.id)
+                }
+              });
+            }
           },
           variables: {
-            postId
+            postId: newsItem.id
           }
         });
       } catch (e) {
@@ -243,21 +355,34 @@ export default Vue.extend({
           variables: {
             title
           },
-          update: async (store, response) => {
-            /*const data = store.readQuery({ query: GET_POSTS }) as any;
-            const newPost = {
-              id: response.data.write,
-              title
-            };
+          optimisticResponse: {
+            write: {
+              id: null,
+              title: title,
+              votes: 0,
+              author: {
+                id: this.userId,
+                __typename: "Person"
+              },
+              __typename: "Post"
+            }
+          },
+          update: (store, response) => {
+            if (response.data) {
+              const remotePost = response.data.write;
+              const data = store.readQuery<{ posts: object[] }>({
+                query: GET_POSTS
+              });
 
-            data.posts.push(newPost);
+              data?.posts.push(remotePost);
 
-            store.writeQuery({
-              query: GET_POSTS,
-              data
-            });*/
+              store.writeQuery({
+                query: GET_POSTS,
+                data: data
+              });
 
-            await this.$apolloProvider.defaultClient.reFetchObservableQueries();
+              this.newsTitle = "";
+            }
           }
         });
       } catch (error) {

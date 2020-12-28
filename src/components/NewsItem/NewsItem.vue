@@ -5,6 +5,7 @@
     <td class="uk-table-shrink" data-test-votes>{{ newsItem.votes }}</td>
     <td class="uk-table-shrink" v-if="login">
       <button
+        v-if="newsItem.id"
         @click="upvote"
         class="uk-icon-button uk-button-default"
         aria-label="Upvote"
@@ -14,6 +15,7 @@
     </td>
     <td class="uk-table-shrink" v-if="login">
       <button
+        v-if="newsItem.id"
         @click="downvote"
         class="uk-icon-button uk-button-secondary"
         aria-label="Downvote"
@@ -23,7 +25,7 @@
     </td>
     <td class="uk-table-shrink" v-if="login">
       <button
-        v-if="isOwner"
+        v-if="newsItem.id && isOwner"
         @click="remove"
         class="uk-icon-button uk-button-danger"
         aria-label="Remove"
@@ -56,13 +58,13 @@ export default Vue.extend({
   },
   methods: {
     remove() {
-      this.$emit("remove", this.newsItem.id);
+      this.$emit("remove", this.newsItem);
     },
     upvote() {
-      this.$emit("upvote", this.newsItem.id);
+      this.$emit("upvote", this.newsItem);
     },
     downvote() {
-      this.$emit("downvote", this.newsItem.id);
+      this.$emit("downvote", this.newsItem);
     }
   }
 });

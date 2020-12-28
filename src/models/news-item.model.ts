@@ -1,15 +1,17 @@
+import { PersonProperties } from "@/models/person.model";
+
 export interface NewsItemProperties {
-  id: number;
+  id: string;
   title: string;
   votes: number;
-  author: any;
+  author: PersonProperties | null;
 }
 
 export class NewsItemModel {
-  id: number;
+  id: string;
   title: string;
   votes: number;
-  author: any;
+  author: PersonProperties | null;
 
   constructor({ id, title, votes = 0, author = null }: NewsItemProperties) {
     this.id = id;
