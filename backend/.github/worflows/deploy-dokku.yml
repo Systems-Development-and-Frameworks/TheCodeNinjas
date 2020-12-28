@@ -1,5 +1,4 @@
 name: "Deploy: dokku"
-
 on: [push]
 
 jobs:
