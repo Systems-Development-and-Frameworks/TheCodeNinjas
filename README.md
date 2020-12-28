@@ -1,59 +1,29 @@
+# homework-1
 
-# TheCodeNinjas
-
-  
-
-This is the homework repo of the "TheCodeNinjas"-Team for the course 'Systems Development and Frameworks'
-
-<p align="center">
-  <img src=".github/img/ninja.gif" alt="homework">
-<p>
-
-# Installation
-
-  
-
-Clone this repo
-
-Install all necessary packages
-
+## Project setup
 ```
-
 npm install
-
 ```
 
-Run the unit tests
-
+### Compiles and hot-reloads for development
 ```
-
-npm run test:unit
-
-```
-
-Lint and fix files
-
-```
-
-npm run lint --fix
-
-```
- Compile the project and start the server locally
-
-```
-
 npm run serve
-
 ```
 
+### Compiles and minifies for production
+```
+npm run build
+```
 
-## Maintainers
+### Run your unit tests
+```
+npm run test:unit
+```
 
-  
+### Lints and fixes files
+```
+npm run lint
+```
 
-- Christoph Stach
-
-- Florian Thom
-
-- Phillip Friedel
-
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
