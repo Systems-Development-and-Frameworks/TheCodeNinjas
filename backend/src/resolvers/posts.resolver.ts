@@ -6,6 +6,7 @@ import { UpvoteDto } from "../dtos/upvote.dto";
 import { gql, UserInputError } from "apollo-server";
 import { WriteDto } from "../dtos/write.dto";
 import { DeleteDto } from "../dtos/delete.dto";
+import { delegateToSchema } from "graphql-tools";
 
 export function query(subSchemas: GraphQLSchema[], executor: Executor) {
   return {};
@@ -21,6 +22,8 @@ export function properties(subSchemas: GraphQLSchema[], executor: Executor) {
 }
 
 export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
+  const [graphCmsSchema] = subSchemas;
+
   return {
     async write(parent, args: WriteDto, context, info) {
       const personId = context.user.id;
@@ -49,13 +52,29 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
           result.errors.map((error) => error.message).join("\n")
         );
       } else {
-        const post: Partial<Post> = result.data.createPost;
-        return post.id;
+        const postId = result.data.createPost.id;
+
+        return delegateToSchema({
+          schema: graphCmsSchema,
+          operation: "query",
+          fieldName: "post",
+          args: { where: { id: postId } },
+          context,
+          info,
+        });
       }
     },
     async delete(parent, args: DeleteDto, context, info) {
-      // const personId = context.user.id;
       const postId = args.id;
+
+      const delegationResult = await delegateToSchema({
+        schema: graphCmsSchema,
+        operation: "query",
+        fieldName: "post",
+        args: { where: { id: postId } },
+        context,
+        info,
+      });
 
       const mutation = gql`
         mutation($postId: ID!) {
@@ -77,8 +96,7 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
           result.errors.map((error) => error.message).join("\n")
         );
       } else {
-        const post: Partial<Post> = result.data.deletePost;
-        return post.id;
+        return delegationResult;
       }
     },
     async upvote(parent, args: UpvoteDto, context, info) {
@@ -91,9 +109,7 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
             where: { id: $postId }
             data: { voters: { connect: { where: { id: $personId } } } }
           ) {
-            voters {
-              id
-            }
+            id
           }
         }
       `;
@@ -111,8 +127,16 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
           result.errors.map((error) => error.message).join("\n")
         );
       } else {
-        const post: Partial<Post> = result.data.updatePost;
-        return post.voters.length;
+        const postId = result.data.updatePost.id;
+
+        return delegateToSchema({
+          schema: graphCmsSchema,
+          operation: "query",
+          fieldName: "post",
+          args: { where: { id: postId } },
+          context,
+          info,
+        });
       }
     },
     async downvote(parent, args: DownvoteDto, context, info) {
@@ -125,9 +149,7 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
             where: { id: $postId }
             data: { voters: { disconnect: { id: $personId } } }
           ) {
-            voters {
-              id
-            }
+            id
           }
         }
       `;
@@ -145,8 +167,16 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
           result.errors.map((error) => error.message).join("\n")
         );
       } else {
-        const post: Partial<Post> = result.data.updatePost;
-        return post.voters.length;
+        const postId = result.data.updatePost.id;
+
+        return delegateToSchema({
+          schema: graphCmsSchema,
+          operation: "query",
+          fieldName: "post",
+          args: { where: { id: postId } },
+          context,
+          info,
+        });
       }
     },
   };

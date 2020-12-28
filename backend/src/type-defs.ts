@@ -7,11 +7,11 @@ const typeDefs = `
   }
   
   type Mutation {
-      write(title: String!): ID
-      delete(id: ID!): ID
+      write(title: String!): Post
+      delete(id: ID!): Post
   
-      upvote(id: ID!): Int
-      downvote(id: ID!): Int
+      upvote(id: ID!): Post
+      downvote(id: ID!): Post
   
       login(email: String!, password: String!): String
       signup(name: String!, email: String!, password: String!): String
