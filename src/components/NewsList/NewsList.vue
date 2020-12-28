@@ -227,7 +227,7 @@ export default Vue.extend({
               title: newsItem.title,
               votes: newsItem.votes + 1,
               author: {
-                id: this.userId,
+                id: newsItem.author?.id,
                 __typename: "Person"
               },
               __typename: "Post"
@@ -272,7 +272,7 @@ export default Vue.extend({
               title: newsItem.title,
               votes: newsItem.votes > 0 ? newsItem.votes - 1 : 0,
               author: {
-                id: this.userId,
+                id: newsItem.author?.id,
                 __typename: "Person"
               },
               __typename: "Post"
@@ -317,7 +317,7 @@ export default Vue.extend({
               title: newsItem.title,
               votes: newsItem.votes,
               author: {
-                id: this.userId,
+                id: newsItem.author?.id,
                 __typename: "Person"
               },
               __typename: "Post"
