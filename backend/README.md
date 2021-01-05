@@ -13,7 +13,7 @@ In the following we describe each step necessary for the setup.
 1. Signup at <a href="https://graphcms.com/">GraphCMS </a>
 2. Create a new Database
 <p align="center">
-    <img src="../.github/img/newDatabase.jpg" width="500">
+    <img src="../.github/img/newDatabase.JPG" width="500">
 </p>
 3. Generate the necessary fields according to your schema
 <p align="center">
