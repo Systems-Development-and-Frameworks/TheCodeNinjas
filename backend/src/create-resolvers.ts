@@ -12,7 +12,7 @@ import {
 
 export default function createResolvers(
   subSchemas: GraphQLSchema[],
-  executor: any
+  executor: any,
 ) {
   return {
     Query: {

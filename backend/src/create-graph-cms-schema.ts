@@ -10,6 +10,7 @@ import {
 import { fetch } from "cross-fetch";
 import { FieldTransformer } from "@graphql-tools/wrap/types";
 import { RenameRootFields } from "apollo-server";
+import { posts } from "./seed-data";
 
 export async function executor({ document, variables }) {
   const query = print(document);
@@ -28,9 +29,31 @@ export async function executor({ document, variables }) {
   return fetchResult.json();
 }
 
+const filter: RootFilter = (operation, fieldName) => {
+  console.log("-- ", operation);
+
+  if(operation == 'Mutation'){
+    return false;
+  }
+
+  if(fieldName == 'posts' || fieldName == 'post' || fieldName == 'persons' || fieldName == 'person'){
+    return true;
+  }
+  
+  return false;
+};
+
 export default async function createGraphCmsSchema(): Promise<GraphQLSchema> {
   return wrapSchema({
     schema: await introspectSchema(executor),
     executor,
+    transforms: [
+      new FilterRootFields(filter),
+    ]
   });
 }
+
+type RootFilter = (
+  operation: 'Query' | 'Mutation' | 'Subscription',
+  fieldName: string,
+) => boolean;
