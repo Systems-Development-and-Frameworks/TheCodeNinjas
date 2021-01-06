@@ -1,4 +1,4 @@
-import { AuthenticationError, gql, UserInputError } from "apollo-server";
+import { AuthenticationError, UserInputError } from "apollo-server";
 import { GraphQLSchema } from "graphql";
 import { SigninDto } from "../dtos/signin.dto";
 import { SignupDto } from "../dtos/signup.dto";
@@ -7,6 +7,7 @@ import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
 import { Executor } from "@graphql-tools/delegate/types";
 import Person from "../entities/person.entity";
+import PersonsDatasource from "../datasources/persons.datasource";
 
 export function query(subSchemas: GraphQLSchema[], executor: Executor) {
   return {};
@@ -20,6 +21,8 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
   return {
     async signup(parent, args: SignupDto, context, info) {
       const { name, email, password } = args;
+      const personsDatasource: PersonsDatasource =
+        context.dataSources.personsDatasource;
 
       const passwordSalt = await bcrypt.genSalt(
         parseInt(process.env.SALT_ROUNDS)
@@ -31,35 +34,12 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
         throw new UserInputError("Password must at least 8 characters long");
       }
 
-      const mutation = gql`
-        mutation(
-          $name: String!
-          $email: String!
-          $passwordHash: String!
-          $passwordSalt: String!
-        ) {
-          createPerson(
-            data: {
-              name: $name
-              email: $email
-              passwordHash: $passwordHash
-              passwordSalt: $passwordSalt
-            }
-          ) {
-            id
-          }
-        }
-      `;
-
-      const result = await executor({
-        document: mutation,
-        variables: {
-          name,
-          email,
-          passwordHash,
-          passwordSalt,
-        },
-      });
+      const result = await personsDatasource.createPerson(
+        name,
+        email,
+        passwordHash,
+        passwordSalt
+      );
 
       if (result.errors) {
         throw new UserInputError(
@@ -76,22 +56,11 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
     },
 
     async login(parent, args: SigninDto, context, info) {
-      const query = gql`
-        query($email: String!) {
-          person(where: { email: $email }) {
-            id
-            passwordHash
-            passwordSalt
-          }
-        }
-      `;
+      const personsDatasource: PersonsDatasource =
+        context.dataSources.personsDatasource;
 
       const { email, password } = args;
-
-      const result = await executor({
-        document: query,
-        variables: { email },
-      });
+      const result = await personsDatasource.queryPersonByEmail(email);
 
       if (result.errors) {
         throw new UserInputError(

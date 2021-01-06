@@ -1,16 +1,16 @@
 import { createTestClient } from "apollo-server-testing";
 import { gql } from "apollo-server";
-import PostDatasource from "../datasources/post.datasource";
+import PostsDatasource from "../datasources/posts.datasource";
 import { posts, persons } from "../test-data";
-import PersonDatasource from "../datasources/person.datasource";
+import PersonsDatasource from "../datasources/persons.datasource";
 import ServerInitializer from "../server-initializer";
 import { JwtPayload } from "../jwt-payload";
 import * as dotenv from "dotenv";
 
 dotenv.config();
 
-const postDatasource = new PostDatasource(posts);
-const personDatasource = new PersonDatasource(persons);
+const postDatasource = new PostsDatasource(posts);
+const personDatasource = new PersonsDatasource(persons);
 const dataSource = {
   postDatasource: postDatasource,
   personDatasource: personDatasource,

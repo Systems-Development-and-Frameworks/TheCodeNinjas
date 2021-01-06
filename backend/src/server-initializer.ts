@@ -29,7 +29,7 @@ export default class ServerInitializer {
     return new ApolloServer({
       schema: schemaWithMiddleware,
       context: createContext(),
-      dataSources: createDatasources,
+      dataSources: createDatasources([graphCmsSchema], executor),
       playground: true,
       introspection: true,
       ...config,
