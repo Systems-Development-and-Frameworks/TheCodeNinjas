@@ -1,36 +1,48 @@
 import { createTestClient } from "apollo-server-testing";
 import { gql } from "apollo-server";
 import PostsDatasource from "../datasources/posts.datasource";
-import { posts, persons } from "../test-data";
 import PersonsDatasource from "../datasources/persons.datasource";
 import ServerInitializer from "../server-initializer";
-import { JwtPayload } from "../jwt-payload";
 import * as dotenv from "dotenv";
+import createGraphCmsSchema, {
+  executor,
+} from "../graph-cms/create-graph-cms-schema";
+
+jest.mock("../datasources/posts.datasource");
+jest.mock("../datasources/persons.datasource");
+jest.mock("../graph-cms/create-graph-cms-schema");
 
 dotenv.config();
 
-const postDatasource = new PostsDatasource(posts);
-const personDatasource = new PersonsDatasource(persons);
-const dataSource = {
-  postDatasource: postDatasource,
-  personDatasource: personDatasource,
-};
-
 const serverInitializer = new ServerInitializer();
-const serverUnauthorized = serverInitializer.createServer({
-  dataSources: () => dataSource,
-});
-
-const serverAuthorized = serverInitializer.createServer({
-  dataSources: () => dataSource,
-  context: () => {
-    return {
-      user: {
-        id: "58334916-ae55-4149-add5-0bc11f1b43c6",
-      } as JwtPayload,
-    };
+const serverUnauthorized = serverInitializer.createServer(
+  {
+    dataSources: () => ({
+      postDatasource: new PostsDatasource(null, null),
+      personDatasource: new PersonsDatasource(null, null),
+    }),
   },
-});
+  createGraphCmsSchema,
+  executor
+);
+
+const serverAuthorized = serverInitializer.createServer(
+  {
+    dataSources: () => ({
+      postDatasource: new PostsDatasource(null, null),
+      personDatasource: new PersonsDatasource(null, null),
+    }),
+    context: () => {
+      return {
+        user: {
+          id: "123",
+        },
+      };
+    },
+  },
+  createGraphCmsSchema,
+  executor
+);
 
 describe("queries", () => {
   describe("POSTS", () => {
@@ -47,13 +59,8 @@ describe("queries", () => {
       return query({ query: POSTS });
     };
 
-    beforeEach(() => {
-      postDatasource.reset();
-      personDatasource.reset();
-    });
-
     it("should return an empty array", async () => {
-      postDatasource.posts = [];
+      // postDatasource.posts = [];
 
       const { query } = createTestClient(await serverUnauthorized);
       const response = action(query);
@@ -117,11 +124,6 @@ describe("mutations", () => {
       });
     };
 
-    beforeEach(() => {
-      postDatasource.reset();
-      personDatasource.reset();
-    });
-
     it("should responds not authorized if no JWT was given", async () => {
       const { mutate } = createTestClient(await serverUnauthorized);
       const response = action(mutate);
@@ -170,11 +172,6 @@ describe("mutations", () => {
         },
       });
     };
-
-    beforeEach(() => {
-      postDatasource.reset();
-      personDatasource.reset();
-    });
 
     it("should throw an error if not authorized", async () => {
       const { mutate } = createTestClient(await serverUnauthorized);

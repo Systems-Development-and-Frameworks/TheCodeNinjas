@@ -25,13 +25,13 @@ export default async function createGraphCmsSchema(): Promise<GraphQLSchema> {
   return wrapSchema({
     schema: await introspectSchema(executor),
     executor,
-    transforms:[
+    transforms: [
       new FilterObjectFields((typeName, fieldName, fieldConfig) => {
-        if(typeName == 'Person' && (fieldName == 'passwordHash' || fieldName == 'passwordSalt')){
-          return false;
-        }
-        return true;
-      })
+        return !(
+          typeName === "Person" &&
+          (fieldName === "passwordHash" || fieldName === "passwordSalt")
+        );
+      }),
     ],
   });
 }
