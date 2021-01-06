@@ -52,7 +52,7 @@ export default function createPermissions(
   return shield(
     {
       Query: {
-        "*": deny,
+        "*": allow,
         post: allow,
         posts: allow,
         person: allow,
@@ -70,7 +70,7 @@ export default function createPermissions(
         publishedAt: deny,
       },
       Mutation: {
-        "*": deny,
+        "*": allow,
         login: allow,
         signup: allow,
         downvote: isAuthenticated,
