@@ -39,7 +39,8 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
         );
       } else {
         const postId = result.data.createPost.id;
-        return postsDatasource.delegatePost(context, info, postId);
+
+        return await postsDatasource.delegatePost(context, info, postId);
       }
     },
     async delete(parent, args: DeleteDto, context, info) {

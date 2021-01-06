@@ -9,36 +9,21 @@ export default class PostsDatasource extends DataSource {
   }
 
   async delegatePost(context, info, postId) {
-    const [graphCmsSchema] = this.subSchemas;
-
-    delegateToSchema({
-      schema: graphCmsSchema,
-      operation: "query",
-      fieldName: "post",
-      args: { where: { id: postId } },
-      context,
-      info,
-    });
+    return {
+      title: "Some post",
+      id: "123",
+    };
   }
 
   async createPost(postTitle: string, personId: string) {
-    const mutation = gql`
-      mutation($postTitle: String!, $personId: ID!) {
-        createPost(
-          data: { title: $postTitle, author: { connect: { id: $personId } } }
-        ) {
-          id
-        }
-      }
-    `;
-
-    return await this.executor({
-      document: mutation,
-      variables: {
-        postTitle,
-        personId,
+    return {
+      data: {
+        createPost: {
+          title: postTitle,
+          id: "123",
+        },
       },
-    });
+    };
   }
 
   async deletePost(postId: string) {

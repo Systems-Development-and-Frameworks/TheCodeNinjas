@@ -8,7 +8,7 @@ export default function createPermissions(
   subSchemas: GraphQLSchema[],
   executor: any
 ) {
-  const isAuthenticated = rule({ cache: "contextual" })(
+  const isAuthenticated = rule({ cache: "no_cache" })(
     async (parent, args, ctx) => {
       return ctx.user !== null;
     }

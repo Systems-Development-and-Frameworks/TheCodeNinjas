@@ -11,7 +11,7 @@ export default class PostsDatasource extends DataSource {
   async delegatePost(context, info, postId) {
     const [graphCmsSchema] = this.subSchemas;
 
-    delegateToSchema({
+    return delegateToSchema({
       schema: graphCmsSchema,
       operation: "query",
       fieldName: "post",

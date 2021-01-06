@@ -29,8 +29,8 @@ const serverUnauthorized = serverInitializer.createServer(
 const serverAuthorized = serverInitializer.createServer(
   {
     dataSources: () => ({
-      postDatasource: new PostsDatasource(null, null),
-      personDatasource: new PersonsDatasource(null, null),
+      postsDatasource: new PostsDatasource(null, null),
+      personsDatasource: new PersonsDatasource(null, null),
     }),
     context: () => {
       return {
@@ -44,69 +44,11 @@ const serverAuthorized = serverInitializer.createServer(
   executor
 );
 
-describe("queries", () => {
-  describe("POSTS", () => {
-    const POSTS = gql`
-      query {
-        posts {
-          id
-          title
-        }
-      }
-    `;
-
-    const action = (query) => {
-      return query({ query: POSTS });
-    };
-
-    it("should return an empty array", async () => {
-      // postDatasource.posts = [];
-
-      const { query } = createTestClient(await serverUnauthorized);
-      const response = action(query);
-
-      await expect(response).resolves.toMatchObject({
-        errors: undefined,
-        data: { posts: [] },
-      });
-    });
-
-    it("should return seeded post data ", async () => {
-      const { query } = createTestClient(await serverUnauthorized);
-      const response = action(query);
-
-      await expect(response).resolves.toMatchObject({
-        errors: undefined,
-        data: {
-          posts: [
-            {
-              id: "7ed8828b-f4de-4359-8160-1df1ff3234cd",
-              title: "Ein Toller Title",
-            },
-            {
-              id: "bea730b9-1585-4de2-9524-84fde899da7c",
-              title: "Phillips Post",
-            },
-            {
-              id: "b0684837-5261-4f63-81bb-432f4ea409bc",
-              title: "Flos Post",
-            },
-            {
-              id: "10af216d-59bb-4cc1-9a27-246f22c2bee6",
-              title: "Noch ein Post",
-            },
-          ],
-        },
-      });
-    });
-  });
-});
-
 describe("mutations", () => {
   describe("WRITE_POST", () => {
     const WRITE_POST = gql`
-      mutation($post: PostInput!) {
-        write(post: $post) {
+      mutation($title: String!) {
+        write(title: $title) {
           id
           title
         }
@@ -117,9 +59,7 @@ describe("mutations", () => {
       return mutate({
         mutation: WRITE_POST,
         variables: {
-          post: {
-            title: "Some post",
-          },
+          title: "Some post",
         },
       });
     };
@@ -131,7 +71,7 @@ describe("mutations", () => {
       await expect(response).resolves.toMatchObject({
         errors: [
           // https://jestjs.io/docs/en/expect#expectobjectcontainingobject
-          expect.objectContaining({ message: "Not Authorised!" }),
+          expect.objectContaining({ message: "No access allowed!" }),
         ],
         data: {
           write: null,
@@ -180,35 +120,46 @@ describe("mutations", () => {
       await expect(response).resolves.toMatchObject({
         errors: [
           // https://jestjs.io/docs/en/expect#expectobjectcontainingobject
-          expect.objectContaining({ message: "Not Authorised!" }),
+          expect.objectContaining({ message: "No access allowed!" }),
         ],
         data: {
           upvote: null,
         },
       });
     });
+  });
 
-    it("should add one vote to the post", async () => {
-      const { mutate } = createTestClient(await serverAuthorized);
-      const response = await action(
-        "7ed8828b-f4de-4359-8160-1df1ff3234cd",
-        mutate
-      );
+  describe("DOWNVOTE_POST", () => {
+    const UPVOTE_POST = gql`
+      mutation($id: ID!) {
+        downvote(id: $id) {
+          votes
+        }
+      }
+    `;
 
-      expect(response.data.upvote.votes).toBe(1);
-    });
+    const action = (id, mutate) => {
+      return mutate({
+        mutation: UPVOTE_POST,
+        variables: {
+          id,
+        },
+      });
+    };
 
-    it("should not add two votes to the post", async () => {
-      const { mutate } = createTestClient(await serverAuthorized);
+    it("should throw an error if not authorized", async () => {
+      const { mutate } = createTestClient(await serverUnauthorized);
+      const response = action("7ed8828b-f4de-4359-8160-1df1ff3234cd", mutate);
 
-      await action("7ed8828b-f4de-4359-8160-1df1ff3234cd", mutate);
-
-      const response = await action(
-        "7ed8828b-f4de-4359-8160-1df1ff3234cd",
-        mutate
-      );
-
-      expect(response.data.upvote.votes).toBe(1);
+      await expect(response).resolves.toMatchObject({
+        errors: [
+          // https://jestjs.io/docs/en/expect#expectobjectcontainingobject
+          expect.objectContaining({ message: "No access allowed!" }),
+        ],
+        data: {
+          downvote: null,
+        },
+      });
     });
   });
 });
