@@ -1,77 +1,32 @@
 import { createTestClient } from "apollo-server-testing";
 import { gql } from "apollo-server";
-import PostDatasource from "../datasources/post.datasource";
-import PersonDatasource from "../datasources/person.datasource";
-import { posts, persons } from "../test-data";
+import PostsDatasource from "../datasources/posts.datasource";
+import PersonsDatasource from "../datasources/persons.datasource";
 import ServerInitializer from "../server-initializer";
 import * as dotenv from "dotenv";
 import * as jwt from "jsonwebtoken";
 import { JwtPayload } from "../jwt-payload";
+import createGraphCmsSchema, {
+  executor,
+} from "../graph-cms/create-graph-cms-schema";
+
+jest.mock("../datasources/posts.datasource");
+jest.mock("../datasources/persons.datasource");
+jest.mock("../graph-cms/create-graph-cms-schema");
 
 dotenv.config();
 
-const postDatasource = new PostDatasource(posts);
-const personDatasource = new PersonDatasource(persons);
-const dataSource = {
-  postDatasource: postDatasource,
-  personDatasource: personDatasource,
-};
-
 const serverInitializer = new ServerInitializer();
-const serverUnauthorized = serverInitializer.createServer({
-  dataSources: () => dataSource,
-});
-
-describe("queries", () => {
-  describe("PERSONS", () => {
-    const PERSONS = gql`
-      query {
-        persons {
-          id
-          email
-          name
-        }
-      }
-    `;
-
-    const action = (query) => {
-      return query({ query: PERSONS });
-    };
-
-    beforeEach(() => {
-      postDatasource.reset();
-      personDatasource.reset();
-    });
-
-    it("should return seeded persons", async () => {
-      const { query } = createTestClient(await serverUnauthorized);
-      const response = action(query);
-
-      await expect(response).resolves.toMatchObject({
-        errors: undefined,
-        data: {
-          persons: [
-            {
-              id: "58334916-ae55-4149-add5-0bc11f1b43c6",
-              name: "Christoph Stach",
-              email: "s0555912@htw-berlin.de",
-            },
-            {
-              id: "16787679-8a07-4742-8d60-97e72bbc8049",
-              name: "Phillip",
-              email: "s0557917@htw-berlin.de",
-            },
-            {
-              id: "c140c845-ab82-425d-ab5b-6d4d80955cb0",
-              name: "Florian",
-              email: "s0558101@htw-berlin.de",
-            },
-          ],
-        },
-      });
-    });
-  });
-});
+const serverUnauthorized = serverInitializer.createServer(
+  {
+    dataSources: () => ({
+      postsDatasource: new PostsDatasource(null, null),
+      personsDatasource: new PersonsDatasource(null, null),
+    }),
+  },
+  createGraphCmsSchema,
+  executor
+);
 
 describe("mutations", () => {
   describe("LOGIN", () => {
@@ -91,11 +46,6 @@ describe("mutations", () => {
       });
     };
 
-    beforeEach(() => {
-      postDatasource.reset();
-      personDatasource.reset();
-    });
-
     it("should not login with wrong person", async () => {
       const { mutate } = createTestClient(await serverUnauthorized);
       const response = await action(
@@ -105,7 +55,7 @@ describe("mutations", () => {
       );
 
       expect(response).toMatchObject({
-        errors: [expect.objectContaining({ message: "Not Authorised!" })],
+        errors: [expect.objectContaining({ message: "Wrong credentials" })],
         data: {
           login: null,
         },
@@ -155,30 +105,6 @@ describe("mutations", () => {
       });
     };
 
-    beforeEach(() => {
-      postDatasource.reset();
-      personDatasource.reset();
-    });
-
-    it("should not signup if email of person already exists", async () => {
-      const { mutate } = createTestClient(await serverUnauthorized);
-      const response = await action(
-        "Christoph Stach",
-        "s0555912@htw-berlin.de",
-        "1234567890",
-        mutate
-      );
-
-      expect(response).toMatchObject({
-        errors: [expect.objectContaining({ message: "Not Authorised!" })],
-        data: {
-          signup: null,
-        },
-      });
-
-      expect(personDatasource.persons).toHaveLength(3);
-    });
-
     it("should not signup if password is to short", async () => {
       const { mutate } = createTestClient(await serverUnauthorized);
       const response = await action(
@@ -189,13 +115,15 @@ describe("mutations", () => {
       );
 
       expect(response).toMatchObject({
-        errors: [expect.objectContaining({ message: "Not Authorised!" })],
+        errors: [
+          expect.objectContaining({
+            message: "Password must at least 8 characters long",
+          }),
+        ],
         data: {
           signup: null,
         },
       });
-
-      expect(personDatasource.persons).toHaveLength(3);
     });
 
     it("it should signup a new person", async () => {
@@ -212,8 +140,6 @@ describe("mutations", () => {
           signup: expect.any(String),
         },
       });
-
-      expect(personDatasource.persons).toHaveLength(4);
     });
   });
 });

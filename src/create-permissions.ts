@@ -1,15 +1,14 @@
-import { allow, rule, shield } from "graphql-shield";
+import { allow, deny, rule, shield } from "graphql-shield";
 import { JwtPayload } from "./jwt-payload";
 import { GraphQLSchema } from "graphql";
-import { gql, UserInputError } from "apollo-server";
+import { ForbiddenError, gql, UserInputError } from "apollo-server";
 import Post from "./entities/post.entity";
-
 
 export default function createPermissions(
   subSchemas: GraphQLSchema[],
   executor: any
 ) {
-  const isAuthenticated = rule({ cache: "contextual" })(
+  const isAuthenticated = rule({ cache: "no_cache" })(
     async (parent, args, ctx) => {
       return ctx.user !== null;
     }
@@ -52,8 +51,27 @@ export default function createPermissions(
 
   return shield(
     {
-      Query: {},
+      Query: {
+        "*": deny,
+        post: allow,
+        posts: allow,
+        person: allow,
+        persons: allow,
+      },
+      Person: {
+        createdAt: deny,
+        updatedAt: deny,
+        publishedAt: deny,
+      },
+      Post: {
+        voters: deny,
+        createdAt: deny,
+        updatedAt: deny,
+        publishedAt: deny,
+      },
       Mutation: {
+        "*": deny,
+        login: allow,
         signup: allow,
         downvote: isAuthenticated,
         upvote: isAuthenticated,
@@ -61,6 +79,10 @@ export default function createPermissions(
         delete: isOwner,
       },
     },
-    { allowExternalErrors: true }
+    {
+      allowExternalErrors: true,
+      fallbackRule: allow,
+      fallbackError: new ForbiddenError("No access allowed!"),
+    }
   );
 }
