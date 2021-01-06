@@ -11,7 +11,7 @@ import { fetch } from "cross-fetch";
 import { FieldTransformer } from "@graphql-tools/wrap/types";
 import { RenameRootFields } from "apollo-server";
 import { posts } from "./seed-data";
-import { filter, RootFilter } from "./schemaTransforms/rootFieldsFilter";
+import { filter, ObjectFilter } from "./schemaTransforms/rootFieldsFilter";
 
 export async function executor({ document, variables }) {
   const query = print(document);
@@ -34,6 +34,6 @@ export default async function createGraphCmsSchema(): Promise<GraphQLSchema> {
   return wrapSchema({
     schema: await introspectSchema(executor),
     executor,
-    transforms: [new FilterRootFields(filter)],
+    transforms: [new FilterObjectFields(filter)],
   });
 }
