@@ -1,0 +1,30 @@
+name: Deployment Workflow
+
+on: push
+
+jobs:
+  deploy-backend:
+    name: Deploy backend to branch
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Push to branch
+      uses: s0/git-publish-subdir-action@develop
+      env:
+        REPO: self
+        BRANCH: deploy/backend
+        FOLDER: backend
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-webapp:
+    name: Deploy webapp to branch
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Push to branch
+      uses: s0/git-publish-subdir-action@develop
+      env:
+        REPO: self
+        BRANCH: deploy/webapp
+        FOLDER: webapp
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
