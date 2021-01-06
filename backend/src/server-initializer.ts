@@ -19,7 +19,6 @@ export default class ServerInitializer {
     executor
   ) {
     const graphCmsSchema = await createGraphCmsSchema();
-    console.log('test', graphCmsSchema);
 
     const gatewaysSchema = stitchSchemas({
       subschemas: [graphCmsSchema],
