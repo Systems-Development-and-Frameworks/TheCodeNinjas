@@ -1,15 +1,8 @@
 import { introspectSchema, wrapSchema } from "graphql-tools";
 import { GraphQLSchema, print } from "graphql";
-import {
-  FilterRootFields,
-  RenameTypes,
-  TransformObjectFields,
-  FilterObjectFields,
-} from "@graphql-tools/wrap";
+import { FilterObjectFields } from "@graphql-tools/wrap";
 
 import { fetch } from "cross-fetch";
-import { FieldTransformer } from "@graphql-tools/wrap/types";
-import { RenameRootFields } from "apollo-server";
 
 export async function executor({ document, variables }) {
   const query = print(document);
@@ -32,5 +25,13 @@ export default async function createGraphCmsSchema(): Promise<GraphQLSchema> {
   return wrapSchema({
     schema: await introspectSchema(executor),
     executor,
+    transforms: [
+      new FilterObjectFields((typeName, fieldName, fieldConfig) => {
+        return !(
+          typeName === "Person" &&
+          (fieldName === "passwordHash" || fieldName === "passwordSalt")
+        );
+      }),
+    ],
   });
 }
