@@ -9,9 +9,14 @@ export default class PersonsDatasource extends DataSource {
 
   async queryPersonByEmail(email: string) {
     return {
-      id: "1234",
-      passwordHash: "4567",
-      passwordSalt: "8901",
+      data: {
+        person: {
+          id: "58334916-ae55-4149-add5-0bc11f1b43c6",
+          passwordHash:
+            "$2b$10$jn8BT0wp60EIhtC08TCbfeJHkSw3unn7vN0Nogv7g7G.ufWXu0ucG", // chrisPW
+          passwordSalt: "$2b$10$jn8BT0wp60EIhtC08TCbfe",
+        },
+      },
     };
   }
 
@@ -21,34 +26,12 @@ export default class PersonsDatasource extends DataSource {
     passwordHash: string,
     passwordSalt: string
   ) {
-    const mutation = gql`
-      mutation(
-        $name: String!
-        $email: String!
-        $passwordHash: String!
-        $passwordSalt: String!
-      ) {
-        createPerson(
-          data: {
-            name: $name
-            email: $email
-            passwordHash: $passwordHash
-            passwordSalt: $passwordSalt
-          }
-        ) {
-          id
-        }
-      }
-    `;
-
-    return await this.executor({
-      document: mutation,
-      variables: {
-        name,
-        email,
-        passwordHash,
-        passwordSalt,
+    return {
+      data: {
+        person: {
+          id: "123",
+        },
       },
-    });
+    };
   }
 }

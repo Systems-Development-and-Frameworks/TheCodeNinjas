@@ -18,8 +18,8 @@ const serverInitializer = new ServerInitializer();
 const serverUnauthorized = serverInitializer.createServer(
   {
     dataSources: () => ({
-      postDatasource: new PostsDatasource(null, null),
-      personDatasource: new PersonsDatasource(null, null),
+      postsDatasource: new PostsDatasource(null, null),
+      personsDatasource: new PersonsDatasource(null, null),
     }),
   },
   createGraphCmsSchema,

@@ -20,8 +20,8 @@ const serverInitializer = new ServerInitializer();
 const serverUnauthorized = serverInitializer.createServer(
   {
     dataSources: () => ({
-      postDatasource: new PostsDatasource(null, null),
-      personDatasource: new PersonsDatasource(null, null),
+      postsDatasource: new PostsDatasource(null, null),
+      personsDatasource: new PersonsDatasource(null, null),
     }),
   },
   createGraphCmsSchema,
@@ -55,7 +55,7 @@ describe("mutations", () => {
       );
 
       expect(response).toMatchObject({
-        errors: [expect.objectContaining({ message: "Not Authorised!" })],
+        errors: [expect.objectContaining({ message: "Wrong credentials" })],
         data: {
           login: null,
         },
@@ -105,30 +105,6 @@ describe("mutations", () => {
       });
     };
 
-    beforeEach(() => {
-      // postDatasource.reset();
-      // personDatasource.reset();
-    });
-
-    it("should not signup if email of person already exists", async () => {
-      const { mutate } = createTestClient(await serverUnauthorized);
-      const response = await action(
-        "Christoph Stach",
-        "s0555912@htw-berlin.de",
-        "1234567890",
-        mutate
-      );
-
-      expect(response).toMatchObject({
-        errors: [expect.objectContaining({ message: "Not Authorised!" })],
-        data: {
-          signup: null,
-        },
-      });
-
-      // expect(personDatasource.persons).toHaveLength(3);
-    });
-
     it("should not signup if password is to short", async () => {
       const { mutate } = createTestClient(await serverUnauthorized);
       const response = await action(
@@ -139,13 +115,15 @@ describe("mutations", () => {
       );
 
       expect(response).toMatchObject({
-        errors: [expect.objectContaining({ message: "Not Authorised!" })],
+        errors: [
+          expect.objectContaining({
+            message: "Password must at least 8 characters long",
+          }),
+        ],
         data: {
           signup: null,
         },
       });
-
-      // expect(personDatasource.persons).toHaveLength(3);
     });
 
     it("it should signup a new person", async () => {
@@ -162,8 +140,6 @@ describe("mutations", () => {
           signup: expect.any(String),
         },
       });
-
-      // expect(personDatasource.persons).toHaveLength(4);
     });
   });
 });
