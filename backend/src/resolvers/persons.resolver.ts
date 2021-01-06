@@ -1,5 +1,5 @@
 import { AuthenticationError, gql, UserInputError } from "apollo-server";
-import { GraphQLError, GraphQLSchema } from "graphql";
+import { GraphQLSchema } from "graphql";
 import { SigninDto } from "../dtos/signin.dto";
 import { SignupDto } from "../dtos/signup.dto";
 import { JwtPayload } from "../jwt-payload";
@@ -108,7 +108,6 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
 
         if (hash === result.data.person.passwordHash) {
           const payload: JwtPayload = { id: person.id };
-
 
           console.log(process.env.JWT_EXPIRES_IN);
 

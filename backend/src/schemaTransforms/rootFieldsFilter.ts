@@ -1,14 +1,13 @@
 import { GraphQLFieldConfig } from "graphql/type/definition";
 
 export const filter: ObjectFilter = (typeName, fieldName, fieldConfig) => {
-  
   // console.log("TypeName:", typeName.toString());
   // console.log("FieldName:", fieldName.toString());
 
   // if( typeName.match('Person') || typeName.match('Post') ){
   //   return true;
   // }
-  
+
   // if (
   //   fieldName === 'post' ||
   //   fieldName === 'posts' ||
@@ -33,9 +32,8 @@ export const filter: ObjectFilter = (typeName, fieldName, fieldConfig) => {
   return true;
 };
 
-
 export type ObjectFilter = (
   typeName: string,
   fieldName: string,
-  fieldConfig: GraphQLFieldConfig<any, any>,
+  fieldConfig: GraphQLFieldConfig<any, any>
 ) => boolean;

@@ -1,17 +1,9 @@
 import { introspectSchema, wrapSchema } from "graphql-tools";
 import { GraphQLSchema, print } from "graphql";
-import {
-  FilterRootFields,
-  RenameTypes,
-  TransformObjectFields,
-  FilterObjectFields,
-} from "@graphql-tools/wrap";
+import { FilterObjectFields } from "@graphql-tools/wrap";
 
 import { fetch } from "cross-fetch";
-import { FieldTransformer } from "@graphql-tools/wrap/types";
-import { RenameRootFields } from "apollo-server";
-import { posts } from "./seed-data";
-import { filter, ObjectFilter } from "./schemaTransforms/rootFieldsFilter";
+import { filter } from "./schemaTransforms/rootFieldsFilter";
 
 export async function executor({ document, variables }) {
   const query = print(document);
