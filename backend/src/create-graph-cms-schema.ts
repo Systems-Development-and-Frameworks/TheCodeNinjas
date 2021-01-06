@@ -3,7 +3,6 @@ import { GraphQLSchema, print } from "graphql";
 import { FilterObjectFields } from "@graphql-tools/wrap";
 
 import { fetch } from "cross-fetch";
-import { filter } from "./schemaTransforms/rootFieldsFilter";
 
 export async function executor({ document, variables }) {
   const query = print(document);
@@ -26,6 +25,13 @@ export default async function createGraphCmsSchema(): Promise<GraphQLSchema> {
   return wrapSchema({
     schema: await introspectSchema(executor),
     executor,
-    transforms: [new FilterObjectFields(filter)],
+    transforms:[
+      new FilterObjectFields((typeName, fieldName, fieldConfig) => {
+        if(typeName == 'Person' && (fieldName == 'passwordHash' || fieldName == 'passwordSalt')){
+          return false;
+        }
+        return true;
+      })
+    ],
   });
 }

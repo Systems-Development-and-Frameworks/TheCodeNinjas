@@ -59,8 +59,6 @@ export default function createPermissions(
         persons: allow,
       },
       Person: {
-        passwordHash: deny,
-        passwordSalt: deny,
         createdAt: deny,
         updatedAt: deny,
         publishedAt: deny,
