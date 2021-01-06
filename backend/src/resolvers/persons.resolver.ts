@@ -109,6 +109,9 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
         if (hash === result.data.person.passwordHash) {
           const payload: JwtPayload = { id: person.id };
 
+
+          console.log(process.env.JWT_EXPIRES_IN);
+
           return jwt.sign(payload, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN,
           });

@@ -103,7 +103,7 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
       const personId = context.user.id;
       const postId = args.id;
 
-      console.log("-- ", personId, "--" , postId);
+      console.log("-- ", personId, "--", postId);
 
       const mutation = gql`
         mutation($postId: ID!, $personId: ID!) {

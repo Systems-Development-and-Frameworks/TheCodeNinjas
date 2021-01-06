@@ -6,7 +6,7 @@ export const posts: Post[] = [
     id: "7ed8828b-f4de-4359-8160-1df1ff3234cd",
     title: "Ein Toller Title",
     author: {
-      id: "16787679-8a07-4742-8d60-97e72bbc8049"
+      id: "16787679-8a07-4742-8d60-97e72bbc8049",
     },
     voters: [],
   },
@@ -14,7 +14,7 @@ export const posts: Post[] = [
     id: "bea730b9-1585-4de2-9524-84fde899da7c",
     title: "Phillips Post",
     author: {
-      id: "16787679-8a07-4742-8d60-97e72bbc8049"
+      id: "16787679-8a07-4742-8d60-97e72bbc8049",
     },
     voters: [],
   },
@@ -22,7 +22,7 @@ export const posts: Post[] = [
     id: "b0684837-5261-4f63-81bb-432f4ea409bc",
     title: "Flos Post",
     author: {
-      id: "c140c845-ab82-425d-ab5b-6d4d80955cb0"
+      id: "c140c845-ab82-425d-ab5b-6d4d80955cb0",
     },
     voters: [],
   },
@@ -30,7 +30,7 @@ export const posts: Post[] = [
     id: "10af216d-59bb-4cc1-9a27-246f22c2bee6",
     title: "Noch ein Post",
     author: {
-      id: "c140c845-ab82-425d-ab5b-6d4d80955cb0"
+      id: "c140c845-ab82-425d-ab5b-6d4d80955cb0",
     },
     voters: [],
   },

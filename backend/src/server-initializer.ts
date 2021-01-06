@@ -20,7 +20,7 @@ export default class ServerInitializer {
     const gatewaysSchema = stitchSchemas({
       subschemas: [graphCmsSchema],
       typeDefs,
-      resolvers: createResolvers([graphCmsSchema], executor)
+      resolvers: createResolvers([graphCmsSchema], executor),
     });
 
     const permissions = createPermissions([graphCmsSchema], executor);
