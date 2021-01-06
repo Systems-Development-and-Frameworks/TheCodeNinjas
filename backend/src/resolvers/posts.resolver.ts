@@ -82,7 +82,7 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
       } else {
         const postId = result.data.updatePost.id;
 
-        return postsDatasource.deletePost(postId);
+        return postsDatasource.delegatePost(context, info, postId);
       }
     },
     async downvote(parent, args: DownvoteDto, context, info) {
@@ -103,7 +103,7 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
       } else {
         const postId = result.data.updatePost.id;
 
-        return postsDatasource.deletePost(postId);
+        return postsDatasource.delegatePost(context, info, postId);
       }
     },
   };
