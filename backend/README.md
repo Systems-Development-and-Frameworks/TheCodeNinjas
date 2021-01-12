@@ -46,7 +46,7 @@ npm install
 4. Create and configure a .env file
 
 ```
-JWT_SECRET=TiuoBIqVFi898plQSItVT0TNcYLKbLwB
+JWT_SECRET= <>
 PORT = 4000
 SALT_ROUNDS = <>
 GRAPH_CMS_ENDPOINT = <>
