@@ -1,32 +1,41 @@
 import { ApolloServer } from "apollo-server";
 
-import resolvers from "./resolvers";
+import createResolvers from "./create-resolvers";
 
 import { applyMiddleware } from "graphql-middleware";
-import permissions from "./permissions";
+import createPermissions from "./create-permissions";
 
 import createDatasources from "./create-datasources";
 import createContext from "./create-context";
 import typeDefs from "./type-defs";
-
-import { makeExecutableSchema } from "graphql-tools";
+import { stitchSchemas } from "@graphql-tools/stitch";
 
 import { ApolloServerExpressConfig } from "apollo-server-express";
 
 export default class ServerInitializer {
-  createServer(defaultConfig: ApolloServerExpressConfig = {}) {
-    const schema = makeExecutableSchema({
+  async createServer(
+    config: ApolloServerExpressConfig = {},
+    createGraphCmsSchema,
+    executor
+  ) {
+    const graphCmsSchema = await createGraphCmsSchema();
+
+    const gatewaysSchema = stitchSchemas({
+      subschemas: [graphCmsSchema],
       typeDefs,
-      resolvers,
+      resolvers: createResolvers([graphCmsSchema], executor),
     });
 
-    const schemaWithMiddleware = applyMiddleware(schema, permissions);
+    const permissions = createPermissions([graphCmsSchema], executor);
+    const schemaWithMiddleware = applyMiddleware(gatewaysSchema, permissions);
 
     return new ApolloServer({
       schema: schemaWithMiddleware,
-      context: createContext,
-      dataSources: createDatasources,
-      ...defaultConfig,
+      context: createContext(),
+      dataSources: createDatasources([graphCmsSchema], executor),
+      playground: true,
+      introspection: true,
+      ...config,
     });
   }
 }

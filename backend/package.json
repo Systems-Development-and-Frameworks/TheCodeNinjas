@@ -9,7 +9,9 @@
     "start:prod": "node dist/index.js",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
-    "test:unit": "jest src/"
+    "test:unit": "jest src/",
+    "deploy:push": "cd .. && git subtree push --prefix backend heroku master",
+    "deploy:pull": "cd .. && git subtree pull --prefix backend heroku master"
   },
   "author": "",
   "license": "ISC",
@@ -34,9 +36,9 @@
     "apollo-datasource": "^0.7.2",
     "apollo-server": "^2.19.0",
     "bcrypt": "^5.0.0",
+    "cross-fetch": "^3.0.6",
     "dotenv": "^8.2.0",
     "graphql": "^15.4.0",
-    "graphql-import": "^1.0.2",
     "graphql-middleware": "^4.0.2",
     "graphql-shield": "^7.4.2",
     "graphql-tools": "^7.0.2",

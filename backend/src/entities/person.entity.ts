@@ -1,6 +1,6 @@
 import Post from "./post.entity";
 
-export default class User {
+export default class Person {
   id: string;
   name: string;
   email: string;

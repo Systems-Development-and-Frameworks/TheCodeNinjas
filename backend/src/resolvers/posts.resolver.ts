@@ -1,79 +1,110 @@
-import PostDatasource from "../datasources/post.datasource";
-import { JwtPayload } from "../jwt-payload";
+import { GraphQLSchema } from "graphql";
 import Post from "../entities/post.entity";
-import UserDatasource from "../datasources/user.datasource";
+import { Executor } from "@graphql-tools/delegate/types";
+import { DownvoteDto } from "../dtos/downvote.dto";
+import { UpvoteDto } from "../dtos/upvote.dto";
+import { UserInputError } from "apollo-server";
+import { WriteDto } from "../dtos/write.dto";
+import { DeleteDto } from "../dtos/delete.dto";
+import PostsDatasource from "../datasources/posts.datasource";
 
-export const query = {
-  posts: async (_source, _args, ctx) => {
-    const postDatasource: PostDatasource = ctx.dataSources.postDatasource;
-    const posts = await postDatasource.getPosts();
+export function query(subSchemas: GraphQLSchema[], executor: Executor) {
+  return {};
+}
 
-    return posts.map((post) => {
-      return {
-        ...post,
-        votes: post.voters.length,
-      };
-    });
-  },
-};
+export function properties(subSchemas: GraphQLSchema[], executor: Executor) {
+  return {
+    votes: {
+      selectionSet: "{ voters { id } }",
+      resolve: (post: Post) => post.voters.length,
+    },
+  };
+}
 
-export const properties = {
-  author: async (parent: Post, _args, ctx) => {
-    const userDatasource: UserDatasource = ctx.dataSources.userDatasource;
-    return await userDatasource.getUser(parent.user);
-  },
-};
+export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
+  const [graphCmsSchema] = subSchemas;
 
-export const mutation = {
-  write: async (_, args, ctx) => {
-    const jwtPayload: JwtPayload = ctx.user;
-    const postDatasource: PostDatasource = ctx.dataSources.postDatasource;
-    const post: Partial<Post> = {
-      title: args.post.title,
-      user: jwtPayload.id,
-    };
+  return {
+    async write(parent, args: WriteDto, context, info) {
+      const personId = context.user.id;
+      const postTitle = args.title;
+      const postsDatasource: PostsDatasource =
+        context.dataSources.postsDatasource;
 
-    return postDatasource.createPost(post).then((p) => ({
-      ...p,
-      votes: p.voters.length,
-    }));
-  },
-  delete: async (_, args, ctx) => {
-    const postDatasource: PostDatasource = ctx.dataSources.postDatasource;
+      const result = await postsDatasource.createPost(postTitle, personId);
 
-    return postDatasource.deletePost(args.id).then((p) => ({
-      ...p,
-      votes: p.voters.length,
-    }));
-  },
-  upvote: async (_, args, ctx) => {
-    const jwtPayload: JwtPayload = ctx.user;
-    const id = args.id;
-    const voter = jwtPayload.id;
-    const postDatasource = ctx.dataSources.postDatasource;
-    const post = await postDatasource.getPost(id);
+      if (result.errors) {
+        throw new UserInputError(
+          result.errors.map((error) => error.message).join("\n")
+        );
+      } else {
+        const postId = result.data.createPost.id;
 
-    if (!post.voters.includes(voter)) {
-      post.voters = [...post.voters, voter];
-    }
+        return await postsDatasource.delegatePost(context, info, postId);
+      }
+    },
+    async delete(parent, args: DeleteDto, context, info) {
+      const postId = args.id;
+      const postsDatasource: PostsDatasource =
+        context.dataSources.postsDatasource;
 
-    return postDatasource.updatePost(id, post).then((p) => ({
-      ...p,
-      votes: p.voters.length,
-    }));
-  },
-  downvote: async (_, args, ctx) => {
-    const jwtPayload: JwtPayload = ctx.user;
-    const id = args.id;
-    const voter = jwtPayload.id;
-    const postDatasource = ctx.dataSources.postDatasource;
-    const post = await postDatasource.getPost(id);
+      const delegationResult = postsDatasource.delegatePost(
+        context,
+        info,
+        postId
+      );
 
-    post.voters = post.voters.filter((v) => v !== voter);
+      const result = await postsDatasource.deletePost(postId);
 
-    return postDatasource.updatePost(id, post).then((p) => ({
-      ...p,
-      votes: p.voters.length,
-    }));
-  },
-};
+      if (result.errors) {
+        throw new UserInputError(
+          result.errors.map((error) => error.message).join("\n")
+        );
+      } else {
+        return delegationResult;
+      }
+    },
+    async upvote(parent, args: UpvoteDto, context, info) {
+      const personId = context.user.id;
+      const postId = args.id;
+      const postsDatasource: PostsDatasource =
+        context.dataSources.postsDatasource;
+
+      const result = await postsDatasource.connectPersonToPost(
+        postId,
+        personId
+      );
+
+      if (result.errors) {
+        throw new UserInputError(
+          result.errors.map((error) => error.message).join("\n")
+        );
+      } else {
+        const postId = result.data.updatePost.id;
+
+        return postsDatasource.delegatePost(context, info, postId);
+      }
+    },
+    async downvote(parent, args: DownvoteDto, context, info) {
+      const personId = context.user.id;
+      const postId = args.id;
+      const postsDatasource: PostsDatasource =
+        context.dataSources.postsDatasource;
+
+      const result = await postsDatasource.disconnectPersonFromPost(
+        postId,
+        personId
+      );
+
+      if (result.errors) {
+        throw new UserInputError(
+          result.errors.map((error) => error.message).join("\n")
+        );
+      } else {
+        const postId = result.data.updatePost.id;
+
+        return postsDatasource.delegatePost(context, info, postId);
+      }
+    },
+  };
+}

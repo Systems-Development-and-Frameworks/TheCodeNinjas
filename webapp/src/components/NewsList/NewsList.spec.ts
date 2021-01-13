@@ -5,19 +5,34 @@ import { NewsItemModel } from "@/models/news-item.model";
 
 const newsItemsMock = [
   new NewsItemModel({
-    id: 1,
+    id: "1",
     title: "Hackernews Nr 1",
-    votes: 1
+    votes: 1,
+    author: {
+      id: "1",
+      name: "Christoph Stach",
+      email: "s0555912@htw-berlin.de"
+    }
   }),
   new NewsItemModel({
-    id: 2,
+    id: "2",
     title: "Hackernews Nr 2",
-    votes: 2
+    votes: 2,
+    author: {
+      id: "1",
+      name: "Christoph Stach",
+      email: "s0555912@htw-berlin.de"
+    }
   }),
   new NewsItemModel({
-    id: 3,
+    id: "3",
     title: "Hackernews Nr 3",
-    votes: 3
+    votes: 3,
+    author: {
+      id: "1",
+      name: "Christoph Stach",
+      email: "s0555912@htw-berlin.de"
+    }
   })
 ];
 

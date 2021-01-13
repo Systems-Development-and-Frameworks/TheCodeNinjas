@@ -21,3 +21,6 @@ yarn-error.log*
 *.sw*
 
 git-crypt-key
+
+
+backend/.git

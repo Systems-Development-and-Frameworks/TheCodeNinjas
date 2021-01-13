@@ -1,34 +1,42 @@
 import Post from "./entities/post.entity";
-import User from "./entities/user.entity";
+import Person from "./entities/person.entity";
 
 export const posts: Post[] = [
   {
     id: "7ed8828b-f4de-4359-8160-1df1ff3234cd",
     title: "Ein Toller Title",
-    user: "16787679-8a07-4742-8d60-97e72bbc8049",
+    author: {
+      id: "16787679-8a07-4742-8d60-97e72bbc8049",
+    },
     voters: [],
   },
   {
     id: "bea730b9-1585-4de2-9524-84fde899da7c",
     title: "Phillips Post",
-    user: "16787679-8a07-4742-8d60-97e72bbc8049",
+    author: {
+      id: "16787679-8a07-4742-8d60-97e72bbc8049",
+    },
     voters: [],
   },
   {
     id: "b0684837-5261-4f63-81bb-432f4ea409bc",
     title: "Flos Post",
-    user: "c140c845-ab82-425d-ab5b-6d4d80955cb0",
+    author: {
+      id: "c140c845-ab82-425d-ab5b-6d4d80955cb0",
+    },
     voters: [],
   },
   {
     id: "10af216d-59bb-4cc1-9a27-246f22c2bee6",
     title: "Noch ein Post",
-    user: "c140c845-ab82-425d-ab5b-6d4d80955cb0",
+    author: {
+      id: "c140c845-ab82-425d-ab5b-6d4d80955cb0",
+    },
     voters: [],
   },
 ];
 
-export const users: User[] = [
+export const persons: Person[] = [
   {
     id: "58334916-ae55-4149-add5-0bc11f1b43c6",
     name: "Christoph Stach",
