@@ -1,5 +1,7 @@
 <template>
-  <div>test</div>
+  <div>
+    <login-form :login="true" />
+  </div>
 </template>
 
 <script lang="ts">

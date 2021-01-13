@@ -13,6 +13,7 @@
     "sourceMap": true,
     "strict": true,
     "noEmit": true,
+    "noImplicitAny": false,
     "experimentalDecorators": true,
     "baseUrl": ".",
     "paths": {
@@ -25,7 +26,9 @@
     },
     "types": [
       "@types/node",
-      "@nuxt/types"
+      "@nuxt/types",
+      "jest",
+      "vue-apollo/types"
     ]
   },
   "exclude": [
