@@ -46,16 +46,14 @@ npm install
 4. Create and configure a .env file
 
 ```
-JWT_SECRET=
-PORT=
-SALT_ROUNDS=
-GRAPH_CMS_ENDPOINT=
-GRAPH_CMS_API_TOKEN=
-JWT_EXPIRES_IN=
-```
+JWT_SECRET= <>
+PORT = 4000
+SALT_ROUNDS = <>
+GRAPH_CMS_ENDPOINT = <>
+GRAPH_CMS_API_TOKEN = <>
+JWT_EXPIRES_IN = <>
 
-Set at least reasonable values for ``JWT_SECRET`` eg. any string, ``SALT_ROUNDS`` eg. 10 and ``JWT_EXPIRES_IN`` eg. 2h
-to make unit tests running.
+```
 
 5. Run the project
 
