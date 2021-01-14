@@ -1,4 +1,8 @@
 export default {
+  storybook: {
+    addons: ['@storybook/addon-a11y', '@storybook/addon-controls'],
+  },
+
   // Target (https://go.nuxtjs.dev/config-target)
   target: 'static',
 
