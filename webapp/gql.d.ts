@@ -1,5 +1,4 @@
 declare module '*.gql' {
-  // eslint-disable-next-line import/no-duplicates
   import { DocumentNode } from 'graphql'
 
   const content: DocumentNode
@@ -7,7 +6,6 @@ declare module '*.gql' {
 }
 
 declare module '*.graphql' {
-  // eslint-disable-next-line import/no-duplicates
   import { DocumentNode } from 'graphql'
 
   const content: DocumentNode
