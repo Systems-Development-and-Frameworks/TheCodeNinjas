@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div v-if="!login">
-      <form @submit.prevent="signIn">
+    <div v-if="!loggedIn">
+      <form @submit.prevent="submit">
         <div class="uk-margin">
           <div class="uk-inline">
             <input
@@ -46,15 +46,11 @@
 <script lang="ts">
 import Vue from 'vue'
 import jwtDecode, { JwtPayload } from 'jwt-decode'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default Vue.extend({
   name: 'LoginForm',
-  props: {
-    login: {
-      type: Boolean,
-      required: true,
-    },
-  },
+  props: {},
 
   data() {
     return {
@@ -63,32 +59,40 @@ export default Vue.extend({
     }
   },
   computed: {
-    jwt(): string | null {
-      // TODO: get from vuex store
-      // return window.localStorage.getItem('token')
-      return ''
-    },
-    userId(): string | null {
-      if (this.jwt) {
-        const payload = jwtDecode<JwtPayload & { id: string }>(this.jwt)
-
-        if (payload) {
-          return payload.id
-        }
-      }
-
-      return null
-    },
+    // jwt(): string | null {
+    //   // TODO: get from vuex store
+    //   // return window.localStorage.getItem('token')
+    //   return ''
+    // },
+    // userId(): string | null {
+    //   if (this.jwt) {
+    //     const payload = jwtDecode<JwtPayload & { id: string }>(this.jwt)
+    //
+    //     if (payload) {
+    //       return payload.id
+    //     }
+    //   }
+    //
+    //   return null
+    // },
+    ...mapGetters('auth', ['loggedIn']),
   },
   methods: {
-    signIn() {
-      const email = this.email
-      const password = this.password
-
-      this.$emit('signIn', { email, password })
-    },
-    signOut() {
-      this.$emit('signOut')
+    // signIn() {
+    //   const email = this.email
+    //   const password = this.password
+    //
+    //   this.$emit('signIn', { email, password })
+    // },
+    // signOut() {
+    //   this.$emit('signOut')
+    // },
+    ...mapActions('auth', ['login']),
+    submit() {
+      try {
+        this.login({ email: this.email, password: this.password })
+        //  const success: boolean =
+      } catch (error) {}
     },
   },
 })

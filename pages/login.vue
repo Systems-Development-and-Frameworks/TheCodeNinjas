@@ -1,6 +1,6 @@
 <template>
   <div>
-    <login-form :login="true" />
+    <login-form />
   </div>
 </template>
 
