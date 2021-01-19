@@ -1,75 +1,73 @@
-import cookie from 'cookie'
+import gql from 'graphql-tag'
+import jwtDecode from 'jwt-decode'
 
-import { SET_USER, SET_TOKEN, SET_LOADING } from './'
-import authenticateUserGql from '~/gql/authenticateUserGql.gql'
+import { actionTree, getterTree, mutationTree } from 'typed-vuex'
 
-export const WRONG_CREDENTIALS = 'Wrong email/password combination'
+import { $apolloClient, $apolloHelpers } from '~/utils/api'
+import { PersonProperties } from '~/models/person.model'
+
+const LOGIN = gql`
+  mutation($email: String!, $password: String!) {
+    login(email: $email, password: $password)
+  }
+`
 
 export const state = () => ({
   loading: false,
-  token: null,
-  currentUser: null,
+  token: null as string | null,
+  user: null as PersonProperties | null,
 })
+export const getters = getterTree(state, {
+  loggedIn: (s) => !!s.token,
+})
+export const mutations = mutationTree(state, {
+  setLoading(s, loading) {
+    s.loading = loading
+  },
+  setUser(s, user) {
+    s.user = user
+  },
+  setToken(s, token) {
+    s.token = token
+  },
+  initialiseStore() {},
+})
+export const actions = actionTree(
+  { state, getters, mutations },
+  {
+    async login(context, { email, password }) {
+      context.commit('setLoading', true)
 
-export const getters = {
-  loggedIn(state) {
-    return !!state.token
-  },
-}
+      try {
+        const result = await $apolloClient.mutate({
+          mutation: LOGIN,
+          variables: {
+            email,
+            password,
+          },
+        })
 
-export const mutations = {
-  [SET_TOKEN](state, token) {
-    state.token = token
-  },
-  [SET_USER](state, user) {
-    state.currentUser = user
-  },
-  [SET_LOADING](state, loading) {
-    state.loading = loading
-  },
-}
+        const token = result.data.login
+        const user = jwtDecode<any>(token)
 
-export const actions = {
-  nuxtServerInit(store, context) {
-    const { req } = context.ssrContext
-    if (!req) return // static site generation
-    const parsedCookies = cookie.parse(req.headers.cookie)
-    const token = parsedCookies['apollo-token']
-    if (!token) return
-    store.commit('auth/setToken', token)
-  },
+        await $apolloHelpers.onLogin(token)
 
-  // TODO: cant access this.$apollo and because of that cant get token and cant call this.$apolloHelpers.onLogin(token)
-  login(store, payload) {
-    store.commit(SET_LOADING, true)
-    console.log('test1')
-    // const { token, user } = this
+        context.commit('setUser', user)
+        context.commit('setToken', token)
+      } catch (e) {
+        alert(e)
+      }
 
-    // console.log(this)
-    // const res = await this.$apollo
-    //   .mutate({
-    //     mutation: authenticateUserGql,
-    //     variables: {
-    //       email,
-    //       password,
-    //     },
-    //   })
-    //   .then((res) => res)
-    //
-    // console.log(res)
-    //
-    // if (!res.token) {
-    //   store.commit(SET_LOADING, false)
-    //   return false
-    // }
-    //
-    // const token:string = await this.$apolloHelpers.onLogin(res.login)
-    //
-    // store.commit(SET_TOKEN, token)
-    // store.commit(SET_USER, user)
-  },
-  logout({ commit }) {
-    commit(SET_TOKEN, null)
-    commit(SET_USER, null)
-  },
-}
+      context.commit('setLoading', false)
+    },
+    async logout(context) {
+      context.commit('setLoading', true)
+
+      await $apolloHelpers.onLogout()
+
+      context.commit('setUser', null)
+      context.commit('setToken', null)
+      context.commit('setLoading', false)
+    },
+  }
+)

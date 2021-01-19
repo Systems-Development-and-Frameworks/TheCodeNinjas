@@ -28,7 +28,11 @@ export default {
   css: [],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: [],
+  plugins: [
+    { src: '~plugins/apollo-client-accessor.ts' },
+    { src: '~plugins/apollo-helpers-accessor.ts' },
+    { src: '~/plugins/vuex-persist', ssr: false },
+  ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
@@ -37,12 +41,11 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
+    'nuxt-typed-vuex',
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
-    // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
     '@nuxtjs/apollo',
@@ -55,6 +58,7 @@ export default {
     clientConfigs: {
       default: {
         httpEndpoint: 'https://news-list-backend.herokuapp.com',
+        tokenName: 'auth.token',
       },
     },
   },

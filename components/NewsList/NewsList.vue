@@ -30,7 +30,7 @@
                 ></i>
               </button>
             </th>
-            <th v-if="login" colspan="3" class="uk-table-shrink"></th>
+            <th v-if="loggedIn" colspan="3" class="uk-table-shrink"></th>
           </tr>
         </thead>
         <tbody v-if="hasNewsItems">
@@ -38,8 +38,8 @@
             v-for="item in newsItemsSorted"
             :key="item.id"
             :news-item="item"
-            :login="login"
-            :is-owner="userId === item.author.id"
+            :login="loggedIn"
+            :is-owner="!!(user && user.id === item.author.id)"
             @upvote="upvote"
             @downvote="downvote"
             @remove="removeNewsItem"
@@ -53,7 +53,11 @@
       </table>
     </div>
 
-    <form v-if="login" class="uk-form-large" @submit.prevent="createNewsItem">
+    <form
+      v-if="loggedIn"
+      class="uk-form-large"
+      @submit.prevent="createNewsItem"
+    >
       <div class="uk-flex uk-flex-bottom">
         <div class="uk-flex-1 uk-margin">
           <label class="uk-form-label" for="news-title-input">Title</label>
@@ -79,11 +83,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
-
-import jwtDecode, { JwtPayload } from 'jwt-decode'
 import gql from 'graphql-tag'
 import NewsItem from '../../components/NewsItem/NewsItem.vue'
-import LoginForm from '../../components/LoginForm/LoginForm.vue'
 import { NewsItemModel, NewsItemProperties } from '~/models/news-item.model'
 
 const GET_POSTS = gql`
@@ -125,12 +126,6 @@ const DOWNVOTE = gql`
   }
 `
 
-const LOGIN = gql`
-  mutation($email: String!, $password: String!) {
-    login(email: $email, password: $password)
-  }
-`
-
 const WRITE = gql`
   mutation($title: String!) {
     write(title: $title) {
@@ -161,7 +156,6 @@ export default Vue.extend({
   name: 'NewsList',
   components: {
     NewsItem,
-    LoginForm,
   },
   apollo: {
     newsItems: {
@@ -182,26 +176,11 @@ export default Vue.extend({
     }
   },
   computed: {
-    jwt(): string | null {
-      if (process.client) {
-        return window.localStorage.getItem('token')
-      } else {
-        return null
-      }
+    user() {
+      return this.$accessor.auth.user
     },
-    userId(): string | null {
-      if (this.jwt) {
-        const payload = jwtDecode<JwtPayload & { id: string }>(this.jwt)
-
-        if (payload) {
-          return payload.id
-        }
-      }
-
-      return null
-    },
-    login(): boolean {
-      return !!this.jwt
+    loggedIn() {
+      return this.$accessor.auth.loggedIn
     },
     hasNewsItems(): boolean {
       return this.newsItems.length > 0
@@ -215,32 +194,6 @@ export default Vue.extend({
     },
   },
   methods: {
-    async signIn(event: { email: string; password: string }) {
-      const { email, password } = event
-
-      try {
-        const result = await this.$apollo.mutate({
-          mutation: LOGIN,
-          variables: {
-            email,
-            password,
-          },
-        })
-
-        if (process.client) {
-          window.localStorage.setItem('token', result.data.login)
-          window.location.reload()
-        }
-      } catch (error) {
-        alert(error)
-      }
-    },
-    signOut() {
-      if (process.client) {
-        window.localStorage.removeItem('token')
-        window.location.reload()
-      }
-    },
     toggleSortOrder() {
       this.sortDescending = !this.sortDescending
     },
@@ -390,7 +343,7 @@ export default Vue.extend({
               title,
               votes: 0,
               author: {
-                id: this.userId,
+                id: this.user?.id,
                 __typename: 'Person',
               },
               __typename: 'Post',
