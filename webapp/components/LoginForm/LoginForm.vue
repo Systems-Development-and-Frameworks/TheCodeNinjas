@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="!loggedIn">
-      <form @submit.prevent="submit">
+      <form @submit.prevent="login">
         <div class="uk-margin">
           <div class="uk-inline">
             <input
@@ -32,26 +32,16 @@
       </form>
     </div>
     <div v-else>
-      <div class="uk-margin">Hallo {{ userId }}</div>
-
-      <div class="uk-margin">
-        <textarea v-model="jwt" class="uk-textarea" rows="10" />
-      </div>
-
-      <button class="uk-button" @click="signOut">Sign out</button>
+      <h1 class="uk-margin">Hallo {{ user.name }}</h1>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import jwtDecode, { JwtPayload } from 'jwt-decode'
-import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default Vue.extend({
   name: 'LoginForm',
-  props: {},
-
   data() {
     return {
       email: null,
@@ -59,40 +49,25 @@ export default Vue.extend({
     }
   },
   computed: {
-    // jwt(): string | null {
-    //   // TODO: get from vuex store
-    //   // return window.localStorage.getItem('token')
-    //   return ''
-    // },
-    // userId(): string | null {
-    //   if (this.jwt) {
-    //     const payload = jwtDecode<JwtPayload & { id: string }>(this.jwt)
-    //
-    //     if (payload) {
-    //       return payload.id
-    //     }
-    //   }
-    //
-    //   return null
-    // },
-    ...mapGetters('auth', ['loggedIn']),
+    loggedIn() {
+      return this.$accessor.auth.loggedIn
+    },
+    user() {
+      return this.$accessor.auth.user
+    },
+    token() {
+      return this.$accessor.auth.token
+    },
   },
   methods: {
-    // signIn() {
-    //   const email = this.email
-    //   const password = this.password
-    //
-    //   this.$emit('signIn', { email, password })
-    // },
-    // signOut() {
-    //   this.$emit('signOut')
-    // },
-    ...mapActions('auth', ['login']),
-    submit() {
-      try {
-        this.login({ email: this.email, password: this.password })
-        //  const success: boolean =
-      } catch (error) {}
+    login() {
+      const email = this.email
+      const password = this.password
+
+      this.$accessor.auth.login({ email, password })
+    },
+    logout() {
+      this.$accessor.auth.logout()
     },
   },
 })
