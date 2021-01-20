@@ -8,7 +8,7 @@ export default {
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
-    title: 'nuxt-webapp',
+    title: 'News List',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -58,7 +58,8 @@ export default {
     clientConfigs: {
       default: {
         httpEndpoint: 'https://news-list-backend.herokuapp.com',
-        tokenName: 'auth.token',
+        authenticationType: 'Bearer',
+        tokenName: 'apollo-token',
       },
     },
   },

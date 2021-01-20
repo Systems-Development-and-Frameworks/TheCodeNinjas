@@ -11,7 +11,7 @@
 
         <div class="uk-navbar-right">
           <ul class="uk-navbar-nav">
-            <li v-if="!loggedIn"><NuxtLink to="/login">Login</NuxtLink></li>
+            <li v-if="!isLoggedIn"><NuxtLink to="/login">Login</NuxtLink></li>
             <li v-else><NuxtLink to="/logout">Logout</NuxtLink></li>
           </ul>
         </div>
@@ -29,8 +29,8 @@ import Vue from 'vue'
 
 export default Vue.extend({
   computed: {
-    loggedIn() {
-      return this.$accessor.auth.loggedIn
+    isLoggedIn() {
+      return this.$accessor.auth.isLoggedIn
     },
   },
 })

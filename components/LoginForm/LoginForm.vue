@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!loggedIn">
+    <div v-if="!isLoggedIn">
       <form @submit.prevent="login">
         <div class="uk-margin">
           <div class="uk-inline">
@@ -49,25 +49,33 @@ export default Vue.extend({
     }
   },
   computed: {
-    loggedIn() {
-      return this.$accessor.auth.loggedIn
+    isLoggedIn() {
+      return this.$accessor.auth.isLoggedIn
     },
     user() {
-      return this.$accessor.auth.user
+      return this.$accessor.auth.getUser
     },
     token() {
-      return this.$accessor.auth.token
+      return this.$accessor.auth.getToken
     },
   },
   methods: {
-    login() {
+    async login() {
       const email = this.email
       const password = this.password
 
-      this.$accessor.auth.login({ email, password })
+      await this.$accessor.auth.login({ email, password })
+
+      setTimeout(() => {
+        this.$router.push({ path: '/' })
+      }, 2500)
     },
-    logout() {
-      this.$accessor.auth.logout()
+    async logout() {
+      await this.$accessor.auth.logout()
+
+      setTimeout(() => {
+        this.$router.push({ path: '/' })
+      }, 2500)
     },
   },
 })
