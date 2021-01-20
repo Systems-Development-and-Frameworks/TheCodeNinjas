@@ -4,84 +4,80 @@
 
     <hr />
 
-    <client-only>
-      <div class="news-items-wrapper uk-overflow-auto">
-        <table
-          class="uk-table uk-table-striped uk-table-medium uk-table-middle"
-        >
-          <thead>
-            <tr>
-              <th class="uk-table-shrink">Id</th>
-              <th class="uk-table-expand">Title</th>
-              <th class="uk-table-shrink uk-text-nowrap">
-                Votes
-                <button
-                  class="uk-button uk-button-default"
-                  data-test-toggle
-                  aria-label="Sort"
-                  @click="toggleSortOrder"
-                >
-                  <i
-                    v-if="sortDescending"
-                    class="mdi mdi-18px mdi-sort-ascending"
-                    aria-hidden="true"
-                  ></i>
-                  <i
-                    v-else
-                    class="mdi mdi-18px mdi-sort-descending"
-                    aria-hidden="true"
-                  ></i>
-                </button>
-              </th>
-              <th v-if="isLoggedIn" colspan="3" class="uk-table-shrink"></th>
-            </tr>
-          </thead>
-          <tbody v-if="hasNewsItems">
-            <news-item
-              v-for="item in newsItemsSorted"
-              :key="item.id"
-              :news-item="item"
-              :login="isLoggedIn"
-              :is-owner="!!(user && user.id === item.author.id)"
-              @upvote="upvote"
-              @downvote="downvote"
-              @remove="removeNewsItem"
+    <div class="news-items-wrapper uk-overflow-auto">
+      <table class="uk-table uk-table-striped uk-table-medium uk-table-middle">
+        <thead>
+          <tr>
+            <th class="uk-table-shrink">Id</th>
+            <th class="uk-table-expand">Title</th>
+            <th class="uk-table-shrink uk-text-nowrap">
+              Votes
+              <button
+                class="uk-button uk-button-default"
+                data-test-toggle
+                aria-label="Sort"
+                @click="toggleSortOrder"
+              >
+                <i
+                  v-if="sortDescending"
+                  class="mdi mdi-18px mdi-sort-ascending"
+                  aria-hidden="true"
+                ></i>
+                <i
+                  v-else
+                  class="mdi mdi-18px mdi-sort-descending"
+                  aria-hidden="true"
+                ></i>
+              </button>
+            </th>
+            <th v-if="isLoggedIn" colspan="3" class="uk-table-shrink"></th>
+          </tr>
+        </thead>
+        <tbody v-if="hasNewsItems">
+          <news-item
+            v-for="item in newsItemsSorted"
+            :key="item.id"
+            :news-item="item"
+            :login="isLoggedIn"
+            :is-owner="!!(user && user.id === item.author.id)"
+            @upvote="upvote"
+            @downvote="downvote"
+            @remove="removeNewsItem"
+          />
+        </tbody>
+        <tbody v-else>
+          <tr>
+            <td colspan="4" class="uk-text-center">No News in the list!</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <form
+      v-if="isLoggedIn"
+      class="uk-form-large"
+      @submit.prevent="createNewsItem"
+    >
+      <div class="uk-flex uk-flex-bottom">
+        <div class="uk-flex-1 uk-margin">
+          <label class="uk-form-label" for="news-title-input">Title</label>
+
+          <div class="uk-form-controls">
+            <input
+              id="news-title-input"
+              v-model="newsTitle"
+              class="uk-input"
+              placeholder="Please enter title"
             />
-          </tbody>
-          <tbody v-else>
-            <tr>
-              <td colspan="4" class="uk-text-center">No News in the list!</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <form
-        v-if="isLoggedIn"
-        class="uk-form-large"
-        @submit.prevent="createNewsItem"
-      >
-        <div class="uk-flex uk-flex-bottom">
-          <div class="uk-flex-1 uk-margin">
-            <label class="uk-form-label" for="news-title-input">Title</label>
-
-            <div class="uk-form-controls">
-              <input
-                id="news-title-input"
-                v-model="newsTitle"
-                class="uk-input"
-                placeholder="Please enter title"
-              />
-            </div>
-          </div>
-          <div class="uk-margin">
-            <button type="submit" class="uk-button uk-button-primary">
-              Create
-            </button>
           </div>
         </div>
-      </form>
-    </client-only>
+        <div class="uk-margin">
+          <button type="submit" class="uk-button uk-button-primary">
+            Create
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
 </template>
 
