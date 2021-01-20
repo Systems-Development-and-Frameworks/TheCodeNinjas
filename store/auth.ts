@@ -48,19 +48,6 @@ export const actions = actionTree(
       context.commit('setLoading', true)
 
       try {
-        // youri seichter
-        // const result = await this.$apollo.mutate({
-        //   mutation: gql`
-        //     mutation($email: String!, $password: String!) {
-        //       login(email: $email, password: $password)
-        //     }
-        //   `,
-        //   variables: {
-        //     email,
-        //     password,
-        //   },
-        // });
-
         const result = await $apolloClient.mutate({
           mutation: LOGIN,
           variables: {
