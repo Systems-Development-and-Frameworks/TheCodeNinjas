@@ -1,5 +1,5 @@
 <template>
-  <h1>Welcome to the News List</h1>
+  <h1>Welcome to the HTW: News List</h1>
 </template>
 
 <script lang="ts">

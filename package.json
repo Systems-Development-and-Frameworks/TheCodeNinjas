@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-webapp",
+  "name": "webapp",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,7 @@
     "generate": "nuxt-ts generate",
     "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore .",
     "lint:fix": "eslint --fix --ext .js,.ts,.vue --ignore-path .gitignore .",
-    "test": "jest"
+    "test:unit": "jest"
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^2.0.0",

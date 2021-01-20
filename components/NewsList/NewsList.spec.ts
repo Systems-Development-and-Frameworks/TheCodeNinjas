@@ -1,6 +1,7 @@
 import { createLocalVue, mount } from '@vue/test-utils'
-import NewsList from '@/components/NewsList/NewsList.vue'
-import NewsItem from '@/components/NewsItem/NewsItem.vue'
+
+import NewsItem from '../NewsItem/NewsItem.vue'
+import NewsList from './NewsList.vue'
 import { NewsItemModel } from '~/models/news-item.model'
 
 const newsItemsMock = [
