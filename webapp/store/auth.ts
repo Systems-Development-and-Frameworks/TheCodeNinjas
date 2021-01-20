@@ -18,7 +18,37 @@ export const state = () => ({
   user: null as PersonProperties | null,
 })
 export const getters = getterTree(state, {
-  loggedIn: (s) => !!s.token,
+  isLoggedIn(s): boolean {
+    if (process.client) {
+      return !!s.token
+    }
+
+    return !!$apolloHelpers.getToken()
+  },
+  getToken(s): string | null {
+    let token
+
+    if (process.client) {
+      token = s.token
+    } else {
+      token = $apolloHelpers.getToken()
+    }
+
+    return token
+  },
+  getUser(s): PersonProperties | null {
+    if (process.client) {
+      return s.user as PersonProperties | null
+    } else {
+      const token = $apolloHelpers.getToken()
+
+      if (token) {
+        return jwtDecode<PersonProperties>(token)
+      }
+    }
+
+    return null
+  },
 })
 export const mutations = mutationTree(state, {
   setLoading(s, loading) {

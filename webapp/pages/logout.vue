@@ -7,8 +7,8 @@ import Vue from 'vue'
 
 export default Vue.extend({
   computed: {
-    loggedIn() {
-      return this.$accessor.auth.loggedIn
+    isLoggedIn() {
+      return this.$accessor.auth.isLoggedIn
     },
   },
   created() {

@@ -30,7 +30,7 @@
                 ></i>
               </button>
             </th>
-            <th v-if="loggedIn" colspan="3" class="uk-table-shrink"></th>
+            <th v-if="isLoggedIn" colspan="3" class="uk-table-shrink"></th>
           </tr>
         </thead>
         <tbody v-if="hasNewsItems">
@@ -38,7 +38,7 @@
             v-for="item in newsItemsSorted"
             :key="item.id"
             :news-item="item"
-            :login="loggedIn"
+            :login="isLoggedIn"
             :is-owner="!!(user && user.id === item.author.id)"
             @upvote="upvote"
             @downvote="downvote"
@@ -54,7 +54,7 @@
     </div>
 
     <form
-      v-if="loggedIn"
+      v-if="isLoggedIn"
       class="uk-form-large"
       @submit.prevent="createNewsItem"
     >
@@ -179,8 +179,8 @@ export default Vue.extend({
     user() {
       return this.$accessor.auth.user
     },
-    loggedIn() {
-      return this.$accessor.auth.loggedIn
+    isLoggedIn() {
+      return this.$accessor.auth.isLoggedIn
     },
     hasNewsItems(): boolean {
       return this.newsItems.length > 0

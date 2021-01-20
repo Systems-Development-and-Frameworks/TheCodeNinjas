@@ -58,7 +58,8 @@ export default {
     clientConfigs: {
       default: {
         httpEndpoint: 'https://news-list-backend.herokuapp.com',
-        tokenName: 'auth.token',
+        authenticationType: 'Bearer',
+        tokenName: 'apollo-token',
       },
     },
   },

@@ -1,5 +1,5 @@
 <template>
-  <div>test</div>
+  <h1>Welcome to the News List</h1>
 </template>
 
 <script lang="ts">
