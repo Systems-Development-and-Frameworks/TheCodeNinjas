@@ -1,4 +1,4 @@
-# nuxt-webapp
+# webapp
 
 ## Build Setup
 
