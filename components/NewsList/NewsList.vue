@@ -4,7 +4,7 @@
 
     <hr />
 
-    <div class="news-items-wrapper">
+    <div class="news-items-wrapper uk-overflow-auto">
       <table class="uk-table uk-table-striped uk-table-medium uk-table-middle">
         <thead>
           <tr>
