@@ -1,39 +1,41 @@
 <template>
   <div>
-    <div v-if="!isLoggedIn">
-      <form @submit.prevent="login">
-        <div class="uk-margin">
-          <div class="uk-inline">
-            <input
-              v-model="email"
-              class="uk-input"
-              type="text"
-              placeholder="E-Mail"
-            />
+    <client-only>
+      <div v-if="!isLoggedIn">
+        <form @submit.prevent="login">
+          <div class="uk-margin">
+            <div class="uk-inline">
+              <input
+                v-model="email"
+                class="uk-input"
+                type="text"
+                placeholder="E-Mail"
+              />
+            </div>
           </div>
-        </div>
 
-        <div class="uk-margin">
-          <div class="uk-inline">
-            <input
-              v-model="password"
-              class="uk-input"
-              type="password"
-              placeholder="Password"
-            />
+          <div class="uk-margin">
+            <div class="uk-inline">
+              <input
+                v-model="password"
+                class="uk-input"
+                type="password"
+                placeholder="Password"
+              />
+            </div>
           </div>
-        </div>
 
-        <div>
-          <div class="uk-inline">
-            <button class="uk-button" type="submit">Sign in</button>
+          <div>
+            <div class="uk-inline">
+              <button class="uk-button" type="submit">Sign in</button>
+            </div>
           </div>
-        </div>
-      </form>
-    </div>
-    <div v-else>
-      <h1 class="uk-margin">Hallo {{ user.name }}</h1>
-    </div>
+        </form>
+      </div>
+      <div v-else>
+        <h1 class="uk-margin">Hallo {{ user.name }}</h1>
+      </div>
+    </client-only>
   </div>
 </template>
 
@@ -65,17 +67,9 @@ export default Vue.extend({
       const password = this.password
 
       await this.$accessor.auth.login({ email, password })
-
-      setTimeout(() => {
-        this.$router.push({ path: '/' })
-      }, 2500)
     },
     async logout() {
       await this.$accessor.auth.logout()
-
-      setTimeout(() => {
-        this.$router.push({ path: '/' })
-      }, 2500)
     },
   },
 })

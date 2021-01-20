@@ -17,37 +17,16 @@ export const state = () => ({
   token: null as string | null,
   user: null as PersonProperties | null,
 })
+
 export const getters = getterTree(state, {
   isLoggedIn(s): boolean {
-    if (process.client) {
-      return !!s.token
-    }
-
-    return !!$apolloHelpers.getToken()
+    return !!s.token
   },
   getToken(s): string | null {
-    let token
-
-    if (process.client) {
-      token = s.token
-    } else {
-      token = $apolloHelpers.getToken()
-    }
-
-    return token
+    return s.token
   },
   getUser(s): PersonProperties | null {
-    if (process.client) {
-      return s.user as PersonProperties | null
-    } else {
-      const token = $apolloHelpers.getToken()
-
-      if (token) {
-        return jwtDecode<PersonProperties>(token)
-      }
-    }
-
-    return null
+    return s.user as PersonProperties | null
   },
 })
 export const mutations = mutationTree(state, {
@@ -69,6 +48,19 @@ export const actions = actionTree(
       context.commit('setLoading', true)
 
       try {
+        // youri seichter
+        // const result = await this.$apollo.mutate({
+        //   mutation: gql`
+        //     mutation($email: String!, $password: String!) {
+        //       login(email: $email, password: $password)
+        //     }
+        //   `,
+        //   variables: {
+        //     email,
+        //     password,
+        //   },
+        // });
+
         const result = await $apolloClient.mutate({
           mutation: LOGIN,
           variables: {
@@ -79,7 +71,6 @@ export const actions = actionTree(
 
         const token = result.data.login
         const user = jwtDecode<any>(token)
-
         await $apolloHelpers.onLogin(token)
 
         context.commit('setUser', user)
