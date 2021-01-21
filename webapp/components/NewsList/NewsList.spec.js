@@ -100,6 +100,7 @@ describe('NewsList', () => {
 
   it('renders news item', () => {
 
+    //Does not create NewsItems. wrapper.findAllComponents(NewsItem).at(0)) is empty
     const wrapper = mount(NewsList, {
       mocks: {
         $accessor: {
@@ -111,12 +112,12 @@ describe('NewsList', () => {
         return { newsItemsMock} 
       }
     })
-    
+
     // wrapper.vm.$children[0].$props.open = true
     //wrapper.vm.$children.map(a => a.$props = {$accessor: {auth: {loading: false, currentUser: null, token: null}}})
     //wrapper.setData({$accessor: {auth: {loading: false, currentUser: null, token: null}}})
 
-    expect(wrapper.findAllComponents(NewsItem)).toHaveLength(3)
+    expect(wrapper.findAllComponents(NewsItem).at(0)).toHaveLength(3)
   })
 
   // it('renders empty list message', () => {
