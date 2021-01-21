@@ -170,7 +170,6 @@ export default Vue.extend({
   data() {
     return {
       sortDescending: true,
-      currentId: 3,
       newsTitle: '',
       newsItems: [] as NewsItemModel[],
     }
