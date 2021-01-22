@@ -47,7 +47,11 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
         );
       } else {
         const person: Partial<Person> = result.data.person;
-        const payload: JwtPayload = { id: person.id, name: person.name, email: person.email };
+        const payload: JwtPayload = {
+          id: person.id,
+          name: person.name,
+          email: person.email,
+        };
 
         return jwt.sign(payload, process.env.JWT_SECRET, {
           expiresIn: process.env.JWT_EXPIRES_IN,
@@ -76,7 +80,11 @@ export function mutation(subSchemas: GraphQLSchema[], executor: Executor) {
         const hash = await bcrypt.hash(password, person.passwordSalt);
 
         if (hash === result.data.person.passwordHash) {
-          const payload: JwtPayload = { id: person.id, name: person.name, email: person.email };
+          const payload: JwtPayload = {
+            id: person.id,
+            name: person.name,
+            email: person.email,
+          };
 
           return jwt.sign(payload, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN,
