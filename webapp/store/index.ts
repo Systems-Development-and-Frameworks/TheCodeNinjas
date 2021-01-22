@@ -12,7 +12,7 @@ export const mutations = mutationTree(state, {
   initialiseStore() {},
 })
 export const actions = actionTree({ state, getters, mutations }, {})
-export const accessorType = getAccessorType({
+export const storePattern = {
   state,
   getters,
   mutations,
@@ -20,4 +20,5 @@ export const accessorType = getAccessorType({
   modules: {
     auth,
   },
-})
+}
+export const accessorType = getAccessorType(storePattern)
