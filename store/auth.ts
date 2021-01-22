@@ -3,7 +3,7 @@ import jwtDecode from 'jwt-decode'
 
 import { actionTree, getterTree, mutationTree } from 'typed-vuex'
 
-import { $apolloClient, $apolloHelpers } from '~/utils/api'
+import { $apolloClient, $apolloHelpers } from '~/utils/globals'
 import { PersonProperties } from '~/models/person.model'
 
 const LOGIN = gql`
