@@ -10,14 +10,10 @@ localVue.use(Vuex)
 
 export function setupWrapperAndStore(
   component: VueConstructor<Vue>,
-  mockedData = {},
-  storePatternParameter?
+  mockedData = {}
 ) {
-  if (storePatternParameter == null) {
-    storePatternParameter = storePattern
-  }
-  const store = new Vuex.Store(storePatternParameter)
-  const storeAccessor = useAccessor(store, storePatternParameter)
+  const store = new Vuex.Store(storePattern)
+  const storeAccessor = useAccessor(store, storePattern)
 
   const wrapper = mount(component, {
     localVue,
@@ -29,5 +25,5 @@ export function setupWrapperAndStore(
     },
   })
 
-  return { wrapper, storeAccessor }
+  return { wrapper, storeAccessor, localVue }
 }
