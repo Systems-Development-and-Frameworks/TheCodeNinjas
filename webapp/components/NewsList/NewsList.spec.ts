@@ -39,10 +39,7 @@ const newsItemsMock = [
 ]
 
 describe('NewsList', () => {
-  const localVue = createLocalVue()
-  localVue.use(Vuex)
-
-  it('should exist', () => {
+  it('exists', () => {
     const { wrapper, storeAccessor } = setupWrapperAndStore(NewsList, {
       newsItems: [],
     })
