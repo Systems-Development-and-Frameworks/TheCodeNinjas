@@ -71,10 +71,9 @@ export const actions = actionTree(
         context.commit('setToken', token)
         context.commit('setError', null)
       } catch (e) {
-
         if (
           e.message === 'GraphQL error: Wrong credentials' ||
-          e === 'Testing wrongCredentials'
+          e.message === 'Testing wrongCredentials'
         ) {
           context.commit('setError', 'Wrong credentials!')
         } else {

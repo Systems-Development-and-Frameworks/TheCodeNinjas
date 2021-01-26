@@ -14,14 +14,14 @@ export const $apolloHelpers: Partial<ApolloHelpers> = {
 export const $apolloClient = {
   mutate(options) {
     if (isWrongCredentialsLogin(options)) {
-      throw 'Testing wrongCredentials'
+      const errorMessage = { message: 'Testing wrongCredentials' }
+      throw errorMessage
     }
 
-    if(isInvalidTokenLogin(options)){
+    if (isInvalidTokenLogin(options)) {
       return Promise.resolve({
         data: {
-          login:
-            'invalidToken',
+          login: 'invalidToken',
         },
       })
     }
