@@ -55,7 +55,6 @@ export const actions = actionTree(
       context.commit('setLoading', true)
 
       try {
-
         const result = await $apolloClient.mutate({
           mutation: LOGIN,
           variables: {
@@ -72,8 +71,15 @@ export const actions = actionTree(
         context.commit('setToken', token)
         context.commit('setError', null)
       } catch (e) {
-        console.log("Error: ", e)
-        context.commit('setError', 'Wrong credentials!')
+
+        if (
+          e.message === 'GraphQL error: Wrong credentials' ||
+          e === 'Testing wrongCredentials'
+        ) {
+          context.commit('setError', 'Wrong credentials!')
+        } else {
+          context.commit('setError', 'Oops! Something went wrong.')
+        }
       }
 
       context.commit('setLoading', false)

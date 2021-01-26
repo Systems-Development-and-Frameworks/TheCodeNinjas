@@ -53,9 +53,6 @@ export default Vue.extend({
       password: null,
     }
   },
-  created() {
-    this.$accessor.auth.setError(null)
-  },
   computed: {
     isLoggedIn() {
       return this.$accessor.auth.isLoggedIn
@@ -69,6 +66,9 @@ export default Vue.extend({
     error() {
       return this.$accessor.auth.getError
     },
+  },
+  created() {
+    this.$accessor.auth.setError(null)
   },
   methods: {
     async login() {
