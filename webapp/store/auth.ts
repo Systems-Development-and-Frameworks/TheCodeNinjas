@@ -16,6 +16,7 @@ export const state = () => ({
   loading: false,
   token: null as string | null,
   user: null as PersonProperties | null,
+  error: null as string | null,
 })
 
 export const getters = getterTree(state, {
@@ -24,6 +25,9 @@ export const getters = getterTree(state, {
   },
   getToken(s): string | null {
     return s.token
+  },
+  getError(s): string | null {
+    return s.error
   },
   getUser(s): PersonProperties | null {
     return s.user as PersonProperties | null
@@ -38,6 +42,9 @@ export const mutations = mutationTree(state, {
   },
   setToken(s, token) {
     s.token = token
+  },
+  setError(s, error) {
+    s.error = error
   },
   initialiseStore() {},
 })
@@ -62,8 +69,9 @@ export const actions = actionTree(
 
         context.commit('setUser', user)
         context.commit('setToken', token)
+        context.commit('setError', null)
       } catch (e) {
-        alert(e)
+        context.commit('setError', 'Wrong credentials!')
       }
 
       context.commit('setLoading', false)
