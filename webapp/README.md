@@ -23,4 +23,7 @@ $ npm run build
 
 # Start the production server
 $ npm run start
+
+#(Optional) Run the project in a development environment with hot reload
+$ npm run dev
 ```
