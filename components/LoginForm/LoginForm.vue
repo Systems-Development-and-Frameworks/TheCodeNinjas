@@ -5,6 +5,7 @@
         <div class="uk-margin">
           <div class="uk-inline">
             <input
+              id="input-email"
               v-model="email"
               class="uk-input"
               type="text"
@@ -16,6 +17,7 @@
         <div class="uk-margin">
           <div class="uk-inline">
             <input
+              id="input-password"
               v-model="password"
               class="uk-input"
               type="password"
@@ -28,6 +30,9 @@
           <div class="uk-inline">
             <button class="uk-button" type="submit">Sign in</button>
           </div>
+        </div>
+        <div v-if="error" class="uk-alert uk-alert-danger">
+          {{ error }}
         </div>
       </form>
     </div>
@@ -48,6 +53,9 @@ export default Vue.extend({
       password: null,
     }
   },
+  created() {
+    this.$accessor.auth.setError(null)
+  },
   computed: {
     isLoggedIn() {
       return this.$accessor.auth.isLoggedIn
@@ -57,6 +65,9 @@ export default Vue.extend({
     },
     token() {
       return this.$accessor.auth.getToken
+    },
+    error() {
+      return this.$accessor.auth.getError
     },
   },
   methods: {
