@@ -12,6 +12,8 @@ export default class PersonsDatasource extends DataSource {
       query($email: String!) {
         person(where: { email: $email }) {
           id
+          name
+          email
           passwordHash
           passwordSalt
         }
@@ -46,6 +48,8 @@ export default class PersonsDatasource extends DataSource {
           }
         ) {
           id
+          name
+          email
         }
       }
     `;

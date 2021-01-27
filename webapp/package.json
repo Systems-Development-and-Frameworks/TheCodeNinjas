@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-webapp",
+  "name": "webapp",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,7 @@
     "generate": "nuxt-ts generate",
     "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore .",
     "lint:fix": "eslint --fix --ext .js,.ts,.vue --ignore-path .gitignore .",
-    "test": "jest"
+    "test:unit": "jest"
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^2.0.0",
@@ -20,7 +20,9 @@
     "graphql-tag": "^2.11.0",
     "jwt-decode": "^3.1.2",
     "nuxt": "^2.14.6",
-    "uikit": "^3.6.10"
+    "nuxt-typed-vuex": "^0.1.22",
+    "uikit": "^3.6.10",
+    "vuex-persist": "^3.1.3"
   },
   "devDependencies": {
     "@nuxt/types": "^2.14.6",
@@ -28,7 +30,11 @@
     "@nuxtjs/eslint-config": "^3.1.0",
     "@nuxtjs/eslint-config-typescript": "^3.0.0",
     "@nuxtjs/eslint-module": "^2.0.0",
+    "@nuxtjs/storybook": "^3.3.0",
+    "@storybook/addon-a11y": "^6.1.14",
+    "@storybook/addon-controls": "^6.1.14",
     "@types/jest": "^26.0.20",
+    "@types/uikit": "^3.3.1",
     "@vue/test-utils": "^1.1.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",

@@ -11,8 +11,8 @@
 
         <div class="uk-navbar-right">
           <ul class="uk-navbar-nav">
-            <li><NuxtLink to="/login">Login</NuxtLink></li>
-            <li><NuxtLink to="/logout">Logout</NuxtLink></li>
+            <li v-if="!isLoggedIn"><NuxtLink to="/login">Login</NuxtLink></li>
+            <li v-else><NuxtLink to="/logout">Logout</NuxtLink></li>
           </ul>
         </div>
       </div>
@@ -23,6 +23,18 @@
     </div>
   </div>
 </template>
+
+<script lang="ts">
+import Vue from 'vue'
+
+export default Vue.extend({
+  computed: {
+    isLoggedIn() {
+      return this.$accessor.auth.isLoggedIn
+    },
+  },
+})
+</script>
 
 <style lang="scss">
 @import '~uikit/src/scss/variables-theme.scss';

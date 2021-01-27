@@ -1,10 +1,14 @@
 export default {
+  storybook: {
+    addons: ['@storybook/addon-a11y', '@storybook/addon-controls'],
+  },
+
   // Target (https://go.nuxtjs.dev/config-target)
   target: 'static',
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
-    title: 'nuxt-webapp',
+    title: 'HTW: News List',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -24,7 +28,12 @@ export default {
   css: [],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: [],
+  plugins: [
+    { src: '~plugins/apollo-client-accessor.ts' },
+    { src: '~plugins/apollo-helpers-accessor.ts' },
+    { src: '~plugins/vuex-persist', mode: 'client' },
+    { src: '~plugins/uikit', mode: 'client' },
+  ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
@@ -33,12 +42,11 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
+    'nuxt-typed-vuex',
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
-    // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
     '@nuxtjs/apollo',
@@ -47,10 +55,19 @@ export default {
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {},
 
+  pwa: {
+    manifest: {
+      name: 'HTW: News List',
+      short_name: 'HTW: News List',
+      description: 'Lists News from a GraphQL Endpoint',
+    },
+  },
+
   apollo: {
     clientConfigs: {
       default: {
         httpEndpoint: 'https://news-list-backend.herokuapp.com',
+        tokenName: 'apollo-token',
       },
     },
   },

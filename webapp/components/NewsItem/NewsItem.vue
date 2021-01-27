@@ -26,6 +26,15 @@
     <td v-if="login" class="uk-table-shrink">
       <button
         v-if="newsItem.id && isOwner"
+        class="uk-icon-button uk-button-default"
+        aria-label="Edit"
+      >
+        <i class="mdi mdi-18px mdi-pencil" aria-hidden="true"></i>
+      </button>
+    </td>
+    <td v-if="login" class="uk-table-shrink">
+      <button
+        v-if="newsItem.id && isOwner"
         class="uk-icon-button uk-button-danger"
         aria-label="Remove"
         @click="remove"
