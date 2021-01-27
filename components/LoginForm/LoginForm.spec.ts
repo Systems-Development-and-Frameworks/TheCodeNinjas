@@ -1,60 +1,50 @@
 import LoginForm from '~/components/LoginForm/LoginForm.vue'
 import { setupWrapperAndStore } from '~/utils/tests'
+
 jest.mock('~/utils/globals')
 
-const loginRightCredentials = async (wrapper) => {
-  wrapper.find('input#input-email').setValue('correctCredentials@test.com')
-  wrapper.find('input#input-password').setValue('rightPassword')
-  await wrapper.find('form').trigger('submit')
-}
-
-const loginWrongCredentials = async (wrapper) => {
-  wrapper.find('input#input-email').setValue('wrongCredentials@test.com')
-  wrapper.find('input#input-password').setValue('wrongPassword')
-  await wrapper.find('form').trigger('submit')
-}
-
-const loginInvalidToken = async (wrapper) => {
-  wrapper.find('input#input-email').setValue('invalidToken@test.com')
-  wrapper.find('input#input-password').setValue('somePassword')
-  await wrapper.find('form').trigger('submit')
-}
-
 describe('Login form tests', () => {
-  it('Tests True', () => {
-    const { wrapper, storeAccessor } = setupWrapperAndStore(LoginForm)
+  it('should set up test utilities properly', () => {
+    const { wrapper, storeAccessor, localVue } = setupWrapperAndStore(LoginForm)
 
     expect(wrapper).toBeTruthy()
     expect(storeAccessor).toBeTruthy()
+    expect(localVue).toBeTruthy()
   })
 
-  describe('form submit', () => {
-    const { wrapper, storeAccessor } = setupWrapperAndStore(LoginForm)
+  describe('Form submit', () => {
+    const { wrapper, storeAccessor, localVue } = setupWrapperAndStore(LoginForm)
+    const inputEmail = wrapper.find('input#input-email')
+    const inputPassword = wrapper.find('input#input-password')
+    const form = wrapper.find('form')
 
-    it('shows no error', async () => {
-      await loginRightCredentials(wrapper)
+    it('should shows no error', async () => {
+      inputEmail.setValue('correctCredentials@test.com')
+      inputPassword.setValue('rightPassword')
+
+      await form.trigger('submit')
+      await localVue.nextTick()
+
       expect(storeAccessor.auth.getError).toBe(null)
     })
-  })
 
-  describe('when credentials are wrong', () => {
-    it('shows wrong credentials error', async () => {
-      const { wrapper, storeAccessor, localVue } = setupWrapperAndStore(
-        LoginForm
-      )
-      await loginWrongCredentials(wrapper)
+    it('should show  wrong credentials error', async () => {
+      inputEmail.setValue('wrongCredentials@test.com')
+      inputPassword.setValue('wrongPassword')
+
+      await form.trigger('submit')
       await localVue.nextTick()
+
       expect(storeAccessor.auth.getError).toBe('Wrong credentials!')
     })
-  })
 
-  describe('in case of any other errors', () => {
-    it('shows friendly error message', async () => {
-      const { wrapper, storeAccessor, localVue } = setupWrapperAndStore(
-        LoginForm
-      )
-      await loginInvalidToken(wrapper)
+    it('should show friendly error message', async () => {
+      inputEmail.setValue('invalidToken@test.com')
+      inputPassword.setValue('somePassword')
+
+      await form.trigger('submit')
       await localVue.nextTick()
+
       expect(storeAccessor.auth.getError).toBe('Oops! Something went wrong.')
     })
   })

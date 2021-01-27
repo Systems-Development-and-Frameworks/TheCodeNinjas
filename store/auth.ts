@@ -23,6 +23,9 @@ export const getters = getterTree(state, {
   isLoggedIn(s): boolean {
     return !!s.token
   },
+  getLoading(s) {
+    return s.loading
+  },
   getToken(s): string | null {
     return s.token
   },

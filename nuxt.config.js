@@ -31,7 +31,8 @@ export default {
   plugins: [
     { src: '~plugins/apollo-client-accessor.ts' },
     { src: '~plugins/apollo-helpers-accessor.ts' },
-    { src: '~/plugins/vuex-persist', ssr: false },
+    { src: '~plugins/vuex-persist', mode: 'client' },
+    { src: '~plugins/uikit', mode: 'client' },
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
