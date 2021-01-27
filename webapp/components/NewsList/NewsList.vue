@@ -30,7 +30,7 @@
                 ></i>
               </button>
             </th>
-            <th v-if="isLoggedIn" colspan="3" class="uk-table-shrink"></th>
+            <th v-if="isLoggedIn" colspan="4" class="uk-table-shrink"></th>
           </tr>
         </thead>
         <tbody v-if="hasNewsItems">
@@ -47,7 +47,10 @@
         </tbody>
         <tbody v-else>
           <tr>
-            <td colspan="4" class="uk-text-center">No News in the list!</td>
+            <td colspan="4" class="uk-text-center">
+              <div v-if="loading > 0" uk-spinner></div>
+              <div v-else>No News in the list!</div>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -158,6 +161,7 @@ export default Vue.extend({
     NewsItem,
   },
   apollo: {
+    $loadingKey: 'loading',
     newsItems: {
       query: GET_POSTS,
       update(data) {
@@ -169,6 +173,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      loading: 0,
       sortDescending: true,
       newsTitle: '',
       newsItems: [] as NewsItemModel[],

@@ -28,9 +28,14 @@
 
         <div>
           <div class="uk-inline">
-            <button class="uk-button" type="submit">Sign in</button>
+            <button class="uk-button" type="submit" :disabled="loading">
+              Sign in
+            </button>
+
+            <div v-if="loading" uk-spinner></div>
           </div>
         </div>
+
         <div v-if="error" class="uk-alert uk-alert-danger">
           {{ error }}
         </div>
@@ -66,8 +71,12 @@ export default Vue.extend({
     error() {
       return this.$accessor.auth.getError
     },
+    loading() {
+      return this.$accessor.auth.getLoading
+    },
   },
   created() {
+    this.$accessor.auth.setLoading(false)
     this.$accessor.auth.setError(null)
   },
   methods: {
