@@ -1,33 +1,31 @@
 <template>
-  <div>
+  <v-app>
     <div v-if="!isLoggedIn">
-      <form @submit.prevent="login">
-        <div class="uk-margin">
-          <div class="uk-inline">
-            <input
+      <v-form @submit.prevent="login">
+        <div>
+          <div>
+            <v-text-field
               id="input-email"
               v-model="email"
-              class="uk-input"
               type="text"
               placeholder="E-Mail"
-            />
-          </div>
-        </div>
-
-        <div class="uk-margin">
-          <div class="uk-inline">
-            <input
-              id="input-password"
-              v-model="password"
-              class="uk-input"
-              type="password"
-              placeholder="Password"
-            />
+            ></v-text-field>
           </div>
         </div>
 
         <div>
-          <div class="uk-inline">
+          <div>
+            <v-text-field
+              id="input-password"
+              v-model="password"
+              type="password"
+              placeholder="Password"
+            ></v-text-field>
+          </div>
+        </div>
+
+        <div>
+          <div>
             <button class="uk-button" type="submit" :disabled="loading">
               Sign in
             </button>
@@ -39,12 +37,12 @@
         <div v-if="error" class="uk-alert uk-alert-danger">
           {{ error }}
         </div>
-      </form>
+      </v-form>
     </div>
     <div v-else>
       <h1 class="uk-margin">Hallo {{ user.name }}</h1>
     </div>
-  </div>
+  </v-app>
 </template>
 
 <script lang="ts">

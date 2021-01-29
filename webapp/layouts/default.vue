@@ -1,36 +1,29 @@
 <template>
   <v-app>
-    <v-app-bar color="deep-purple accent-4" dense dark>
+    <v-app-bar color="deep-purple accent-4" dense dark app>
       <v-app-bar-nav-icon
-        class='hidden-sm-and-up'
+        class="hidden-md-and-up"
         @click.stop="drawer = !drawer"
       >
       </v-app-bar-nav-icon>
 
-      <v-btn router to="/" class='mx-1 hidden-md-and-down'> Home </v-btn>
+      <v-btn router to="/" class="mx-1 hidden-md-and-down"> Home </v-btn>
 
-      <v-btn router to="/news" class='hidden-md-and-down' >
-        News
-      </v-btn>
+      <v-btn router to="/news" class="hidden-md-and-down"> News </v-btn>
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        v-if="!isLoggedIn"
-        class='hidden-md-and-down'
-        router
-        to="/login"
-      >
+      <v-btn v-if="!isLoggedIn" class="hidden-md-and-down" router to="/login">
         Login
       </v-btn>
 
-      <v-btn v-else router to="/logout" class='hidden-md-and-down'>
+      <v-btn v-else router to="/logout" class="hidden-md-and-down">
         Logout
       </v-btn>
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" absolute left temporary>
-      <v-list nav dense>
+      <v-list>
         <v-list-item router to="/">
           <v-list-item-title>Home</v-list-item-title>
         </v-list-item>
@@ -51,29 +44,10 @@
 
     <Nuxt />
 
-    <v-footer
-      color="primary lighten-1"
-      padless
-    >
-      <v-row
-        justify="center"
-        no-gutters
-      >
-        <v-btn
-          v-for="link in links"
-          :key="link"
-          color="white"
-          text
-          rounded
-          class="my-2"
-        >
-          {{ link }}
-        </v-btn>
-        <v-col
-          class="primary lighten-2 py-4 text-center white--text"
-          cols="12"
-        >
-          {{ new Date().getFullYear() }} — <strong>Vuetify</strong>
+    <v-footer color="primary lighten-1" padless app>
+      <v-row justify="center" no-gutters>
+        <v-col class="primary lighten-2 py-4 text-center white--text" cols="12">
+          {{ new Date().getFullYear() }} — <strong>TheCodeNinjas</strong>
         </v-col>
       </v-row>
     </v-footer>
