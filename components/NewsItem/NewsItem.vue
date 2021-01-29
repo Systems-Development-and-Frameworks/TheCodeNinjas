@@ -1,48 +1,41 @@
 <template>
-  <tr>
-    <td class="uk-table-shrink">{{ newsItem.id }}</td>
-    <td class="uk-table-expand">{{ newsItem.title }}</td>
-    <td class="uk-table-shrink" data-test-votes>{{ newsItem.votes }}</td>
-    <td v-if="login" class="uk-table-shrink">
-      <button
-        v-if="newsItem.id"
-        class="uk-icon-button uk-button-default"
-        aria-label="Upvote"
-        @click="upvote"
-      >
-        <i class="mdi mdi-18px mdi-thumb-up" aria-hidden="true"></i>
-      </button>
-    </td>
-    <td v-if="login" class="uk-table-shrink">
-      <button
-        v-if="newsItem.id"
-        class="uk-icon-button uk-button-secondary"
-        aria-label="Downvote"
-        @click="downvote"
-      >
-        <i class="mdi mdi-18px mdi-thumb-down" aria-hidden="true"></i>
-      </button>
-    </td>
-    <td v-if="login" class="uk-table-shrink">
-      <button
-        v-if="newsItem.id && isOwner"
-        class="uk-icon-button uk-button-default"
-        aria-label="Edit"
-      >
-        <i class="mdi mdi-18px mdi-pencil" aria-hidden="true"></i>
-      </button>
-    </td>
-    <td v-if="login" class="uk-table-shrink">
-      <button
-        v-if="newsItem.id && isOwner"
-        class="uk-icon-button uk-button-danger"
-        aria-label="Remove"
-        @click="remove"
-      >
-        <i class="mdi mdi-18px mdi-delete" aria-hidden="true"></i>
-      </button>
-    </td>
-  </tr>
+  <v-col cols="12" md="4">
+    <v-card>
+      <v-card-title>
+        <v-row>
+          <v-col cols="6" md="12" class="text-center">
+            <v-avatar color="primary" size="100">
+              <v-img
+                :src="`https://robohash.org/${newsItem.id}.png`"
+                :alt="newsItem.author.name"
+              ></v-img>
+            </v-avatar>
+          </v-col>
+          <v-col cols="6" md="12" class="text-center">
+            {{ newsItem.title }}
+            ( <span data-test-votes>{{ newsItem.votes }}</span> )
+          </v-col>
+        </v-row>
+      </v-card-title>
+
+      <v-card-actions v-if="login">
+        <v-btn v-if="newsItem.id" elevation="2" color="" icon @click="upvote">
+          <v-icon>mdi-thumb-up</v-icon>
+        </v-btn>
+        <v-btn v-if="newsItem.id" elevation="2" color="" icon @click="downvote">
+          <v-icon>mdi-thumb-down</v-icon>
+        </v-btn>
+
+        <v-btn v-if="newsItem.id && isOwner" elevation="2" icon>
+          <v-icon color="orange">mdi-pencil</v-icon>
+        </v-btn>
+
+        <v-btn v-if="newsItem.id && isOwner" elevation="2" icon @click="remove">
+          <v-icon color="red">mdi-delete</v-icon>
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-col>
 </template>
 
 <script lang="ts">
