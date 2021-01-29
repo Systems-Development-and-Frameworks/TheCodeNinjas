@@ -25,14 +25,13 @@ export default {
   },
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
-  css: [],
+  css: ['vuetify/dist/vuetify.min.css'],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
     { src: '~plugins/apollo-client-accessor.ts' },
     { src: '~plugins/apollo-helpers-accessor.ts' },
     { src: '~plugins/vuex-persist', mode: 'client' },
-    { src: '~plugins/uikit', mode: 'client' },
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
@@ -43,6 +42,7 @@ export default {
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
     'nuxt-typed-vuex',
+    '@nuxtjs/vuetify',
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
