@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <client-only>
     <v-form v-if="isLoggedIn" @submit.prevent="createNewsItem">
       <div class="d-flex align-center">
         <v-text-field
@@ -45,7 +45,7 @@
         @remove="removeNewsItem"
       />
     </v-row>
-  </div>
+  </client-only>
 </template>
 
 <script lang="ts">
