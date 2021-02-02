@@ -1,51 +1,56 @@
 <template>
-  <client-only>
-    <v-form v-if="isLoggedIn" @submit.prevent="createNewsItem">
-      <div class="d-flex align-center">
-        <v-text-field
-          id="news-title-input"
-          v-model="newsTitle"
-          type="text"
-          placeholder="Please enter title"
-        ></v-text-field>
+  <div>
+    <client-only>
+      <v-form v-if="isLoggedIn" @submit.prevent="createNewsItem">
+        <div class="d-flex align-center">
+          <v-text-field
+            id="news-title-input"
+            v-model="newsTitle"
+            type="text"
+            placeholder="Please enter title"
+          ></v-text-field>
 
-        <v-btn
+          <v-btn
+            color="primary"
+            class="mx-4"
+            type="submit"
+            :disabled="loading > 0"
+            :loading="loading > 0"
+          >
+            Create
+          </v-btn>
+
+          <v-btn
+            :disabled="loading > 0"
+            :loading="loading > 0"
+            @click="toggleSortOrder"
+          >
+            <v-icon v-if="sortDescending">mdi-sort-ascending</v-icon>
+            <v-icon v-else>mdi-sort-descending</v-icon>
+          </v-btn>
+        </div>
+      </v-form>
+
+      <div v-if="loading > 0" class="text-center">
+        <v-progress-circular
+          indeterminate
           color="primary"
-          class="mx-4"
-          type="submit"
-          :disabled="loading > 0"
-          :loading="loading > 0"
-        >
-          Create
-        </v-btn>
-
-        <v-btn
-          :disabled="loading > 0"
-          :loading="loading > 0"
-          @click="toggleSortOrder"
-        >
-          <v-icon v-if="sortDescending">mdi-sort-ascending</v-icon>
-          <v-icon v-else>mdi-sort-descending</v-icon>
-        </v-btn>
+        ></v-progress-circular>
       </div>
-    </v-form>
-
-    <div v-if="loading > 0" class="text-center">
-      <v-progress-circular indeterminate color="primary"></v-progress-circular>
-    </div>
-    <v-row v-else>
-      <news-item
-        v-for="item in newsItemsSorted"
-        :key="item.id"
-        :news-item="item"
-        :login="isLoggedIn"
-        :is-owner="!!(user && user.id === item.author.id)"
-        @upvote="upvote"
-        @downvote="downvote"
-        @remove="removeNewsItem"
-      />
-    </v-row>
-  </client-only>
+      <v-row v-else>
+        <news-item
+          v-for="item in newsItemsSorted"
+          :key="item.id"
+          :news-item="item"
+          :login="isLoggedIn"
+          :is-owner="!!(user && user.id === item.author.id)"
+          @upvote="upvote"
+          @downvote="downvote"
+          @remove="removeNewsItem"
+        />
+      </v-row>
+    </client-only>
+  </div>
 </template>
 
 <script lang="ts">
