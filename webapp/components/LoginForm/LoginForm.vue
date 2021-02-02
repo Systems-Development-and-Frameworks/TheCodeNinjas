@@ -1,61 +1,46 @@
 <template>
   <div>
-    <div v-if="!login">
-      <form @submit.prevent="signIn">
-        <div class="uk-margin">
-          <div class="uk-inline">
-            <input
-              v-model="email"
-              class="uk-input"
-              type="text"
-              placeholder="E-Mail"
-            />
-          </div>
-        </div>
+    <div v-if="!isLoggedIn">
+      <v-form @submit.prevent="login">
+        <v-text-field
+          id="input-email"
+          v-model="email"
+          type="text"
+          placeholder="E-Mail"
+        ></v-text-field>
 
-        <div class="uk-margin">
-          <div class="uk-inline">
-            <input
-              v-model="password"
-              class="uk-input"
-              type="password"
-              placeholder="Password"
-            />
-          </div>
-        </div>
+        <v-text-field
+          id="input-password"
+          v-model="password"
+          type="password"
+          placeholder="Password"
+        ></v-text-field>
 
-        <div>
-          <div class="uk-inline">
-            <button class="uk-button" type="submit">Sign in</button>
-          </div>
-        </div>
-      </form>
+        <v-btn
+          color="primary"
+          type="submit"
+          :disabled="loading"
+          :loading="loading"
+        >
+          Sign in
+        </v-btn>
+
+        <v-alert v-if="error" color="red lighten-2 mt-4" dark>
+          {{ error }}
+        </v-alert>
+      </v-form>
     </div>
     <div v-else>
-      <div class="uk-margin">Hallo {{ userId }}</div>
-
-      <div class="uk-margin">
-        <textarea v-model="jwt" class="uk-textarea" rows="10" />
-      </div>
-
-      <button class="uk-button" @click="signOut">Sign out</button>
+      <h1 class="uk-margin">Hallo {{ user.name }}</h1>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import jwtDecode, { JwtPayload } from 'jwt-decode'
 
 export default Vue.extend({
   name: 'LoginForm',
-  props: {
-    login: {
-      type: Boolean,
-      required: true,
-    },
-  },
-
   data() {
     return {
       email: null,
@@ -63,32 +48,35 @@ export default Vue.extend({
     }
   },
   computed: {
-    jwt(): string | null {
-      // TODO: get from vuex store
-      // return window.localStorage.getItem('token')
-      return ''
+    isLoggedIn() {
+      return this.$accessor.auth.isLoggedIn
     },
-    userId(): string | null {
-      if (this.jwt) {
-        const payload = jwtDecode<JwtPayload & { id: string }>(this.jwt)
-
-        if (payload) {
-          return payload.id
-        }
-      }
-
-      return null
+    user() {
+      return this.$accessor.auth.getUser
+    },
+    token() {
+      return this.$accessor.auth.getToken
+    },
+    error() {
+      return this.$accessor.auth.getError
+    },
+    loading() {
+      return this.$accessor.auth.getLoading
     },
   },
+  created() {
+    this.$accessor.auth.setLoading(false)
+    this.$accessor.auth.setError(null)
+  },
   methods: {
-    signIn() {
+    async login() {
       const email = this.email
       const password = this.password
 
-      this.$emit('signIn', { email, password })
+      await this.$accessor.auth.login({ email, password })
     },
-    signOut() {
-      this.$emit('signOut')
+    async logout() {
+      await this.$accessor.auth.logout()
     },
   },
 })

@@ -1,89 +1,62 @@
 <template>
   <div>
-    <h1 class="uk-heading-xlarge uk-text-center">News List</h1>
+    <client-only>
+      <v-form v-if="isLoggedIn" @submit.prevent="createNewsItem">
+        <div class="d-flex align-center">
+          <v-text-field
+            id="news-title-input"
+            v-model="newsTitle"
+            type="text"
+            placeholder="Please enter title"
+          ></v-text-field>
 
-    <hr />
-
-    <div class="news-items-wrapper">
-      <table class="uk-table uk-table-striped uk-table-medium uk-table-middle">
-        <thead>
-          <tr>
-            <th class="uk-table-shrink">Id</th>
-            <th class="uk-table-expand">Title</th>
-            <th class="uk-table-shrink uk-text-nowrap">
-              Votes
-              <button
-                class="uk-button uk-button-default"
-                data-test-toggle
-                aria-label="Sort"
-                @click="toggleSortOrder"
-              >
-                <i
-                  v-if="sortDescending"
-                  class="mdi mdi-18px mdi-sort-ascending"
-                  aria-hidden="true"
-                ></i>
-                <i
-                  v-else
-                  class="mdi mdi-18px mdi-sort-descending"
-                  aria-hidden="true"
-                ></i>
-              </button>
-            </th>
-            <th v-if="login" colspan="3" class="uk-table-shrink"></th>
-          </tr>
-        </thead>
-        <tbody v-if="hasNewsItems">
-          <news-item
-            v-for="item in newsItemsSorted"
-            :key="item.id"
-            :news-item="item"
-            :login="login"
-            :is-owner="userId === item.author.id"
-            @upvote="upvote"
-            @downvote="downvote"
-            @remove="removeNewsItem"
-          />
-        </tbody>
-        <tbody v-else>
-          <tr>
-            <td colspan="4" class="uk-text-center">No News in the list!</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <form v-if="login" class="uk-form-large" @submit.prevent="createNewsItem">
-      <div class="uk-flex uk-flex-bottom">
-        <div class="uk-flex-1 uk-margin">
-          <label class="uk-form-label" for="news-title-input">Title</label>
-
-          <div class="uk-form-controls">
-            <input
-              id="news-title-input"
-              v-model="newsTitle"
-              class="uk-input"
-              placeholder="Please enter title"
-            />
-          </div>
-        </div>
-        <div class="uk-margin">
-          <button type="submit" class="uk-button uk-button-primary">
+          <v-btn
+            color="primary"
+            class="mx-4"
+            type="submit"
+            :disabled="loading > 0"
+            :loading="loading > 0"
+          >
             Create
-          </button>
+          </v-btn>
+
+          <v-btn
+            :disabled="loading > 0"
+            :loading="loading > 0"
+            @click="toggleSortOrder"
+          >
+            <v-icon v-if="sortDescending">mdi-sort-ascending</v-icon>
+            <v-icon v-else>mdi-sort-descending</v-icon>
+          </v-btn>
         </div>
+      </v-form>
+
+      <div v-if="loading > 0" class="text-center">
+        <v-progress-circular
+          indeterminate
+          color="primary"
+        ></v-progress-circular>
       </div>
-    </form>
+      <v-row v-else>
+        <news-item
+          v-for="item in newsItemsSorted"
+          :key="item.id"
+          :news-item="item"
+          :login="isLoggedIn"
+          :is-owner="!!(user && user.id === item.author.id)"
+          @upvote="upvote"
+          @downvote="downvote"
+          @remove="removeNewsItem"
+        />
+      </v-row>
+    </client-only>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-
-import jwtDecode, { JwtPayload } from 'jwt-decode'
 import gql from 'graphql-tag'
 import NewsItem from '../../components/NewsItem/NewsItem.vue'
-import LoginForm from '../../components/LoginForm/LoginForm.vue'
 import { NewsItemModel, NewsItemProperties } from '~/models/news-item.model'
 
 const GET_POSTS = gql`
@@ -125,12 +98,6 @@ const DOWNVOTE = gql`
   }
 `
 
-const LOGIN = gql`
-  mutation($email: String!, $password: String!) {
-    login(email: $email, password: $password)
-  }
-`
-
 const WRITE = gql`
   mutation($title: String!) {
     write(title: $title) {
@@ -159,11 +126,9 @@ const DELETE = gql`
 
 export default Vue.extend({
   name: 'NewsList',
-  components: {
-    NewsItem,
-    LoginForm,
-  },
+  components: {},
   apollo: {
+    $loadingKey: 'loading',
     newsItems: {
       query: GET_POSTS,
       update(data) {
@@ -175,33 +140,18 @@ export default Vue.extend({
   },
   data() {
     return {
+      loading: 0,
       sortDescending: true,
-      currentId: 3,
       newsTitle: '',
       newsItems: [] as NewsItemModel[],
     }
   },
   computed: {
-    jwt(): string | null {
-      if (process.client) {
-        return window.localStorage.getItem('token')
-      } else {
-        return null
-      }
+    user() {
+      return this.$accessor.auth.user
     },
-    userId(): string | null {
-      if (this.jwt) {
-        const payload = jwtDecode<JwtPayload & { id: string }>(this.jwt)
-
-        if (payload) {
-          return payload.id
-        }
-      }
-
-      return null
-    },
-    login(): boolean {
-      return !!this.jwt
+    isLoggedIn() {
+      return this.$accessor.auth.isLoggedIn
     },
     hasNewsItems(): boolean {
       return this.newsItems.length > 0
@@ -215,32 +165,6 @@ export default Vue.extend({
     },
   },
   methods: {
-    async signIn(event: { email: string; password: string }) {
-      const { email, password } = event
-
-      try {
-        const result = await this.$apollo.mutate({
-          mutation: LOGIN,
-          variables: {
-            email,
-            password,
-          },
-        })
-
-        if (process.client) {
-          window.localStorage.setItem('token', result.data.login)
-          window.location.reload()
-        }
-      } catch (error) {
-        alert(error)
-      }
-    },
-    signOut() {
-      if (process.client) {
-        window.localStorage.removeItem('token')
-        window.location.reload()
-      }
-    },
     toggleSortOrder() {
       this.sortDescending = !this.sortDescending
     },
@@ -390,7 +314,7 @@ export default Vue.extend({
               title,
               votes: 0,
               author: {
-                id: this.userId,
+                id: this.user?.id,
                 __typename: 'Person',
               },
               __typename: 'Post',

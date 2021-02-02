@@ -1,7 +1,9 @@
-import { createLocalVue, mount } from '@vue/test-utils'
-import NewsList from '@/components/NewsList/NewsList.vue'
-import NewsItem from '@/components/NewsItem/NewsItem.vue'
+import { createLocalVue } from '@vue/test-utils'
+import Vuex from 'vuex'
+import NewsItem from '../NewsItem/NewsItem.vue'
+import NewsList from './NewsList.vue'
 import { NewsItemModel } from '~/models/news-item.model'
+import { setupWrapperAndStore } from '~/utils/tests'
 
 const newsItemsMock = [
   new NewsItemModel({
@@ -21,7 +23,7 @@ const newsItemsMock = [
     author: {
       id: '1',
       name: 'Christoph Stach',
-      email: 's0555912@htw-berlin.de',
+      email: 's0555912@htw-berlisn.de',
     },
   }),
   new NewsItemModel({
@@ -37,33 +39,26 @@ const newsItemsMock = [
 ]
 
 describe('NewsList', () => {
-  const localVue = createLocalVue()
-
   it('exists', () => {
-    const wrapper = mount(NewsList, {
-      localVue,
+    const { wrapper, storeAccessor } = setupWrapperAndStore(NewsList, {
+      newsItems: [],
     })
 
     expect(wrapper).toBeTruthy()
+    expect(storeAccessor).toBeTruthy()
   })
 
   it('renders no news items', () => {
-    const wrapper = mount(NewsList, {
-      localVue,
-      data() {
-        return { newsItems: [] }
-      },
+    const { wrapper, storeAccessor } = setupWrapperAndStore(NewsList, {
+      newsItems: [],
     })
 
     expect(wrapper.findAllComponents(NewsItem)).toHaveLength(0)
   })
 
   it('renders news item', () => {
-    const wrapper = mount(NewsList, {
-      localVue,
-      data() {
-        return { newsItems: newsItemsMock }
-      },
+    const { wrapper, storeAccessor } = setupWrapperAndStore(NewsList, {
+      newsItems: newsItemsMock,
     })
 
     expect(wrapper.findAllComponents(NewsItem)).toHaveLength(3)
@@ -71,23 +66,16 @@ describe('NewsList', () => {
 
   it('renders empty list message', () => {
     const emptyMessage = 'No News in the list!'
-
-    const wrapper = mount(NewsList, {
-      localVue,
-      data() {
-        return { newsItems: [] }
-      },
+    const { wrapper, storeAccessor } = setupWrapperAndStore(NewsList, {
+      newsItems: [],
     })
 
     expect(wrapper.text()).toMatch(emptyMessage)
   })
 
   it('check order: check initial order before clicking the toggle-button', () => {
-    const wrapper = mount(NewsList, {
-      localVue,
-      data() {
-        return { newsItems: newsItemsMock }
-      },
+    const { wrapper, storeAccessor } = setupWrapperAndStore(NewsList, {
+      newsItems: newsItemsMock,
     })
 
     const votes = wrapper
@@ -98,11 +86,8 @@ describe('NewsList', () => {
   })
 
   it('toggles between ascending and descending order', async () => {
-    const wrapper = mount(NewsList, {
-      localVue,
-      data() {
-        return { newsItems: newsItemsMock }
-      },
+    const { wrapper, storeAccessor } = setupWrapperAndStore(NewsList, {
+      newsItems: newsItemsMock,
     })
 
     const button = wrapper.find('[data-test-toggle]')

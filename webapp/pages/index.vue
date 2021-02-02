@@ -1,5 +1,7 @@
 <template>
-  <div>test</div>
+  <v-container class="py-16">
+    <h1>Welcome to the HTW: News List</h1>
+  </v-container>
 </template>
 
 <script lang="ts">

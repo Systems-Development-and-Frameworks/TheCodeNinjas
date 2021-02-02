@@ -1,20 +1,29 @@
-# nuxt-webapp
+# TheCodeNinjas Webapp
 
-## Build Setup
+## Installation Steps
+
+Follow these steps to build the webapp for production
+
+1. Clone this project
+
+2. Go to the "webapp" folder (Where this README is located)
+
+3. Run these commands
 
 ```bash
-# install dependencies
+
+# Install all necessary dependencies
 $ npm install
 
-# serve with hot reload at localhost:3000
-$ npm run dev
+# Generate the static project
+$ npm run generate
 
-# build for production and launch server
+# Build the app for production
 $ npm run build
+
+# Start the production server
 $ npm run start
 
-# generate static project
-$ npm run generate
+#(Optional) Run the project in a development environment with hot reload
+$ npm run dev
 ```
-
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).

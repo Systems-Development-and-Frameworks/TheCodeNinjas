@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <login-form :login="true" />
-  </div>
+  <v-container class="py-16">
+    <login-form />
+  </v-container>
 </template>
 
 <script lang="ts">
