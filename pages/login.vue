@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <v-container class="py-16">
     <login-form />
-  </div>
+  </v-container>
 </template>
 
 <script lang="ts">

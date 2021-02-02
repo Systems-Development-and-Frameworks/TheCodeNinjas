@@ -1,5 +1,5 @@
 <template>
-  <div>You have been logged out</div>
+  <v-container class="py-16"> You have been logged out </v-container>
 </template>
 
 <script lang="ts">

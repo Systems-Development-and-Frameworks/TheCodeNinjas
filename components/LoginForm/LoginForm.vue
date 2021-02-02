@@ -1,48 +1,39 @@
 <template>
-  <v-app>
+  <div>
     <div v-if="!isLoggedIn">
       <v-form @submit.prevent="login">
-        <div>
-          <div>
-            <v-text-field
-              id="input-email"
-              v-model="email"
-              type="text"
-              placeholder="E-Mail"
-            ></v-text-field>
-          </div>
-        </div>
+        <v-text-field
+          id="input-email"
+          v-model="email"
+          type="text"
+          placeholder="E-Mail"
+        ></v-text-field>
 
-        <div>
-          <div>
-            <v-text-field
-              id="input-password"
-              v-model="password"
-              type="password"
-              placeholder="Password"
-            ></v-text-field>
-          </div>
-        </div>
+        <v-text-field
+          id="input-password"
+          v-model="password"
+          type="password"
+          placeholder="Password"
+        ></v-text-field>
 
-        <div>
-          <div>
-            <button class="uk-button" type="submit" :disabled="loading">
-              Sign in
-            </button>
+        <v-btn
+          color="primary"
+          type="submit"
+          :disabled="loading"
+          :loading="loading"
+        >
+          Sign in
+        </v-btn>
 
-            <div v-if="loading" uk-spinner></div>
-          </div>
-        </div>
-
-        <div v-if="error" class="uk-alert uk-alert-danger">
+        <v-alert v-if="error" color="red lighten-2 mt-4" dark>
           {{ error }}
-        </div>
+        </v-alert>
       </v-form>
     </div>
     <div v-else>
       <h1 class="uk-margin">Hallo {{ user.name }}</h1>
     </div>
-  </v-app>
+  </div>
 </template>
 
 <script lang="ts">

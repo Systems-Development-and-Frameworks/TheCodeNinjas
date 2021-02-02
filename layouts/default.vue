@@ -7,17 +7,17 @@
       >
       </v-app-bar-nav-icon>
 
-      <v-btn router to="/" class="mx-1 hidden-md-and-down"> Home </v-btn>
+      <v-btn router to="/" class="mx-1 hidden-sm-and-down"> Home </v-btn>
 
-      <v-btn router to="/news" class="hidden-md-and-down"> News </v-btn>
+      <v-btn router to="/news" class="hidden-sm-and-down"> News </v-btn>
 
       <v-spacer></v-spacer>
 
-      <v-btn v-if="!isLoggedIn" class="hidden-md-and-down" router to="/login">
+      <v-btn v-if="!isLoggedIn" class="hidden-sm-and-down" router to="/login">
         Login
       </v-btn>
 
-      <v-btn v-else router to="/logout" class="hidden-md-and-down">
+      <v-btn v-else router to="/logout" class="hidden-sm-and-down">
         Logout
       </v-btn>
     </v-app-bar>

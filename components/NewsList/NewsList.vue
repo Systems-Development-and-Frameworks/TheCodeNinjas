@@ -1,6 +1,39 @@
 <template>
-  <v-container class="pt-16">
-    <v-row>
+  <div>
+    <v-form v-if="isLoggedIn" @submit.prevent="createNewsItem">
+      <div class="d-flex align-center">
+        <v-text-field
+          id="news-title-input"
+          v-model="newsTitle"
+          type="text"
+          placeholder="Please enter title"
+        ></v-text-field>
+
+        <v-btn
+          color="primary"
+          class="mx-4"
+          type="submit"
+          :disabled="loading > 0"
+          :loading="loading > 0"
+        >
+          Create
+        </v-btn>
+
+        <v-btn
+          :disabled="loading > 0"
+          :loading="loading > 0"
+          @click="toggleSortOrder"
+        >
+          <v-icon v-if="sortDescending">mdi-sort-ascending</v-icon>
+          <v-icon v-else>mdi-sort-descending</v-icon>
+        </v-btn>
+      </div>
+    </v-form>
+
+    <div v-if="loading > 0" class="text-center">
+      <v-progress-circular indeterminate color="primary"></v-progress-circular>
+    </div>
+    <v-row v-else>
       <news-item
         v-for="item in newsItemsSorted"
         :key="item.id"
@@ -12,7 +45,7 @@
         @remove="removeNewsItem"
       />
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script lang="ts">

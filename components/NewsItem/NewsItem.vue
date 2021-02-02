@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title>
         <v-row>
-          <v-col cols="6" md="12" class="text-center">
+          <v-col cols="4" md="12" class="text-center">
             <v-avatar color="primary" size="100">
               <v-img
                 :src="`https://robohash.org/${newsItem.id}.png`"
@@ -11,7 +11,7 @@
               ></v-img>
             </v-avatar>
           </v-col>
-          <v-col cols="6" md="12" class="text-center">
+          <v-col cols="8" md="12" class="text-center">
             {{ newsItem.title }}
             ( <span data-test-votes>{{ newsItem.votes }}</span> )
           </v-col>
