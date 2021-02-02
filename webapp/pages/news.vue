@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <v-container class="py-16">
     <news-list />
-  </div>
+  </v-container>
 </template>
 
 <script lang="ts">
